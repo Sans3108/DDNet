@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Pulls data from ddnet.tw, otherwise known as \"DDRace Network\".",
   "main": "index.js",
   "keywords": [
@@ -17,5 +17,14 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^3.2.6"
-  }
+  },
+  "homepage": "https://github.com/Sans3108/DDNet/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/Sans3108/DDNet/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sans3108/DDNet.git"
+  },
+  "funding": "https://ko-fi.com/sansy"
 }
