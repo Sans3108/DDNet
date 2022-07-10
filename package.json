@@ -2,7 +2,7 @@
   "name": "ddnet",
   "version": "0.1.2",
   "description": "Pulls data from ddnet.tw, otherwise known as \"DDRace Network\".",
-  "main": "index.js",
+  "main": "dist/index.js",
   "keywords": [
     "ddnet",
     "ddrace",
@@ -17,6 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^3.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.3",
+    "typescript": "^4.8.0-dev"
   },
   "homepage": "https://github.com/Sans3108/DDNet/blob/master/README.md",
   "bugs": {

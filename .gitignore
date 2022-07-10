@@ -1,4 +1,7 @@
 node_modules/
 testing/
+dist/
+
+.DS_Store
 .vscode/
 .idea/
