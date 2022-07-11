@@ -33,5 +33,6 @@
   "funding": "https://ko-fi.com/sansy",
   "files": [
     "./dist"
-  ]
+  ],
+  "types": "./types.ts"
 }
