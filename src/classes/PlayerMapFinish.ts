@@ -1,4 +1,4 @@
-import FinishTime from "./FinishTime";
+import FinishTime from "./FinishTime.js";
 
 class PlayerMapFinish {
   timestamp: number;

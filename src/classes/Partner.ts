@@ -1,4 +1,4 @@
-import Player from "./Player";
+import Player from "./Player.js";
 
 class Partner {
   name: string;

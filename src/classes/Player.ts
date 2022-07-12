@@ -1,9 +1,9 @@
-import PlayerAPIRequest, { _PlayerAPIData } from "./PlayerAPIRequest";
-import PlayerMapFinish from "./PlayerMapFinish";
-import Partner from "./Partner";
-import PlayerMapInfo from "./PlayerMapInfo";
-import PlayerPoints from "./PlayerPoints";
-import PlayerMapSet from "./PlayerMapSet";
+import PlayerAPIRequest, { type _PlayerAPIData } from "./PlayerAPIRequest.js";
+import PlayerMapFinish from "./PlayerMapFinish.js";
+import Partner from "./Partner.js";
+import PlayerMapInfo from "./PlayerMapInfo.js";
+import PlayerPoints from "./PlayerPoints.js";
+import PlayerMapSet from "./PlayerMapSet.js";
 
 class Player {
   name: string;
@@ -12,7 +12,8 @@ class Player {
   points!: PlayerPoints;
   finishes!: { first: PlayerMapFinish; last10: PlayerMapFinish[]; };
   partners!: Partner[];
-  mapsTypes!: { [set: string]: PlayerMapSet; };
+  mapSets!: { novice: PlayerMapSet; moderate: PlayerMapSet; brutal: PlayerMapSet; insane: PlayerMapSet; dummy: PlayerMapSet; ddmax: PlayerMapSet; oldschool: PlayerMapSet; solo: PlayerMapSet; race: PlayerMapSet; fun: PlayerMapSet;  };
+  timestamp!: number | null;
   constructor(name: string) {
     if (typeof name !== 'string') throw new TypeError('"name" must be of type string.');
 
@@ -34,7 +35,7 @@ class Player {
       last10: rawData.last_finishes.map(o => new PlayerMapFinish(o.timestamp, o.map, o.time, o.country, o.type))
     }
     this.partners = rawData.favorite_partners.map(o => new Partner(o.name, o.finishes));
-    this.mapsTypes = {
+    this.mapSets = {
       novice: new PlayerMapSet(rawData.types.Novice.points.points || 0, Object.keys(rawData.types.Novice.maps).map(key => new PlayerMapInfo(key, rawData.types.Novice.maps[key].points, rawData.types.Novice.maps[key].finishes, rawData.types.Novice.maps[key].time || -1))),
       moderate: new PlayerMapSet(rawData.types.Moderate.points.points || 0, Object.keys(rawData.types.Moderate.maps).map(key => new PlayerMapInfo(key, rawData.types.Moderate.maps[key].points, rawData.types.Moderate.maps[key].finishes, rawData.types.Moderate.maps[key].time || -1))),
       brutal: new PlayerMapSet(rawData.types.Brutal.points.points || 0, Object.keys(rawData.types.Brutal.maps).map(key => new PlayerMapInfo(key, rawData.types.Brutal.maps[key].points, rawData.types.Brutal.maps[key].finishes, rawData.types.Brutal.maps[key].time || -1))),
@@ -48,6 +49,7 @@ class Player {
     }
 
     this.ready = true;
+    this.timestamp = request.timestamp;
     return this;
   }
 }

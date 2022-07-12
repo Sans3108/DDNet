@@ -1,5 +1,5 @@
 class FinishTime {
-  time: number;
+  finishTime: number;
   timeString: string;
 
   #timeString(d: number) {
@@ -13,7 +13,7 @@ class FinishTime {
   constructor(time: number) {
     if (typeof time !== 'number') throw new TypeError('"time" must be of type number.');
 
-    this.time = time;
+    this.finishTime = time;
     this.timeString = this.#timeString(time);
   }
 }

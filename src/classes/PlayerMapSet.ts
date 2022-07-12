@@ -1,4 +1,4 @@
-import PlayerMapInfo from "./PlayerMapInfo";
+import PlayerMapInfo from "./PlayerMapInfo.js";
 
 class PlayerMapSet {
   points: number;
@@ -6,9 +6,11 @@ class PlayerMapSet {
   finished: PlayerMapInfo[];
   unfinished: PlayerMapInfo[];
   constructor(points: number, mapSets: PlayerMapInfo[]) {
+    if (typeof points !== 'number') throw new TypeError('"time" must be of type number.');
+
     let valid = true;
     mapSets.forEach(map => {
-      if (map instanceof PlayerMapInfo) valid = false;
+      if (map !instanceof PlayerMapInfo) valid = false;
     });
 
     this.points = points;
