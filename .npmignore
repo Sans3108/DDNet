@@ -1,0 +1,8 @@
+node_modules/
+testing/
+
+.DS_Store
+.vscode/
+.idea/
+
+*.tgz
