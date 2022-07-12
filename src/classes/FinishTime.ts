@@ -16,6 +16,10 @@ class FinishTime {
     this.finishTime = time;
     this.timeString = this.#timeString(time);
   }
+
+  toString() {
+    return this.#timeString(this.finishTime);
+  }
 }
 
 export default FinishTime;
