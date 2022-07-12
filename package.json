@@ -3,6 +3,9 @@
   "version": "0.1.2",
   "description": "Pulls data from ddnet.tw, otherwise known as \"DDRace Network\".",
   "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
   "keywords": [
     "ddnet",
     "ddrace",

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
 
     "allowJs": true,
@@ -12,7 +12,9 @@
 
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+
+    "declaration": true
   },
   "include": ["./src/**/*"]
 }
