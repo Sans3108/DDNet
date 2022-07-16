@@ -1,4 +1,4 @@
-import Player from "./Player.js";
+import { Player } from "./Player.js";
 
 class Partner {
   name: string;
@@ -18,4 +18,4 @@ class Partner {
   }
 }
 
-export default Partner;
+export { Partner };

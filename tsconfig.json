@@ -3,19 +3,18 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Node",
-
+    "resolveJsonModule": true,
     "allowJs": true,
     "checkJs": true,
-
     "rootDir": "./src",
     "outDir": "./dist",
-
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,
-
     "declaration": true,
     "sourceMap": true
   },
-  "include": ["./src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }
