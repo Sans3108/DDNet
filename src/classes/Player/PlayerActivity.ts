@@ -1,9 +1,9 @@
 class PlayerActivity {
-  date: { dateString: string; dateObj: Date; year: number; month: number; day: number; };
+  date: { dateString: string; dateObject: Date; year: number; month: number; day: number; };
   hours: number;
   constructor(dateString: string, hours: number) {
     if (typeof dateString !== 'string') throw new TypeError('"dateString" must be of type string.');
-    if (typeof hours !== 'number') throw new TypeError('"dateString" must be of type string.');
+    if (typeof hours !== 'number') throw new TypeError('"hours" must be of type number.');
     if (!this.#validateDateString(dateString)) throw new Error('"dateString" is not formatted correctly.');
     if (0 > hours || hours > 24) throw new Error('"hours" must be a number in range 0-24 inclusive.');
 
@@ -11,7 +11,7 @@ class PlayerActivity {
 
     this.date = {
       dateString: dateString,
-      dateObj: new Date(dateString),
+      dateObject: new Date(dateString),
       year: year,
       month: month,
       day: day
@@ -25,7 +25,7 @@ class PlayerActivity {
 
     if (
       year > 2100 || // arbitrary number cuz y not
-      year < 2020 || // ddnet release year
+      year < 2000 ||
       month > 12 ||
       month < 1 ||
       day > 31 ||
@@ -38,6 +38,4 @@ class PlayerActivity {
   }
 }
 
-export default PlayerActivity;
-
-const t = new PlayerActivity('2022-6-9', 9);
+export { PlayerActivity };
