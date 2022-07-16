@@ -1,5 +1,5 @@
 class PlayerActivity {
-  date: { dateString: string; dateObj: Date; year: number; month: number; day: number; };
+  date: { dateString: string; dateObject: Date; year: number; month: number; day: number; };
   hours: number;
   constructor(dateString: string, hours: number) {
     if (typeof dateString !== 'string') throw new TypeError('"dateString" must be of type string.');
@@ -11,7 +11,7 @@ class PlayerActivity {
 
     this.date = {
       dateString: dateString,
-      dateObj: new Date(dateString),
+      dateObject: new Date(dateString),
       year: year,
       month: month,
       day: day
@@ -38,6 +38,4 @@ class PlayerActivity {
   }
 }
 
-export default PlayerActivity;
-
-const t = new PlayerActivity('2022-6-9', 9);
+export { PlayerActivity };
