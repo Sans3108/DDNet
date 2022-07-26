@@ -10,7 +10,7 @@ For now, you can get Player data like this:
 ```js
 import { Player } from 'ddnet';
 
-const me = new Player('Sans'); 
+const me = new Player('Sans3108'); 
 
 console.log(me);
 /* Output:
