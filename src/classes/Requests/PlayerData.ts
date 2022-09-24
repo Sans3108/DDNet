@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import axios from "axios";
 import { z } from "zod";
 
 const Rank_Schema = z.union([z.literal('unranked'), z.number()]);
@@ -109,7 +109,7 @@ class PlayerData {
   }
 
   async fetch() {
-    const DATA: APIPlayerData = await (await fetch(this.url)).json() as any;
+    const DATA: APIPlayerData = (await axios.get(this.url)).data; //aaaaaaaaa
     if (!DATA || Object.keys(DATA).filter(key => Object.hasOwn(DATA, key)).length === 0) throw new Error(`${this.url} returned no data.`);
     if (!PlayerData_Schema.safeParse(DATA).success) throw new Error(`Received data does not match schema.`);
 

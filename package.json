@@ -1,11 +1,11 @@
 {
   "name": "ddnet",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Pulls data from ddnet.tw, otherwise known as \"DDRace Network\".",
   "main": "dist/index.js",
   "scripts": {
     "_1": "echo tsc is hard so i basically copied my config file into the command lol",
-    "build-test": "tsc ./testing/moduleTest.ts --target ESNext --module ESNext --moduleResolution Node --resolveJsonModule true --allowSyntheticDefaultImports true --esModuleInterop true --declaration true --sourceMap true",
+    "build-test": "tsc ./testing/moduleTest.ts --target ESNext --module CommonJS --skipLibCheck true --moduleResolution Node --resolveJsonModule true --allowSyntheticDefaultImports true --esModuleInterop true --declaration true --sourceMap true",
     "test": "npm run build-test && tput reset && node ./testing/moduleTest.js",
     "build": "tsc && npm pack"
   },
@@ -18,11 +18,10 @@
     "ddnetwork",
     "teedata"
   ],
-  "type": "module",
   "author": "thatboisans",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^3.2.8",
+    "axios": "^0.27.2",
     "zod": "^3.17.3"
   },
   "devDependencies": {
