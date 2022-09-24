@@ -1,5 +1,5 @@
 import { PlayerData, APIPlayerData } from "../Requests/PlayerData.js";
-import { MapFinish } from "./MapFinish.js";
+import { Run } from "./MapFinish.js";
 import { Partner } from "./Partner.js";
 import { MapSet } from "./MapSet.js";
 import { MapInfo } from "./MapInfo.js";
@@ -15,8 +15,8 @@ class Player {
   }
   readyAt: Date | null = null;
   points: { total: number; lastWeek: number; lastMonth: number; } | null = null;
-  firstFinish: MapFinish | null = null;
-  finishes: MapFinish[] | null = null;
+  firstFinish: Run | null = null;
+  finishes: Run[] | null = null;
   partners: Partner[] | null = null;
   maps: { novice: MapSet; moderate: MapSet; brutal: MapSet; insane: MapSet; dummy: MapSet; ddmax: MapSet; oldschool: MapSet; solo: MapSet; race: MapSet; fun: MapSet; } | null = null;
   activity: PlayerActivity[] | null = null;
@@ -80,13 +80,13 @@ class Player {
   #getFirstFinish() {
     if (!this.#rawData.fetched) throw new Error('No data available.');
 
-    return new MapFinish(this.#rawData.data!.first_finish.map, this.#rawData.data!.first_finish.time, this.#rawData.data!.first_finish.timestamp);
+    return new Run(this.#rawData.data!.first_finish.map, this.#rawData.data!.first_finish.time, this.#rawData.data!.first_finish.timestamp);
   }
 
   #getFinishes() {
     if (!this.#rawData.fetched) throw new Error('No data available.');
 
-    return this.#rawData.data!.last_finishes.map(m => new MapFinish(m.map, m.time, m.timestamp, m.country, m.type));
+    return this.#rawData.data!.last_finishes.map(m => new Run(m.map, m.time, m.timestamp, m.country, m.type));
   }
 
   #getPartners() {

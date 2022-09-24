@@ -16,18 +16,18 @@ export type PointsWithTotal = z.infer<typeof PointsWithTotal_Schema>;
 
 export { PointsWithTotal_Schema };
 
-const MapType_Schema = z.union([z.literal('Novice'), z.literal('Moderate'), z.literal('Brutal'), z.literal('Insane'), z.literal('Dummy'), z.literal('DDmaX'), z.literal('Oldschool'), z.literal('Solo'), z.literal('Race'), z.literal('Fun')]);
+const Category_Schema = z.union([z.literal('Novice'), z.literal('Moderate'), z.literal('Brutal'), z.literal('Insane'), z.literal('Dummy'), z.literal('DDmaX'), z.literal('Oldschool'), z.literal('Solo'), z.literal('Race'), z.literal('Fun')]);
 
-export type MapType = z.infer<typeof MapType_Schema>;
+export type Category = z.infer<typeof Category_Schema>;
 
-export { MapType_Schema };
+export { Category_Schema };
 
 const MapFinish_Schema = z.object({
   timestamp: z.number(),
   map: z.string(),
   time: z.number(),
   country: z.string().optional(),
-  type: z.optional(MapType_Schema)
+  type: z.optional(Category_Schema)
 });
 
 export type MapFinish = z.infer<typeof MapFinish_Schema>;
