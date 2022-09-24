@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Pulls data from ddnet.tw, otherwise known as \"DDRace Network\".",
   "main": "dist/index.js",
   "scripts": {
