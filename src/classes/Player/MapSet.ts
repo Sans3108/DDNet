@@ -1,11 +1,11 @@
-import { MapType } from "../Requests/PlayerData.js";
+import { Category } from "../Requests/PlayerData.js";
 import { MapInfo } from "./MapInfo.js";
 
 class MapSet {
   points: number;
   maps: MapInfo[];
-  type: MapType;
-  constructor(points: number, maps: MapInfo[], type: MapType) {
+  type: Category;
+  constructor(points: number, maps: MapInfo[], type: Category) {
     if (typeof points !== 'number') throw new TypeError('"points" must be of type number.');
     let mapsValid = true;
     maps.forEach(m => {

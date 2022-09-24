@@ -1,5 +1,5 @@
 import { PlayerData, APIPlayerData } from "../Requests/PlayerData.js";
-import { Run } from "./MapFinish.js";
+import { Run } from "./Run.js";
 import { Partner } from "./Partner.js";
 import { MapSet } from "./MapSet.js";
 import { MapInfo } from "./MapInfo.js";
