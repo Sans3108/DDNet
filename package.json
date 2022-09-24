@@ -7,7 +7,7 @@
     "_1": "echo tsc is hard so i basically copied my config file into the command lol",
     "build-test": "tsc ./testing/moduleTest.ts --target ESNext --module ESNext --moduleResolution Node --resolveJsonModule true --allowSyntheticDefaultImports true --esModuleInterop true --declaration true --sourceMap true",
     "test": "npm run build-test && tput reset && node ./testing/moduleTest.js",
-    "build": "tsc"
+    "build": "tsc && npm pack"
   },
   "keywords": [
     "ddnet",
