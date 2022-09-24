@@ -16,6 +16,10 @@ class Partner {
   toPlayer() {
     return new Player(this.name);
   }
+
+  toString() {
+    return this.name;
+  }
 }
 
 export { Partner };
