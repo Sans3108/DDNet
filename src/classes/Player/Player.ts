@@ -32,6 +32,10 @@ class Player {
     }
   }
 
+  toString() {
+    return `${this.name}`;
+  }
+
   async fetch() {
     const request = new PlayerData(this.name);
     const rawData: APIPlayerData = (await request.fetch() as any).data;
