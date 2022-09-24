@@ -3,13 +3,18 @@ Hey there, this package is very early in development, if you have questions, fee
 
 (Better) Documentation coming soon™️
 
-## Examples
+## Example Usage
 
-For now, you can get Player data like this:
+Import the `Player` class from the package and create a new instance of it.
 
 ```js
 import { Player } from 'ddnet';
 
+// or
+
+const { Player } = require('ddnet');
+```
+```js
 const me = new Player('Sans3108'); 
 
 console.log(me);
