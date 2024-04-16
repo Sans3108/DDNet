@@ -1,4 +1,4 @@
-import {z} from 'zod'
+import { z } from 'zod';
 import axios from 'axios';
 
 export const RawPlayerDataSchema = z.object({
