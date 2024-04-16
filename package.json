@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "cleanup": "rmdir /s /q dist",
-    "dev": "pnpm cleanup && pnpm build"
+    "dev": "pnpm cleanup && pnpm build",
+    "prettier": "prettier . --write"
   },
   "keywords": [
     "ddnet",
