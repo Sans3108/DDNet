@@ -1,0 +1,57 @@
+name: Prettier Formatting
+
+env:
+  files_modified:
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  format:
+    # Check if the PR is not from a fork
+    if: >
+      github.event.pull_request.head.repo.full_name == github.repository ||
+      (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Format files with Prettier') == false)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0 # Ensures history is checked out
+          token: ${{ secrets.GITHUB_TOKEN }} # Use the GitHub token for authentication
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 'package.json' # Grabs node version from package.json
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run prettier
+        run: pnpm prettier
+
+      - name: Check for modified files
+        id: git-check
+        run: |
+          if git diff --quiet; then
+            echo "files_modified=false" >> $GITHUB_ENV
+          else
+            echo "files_modified=true" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push changes
+        if: env.files_modified == 'true'
+        run: |
+          git config --global user.name '${{ github.repository_owner }}'
+          git config --global user.email 'actions@github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git add -A
+          git commit -m "Format files with Prettier"
+          git push

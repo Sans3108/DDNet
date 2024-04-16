@@ -1,13 +1,12 @@
 {
   "name": "ddnet",
-  "version": "0.1.7",
-  "description": "Pulls data from ddnet.tw, otherwise known as \"DDRace Network\".",
+  "version": "0.3.0",
+  "description": "ddnet.org API wrapper",
   "main": "dist/index.js",
   "scripts": {
-    "_1": "echo tsc is hard so i basically copied my config file into the command lol",
-    "build-test": "tsc ./testing/moduleTest.ts --target ESNext --module CommonJS --skipLibCheck true --moduleResolution Node --resolveJsonModule true --allowSyntheticDefaultImports true --esModuleInterop true --declaration true --sourceMap true",
-    "test": "npm run build-test && tput reset && node ./testing/moduleTest.js",
-    "build": "tsc && npm pack"
+    "build": "tsc",
+    "cleanup": "rmdir /s /q dist",
+    "dev": "pnpm cleanup && pnpm build"
   },
   "keywords": [
     "ddnet",
@@ -18,16 +17,9 @@
     "ddnetwork",
     "teedata"
   ],
+  "type": "module",
   "author": "thatboisans",
   "license": "ISC",
-  "dependencies": {
-    "axios": "^0.27.2",
-    "zod": "^3.17.3"
-  },
-  "devDependencies": {
-    "@types/node": "^18.7.19",
-    "typescript": "^4.8.3"
-  },
   "homepage": "https://github.com/Sans3108/DDNet/blob/master/README.md",
   "bugs": {
     "url": "https://github.com/Sans3108/DDNet/issues"
@@ -40,5 +32,12 @@
   "files": [
     "dist/**/*"
   ],
-  "types": "dist/index.d.ts"
+  "devDependencies": {
+    "@types/node": "20.10.0",
+    "prettier": "3.2.5"
+  },
+  "dependencies": {
+    "typescript": "^5.4.5",
+    "zod": "^3.20.2"
+  }
 }

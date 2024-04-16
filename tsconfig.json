@@ -1,22 +1,33 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
-    "skipLibCheck": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": true,
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+    "removeComments": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "declaration": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "ESNext",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "sourceMap": true,
-    "removeComments": true
+    "baseUrl": "./src",
+    "paths": {
+      "@log": ["common/log"],
+      "@utils": ["utils/functions/index"],
+      "@common/*": ["common/*"],
+      "@classes/*": ["classes/*"],
+      "@scripts/*": ["utils/scripts/*"]
+    }
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }
