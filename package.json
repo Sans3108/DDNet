@@ -21,7 +21,7 @@
   "author": "thatboisans",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "zod": "^3.17.3"
   },
   "devDependencies": {
