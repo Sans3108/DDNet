@@ -3,6 +3,9 @@
   "version": "0.3.0",
   "description": "ddnet.org API wrapper",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=18.20.2"
+  },
   "scripts": {
     "build": "tsc",
     "cleanup": "rmdir /s /q dist",
