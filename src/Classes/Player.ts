@@ -1,6 +1,7 @@
-import { z } from 'zod';
+import {z} from 'zod'
+import axios from 'axios';
 
-const RawPlayerDataSchema = z.object({
+export const RawPlayerDataSchema = z.object({
   player: z.string(),
   points: z.intersection(
     z.union([
@@ -136,3 +137,68 @@ const RawPlayerDataSchema = z.object({
 });
 
 export type RawPlayerData = z.infer<typeof RawPlayerDataSchema>;
+
+export class PlayerError extends Error {
+  constructor(
+    reason?: string,
+    public context?: unknown
+  ) {
+    super(reason ?? 'ERR');
+  }
+}
+
+/**
+ * Class representing a DDNet player.
+ */
+export class Player {
+  private _ready: boolean;
+  private _data!: RawPlayerData;
+
+  constructor(private readonly name: string) {
+    this._ready = false;
+  }
+
+  private static isObject(value: any): value is object {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+  }
+
+  private static async fetchAndParse(name: string): Promise<RawPlayerData | null | PlayerError> {
+    const data = await axios
+      .get(`https://ddnet.org/players/?json2=${name}`)
+      .then(res => {
+        if (Player.isObject(res.data)) {
+          if (Object.keys(res.data).length === 0) return null;
+          return res.data;
+        } else return new PlayerError('Unexpected data!', res.data);
+      })
+      .catch(err => new PlayerError(err.message, err));
+
+    if (!data || data instanceof PlayerError) return data;
+
+    const parsed = RawPlayerDataSchema.safeParse(data);
+
+    if (parsed.success) return parsed.data;
+
+    return new PlayerError(parsed.error.message, parsed.error);
+  }
+
+  public async fetch(): Promise<{ success: true } | { success: false; error: PlayerError }> {
+    const data = await Player.fetchAndParse(this.name);
+
+    if (data instanceof PlayerError) return { success: false, error: data };
+
+    if (!data) return { success: false, error: new PlayerError(`No data returned for '${this.name}'.`) };
+
+    this._data = data;
+    this._ready = true;
+
+    return { success: true };
+  }
+
+  /**
+   * Wether the instance is ready. (i.e. The player data has been successfuly fetched with {@link Player.fetch})
+   */
+  public get ready() {
+    return this._ready;
+  }
+}

@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "ESNext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
     "outDir": "dist",
     "removeComments": true,
     "esModuleInterop": true,
@@ -19,14 +18,7 @@
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@log": ["common/log"],
-      "@utils": ["utils/functions/index"],
-      "@common/*": ["common/*"],
-      "@classes/*": ["classes/*"],
-      "@scripts/*": ["utils/scripts/*"]
-    }
+    "declaration": true
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]
