@@ -1,4 +1,5 @@
 # DDNet
+
 Hey there, this package is very early in development, if you have questions, feedback you can find me over on Discord, my tag is `Sans#0001`.
 
 (Better) Documentation coming soon™️
@@ -14,8 +15,9 @@ import { Player } from 'ddnet';
 
 const { Player } = require('ddnet');
 ```
+
 ```js
-const me = new Player('Sans3108'); 
+const me = new Player('Sans3108');
 
 console.log(me);
 /* Output:
@@ -51,10 +53,11 @@ me.fetch().then(data => {
 ```
 
 You probably wouldn't want to log everything, just what you need. Examples below show how to log out the points of the player, the first finished map's name and the map with fastest finish time out of all the novice maps:
+
 ```js
 // Points
 import { Player } from 'ddnet';
-const player = await (new Player('Sans3108')).fetch();
+const player = await new Player('Sans3108').fetch();
 
 console.log(player.points);
 /* Output:
@@ -63,10 +66,11 @@ console.log(player.points);
 
 */
 ```
+
 ```js
 // First finish
 import { Player } from 'ddnet';
-const player = await (new Player('Sans3108')).fetch();
+const player = await new Player('Sans3108').fetch();
 
 console.log(player.firstFinish.name);
 /* Output:
@@ -75,16 +79,13 @@ Multeasymap
 
 */
 ```
+
 ```js
 // Fastest finish time of all novice maps
 import { Player } from 'ddnet';
-const player = await (new Player('Sans3108')).fetch();
+const player = await new Player('Sans3108').fetch();
 
-console.log(
-  player.maps.novice.maps
-    .filter(m => m.finishes > 0)
-    .sort((a, b) => a.time.finishTime - b.time.finishTime)[0]
-);
+console.log(player.maps.novice.maps.filter(m => m.finishes > 0).sort((a, b) => a.time.finishTime - b.time.finishTime)[0]);
 /* Output:
 
 MapInfo {
