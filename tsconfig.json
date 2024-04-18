@@ -3,7 +3,7 @@
     "target": "ESNext",
     "moduleResolution": "node",
     "outDir": "dist",
-    "removeComments": true,
+    "removeComments": false,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
