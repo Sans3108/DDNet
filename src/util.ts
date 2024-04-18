@@ -50,3 +50,16 @@ export async function makeRequest(path: string, qs: string, qsValue: string): Pr
 
   return response;
 }
+
+export function timeString(totalSeconds: number): string {
+  if (totalSeconds < 0) return '--:--';
+
+  const pad = (s: string) => (s.length < 2 ? `0${s}` : s);
+
+  const hours = Math.floor(totalSeconds / 3600).toString();
+  const remainingSecondsAfterHours = totalSeconds % 3600;
+  const minutes = Math.floor(remainingSecondsAfterHours / 60).toString();
+  const seconds = Math.floor(remainingSecondsAfterHours % 60).toString();
+
+  return hours === '0' ? `${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
