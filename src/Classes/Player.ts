@@ -1,204 +1,63 @@
-import { z } from 'zod';
-import axios from 'axios';
-
-export const RawPlayerDataSchema = z.object({
-  player: z.string(),
-  points: z.intersection(
-    z.union([
-      z.object({
-        rank: z.number(),
-        points: z.number()
-      }),
-      z.object({
-        rank: z.null()
-      })
-    ]),
-    z.object({ total: z.number() })
-  ),
-  team_rank: z.union([
-    z.object({
-      rank: z.number(),
-      points: z.number()
-    }),
-    z.object({
-      rank: z.null()
-    })
-  ]),
-  rank: z.union([
-    z.object({
-      rank: z.number(),
-      points: z.number()
-    }),
-    z.object({
-      rank: z.null()
-    })
-  ]),
-  points_last_month: z.union([
-    z.object({
-      rank: z.number(),
-      points: z.number()
-    }),
-    z.object({
-      rank: z.null()
-    })
-  ]),
-  points_last_week: z.union([
-    z.object({
-      rank: z.number(),
-      points: z.number()
-    }),
-    z.object({
-      rank: z.null()
-    })
-  ]),
-  favorite_server: z.object({
-    server: z.string()
-  }),
-  first_finish: z.object({
-    timestamp: z.number(),
-    map: z.string(),
-    time: z.number()
-  }),
-  last_finishes: z.array(
-    z.object({
-      timestamp: z.number(),
-      map: z.string(),
-      time: z.number(),
-      country: z.string(),
-      type: z.string()
-    })
-  ),
-  favorite_partners: z.array(
-    z.object({
-      name: z.string(),
-      finishes: z.number()
-    })
-  ),
-  types: z.record(
-    z.string(),
-    z.object({
-      points: z.union([
-        z.object({
-          rank: z.number(),
-          points: z.number(),
-          total: z.number()
-        }),
-        z.object({
-          rank: z.null(),
-          total: z.number()
-        })
-      ]),
-      team_rank: z.union([
-        z.object({
-          rank: z.number(),
-          points: z.number()
-        }),
-        z.object({
-          rank: z.null()
-        })
-      ]),
-      rank: z.union([
-        z.object({
-          rank: z.number(),
-          points: z.number()
-        }),
-        z.object({
-          rank: z.null()
-        })
-      ]),
-      maps: z.record(
-        z.string(),
-        z.union([
-          z.object({
-            points: z.number(),
-            total_finishes: z.number(),
-            finishes: z.literal(0)
-          }),
-          z.object({
-            points: z.number(),
-            total_finishes: z.number(),
-            finishes: z.number(),
-            team_rank: z.number().optional(),
-            rank: z.number(),
-            time: z.number(),
-            first_finish: z.number()
-          })
-        ])
-      )
-    })
-  ),
-  activity: z.array(
-    z.object({
-      date: z.string(),
-      hours_played: z.number()
-    })
-  ),
-  hours_played_past_365_days: z.number()
-});
-
-export type RawPlayerData = z.infer<typeof RawPlayerDataSchema>;
-
-export class PlayerError extends Error {
-  constructor(
-    reason?: string,
-    public context?: unknown
-  ) {
-    super(reason ?? 'ERR');
-  }
-}
+import { _PlayersJson2, _Schema_players_json2 } from '../Schemas/index.js';
+import { DDNetError, makeRequest } from '../util.js';
 
 /**
  * Class representing a DDNet player.
  */
-export class Player {
-  private _ready: boolean;
-  private _data!: RawPlayerData;
+class Player {
+  private readonly rawData: _PlayersJson2;
 
-  constructor(private readonly name: string) {
-    this._ready = false;
-  }
+  /**
+   * The name of this player.
+   */
+  public name: string;
 
-  private static isObject(value: any): value is object {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
-  }
+  /**
+   * The amount of points this player has earned.
+   */
+  public points: number;
 
-  private static async fetchAndParse(name: string): Promise<RawPlayerData | null | PlayerError> {
-    const data = await axios
-      .get(`https://ddnet.org/players/?json2=${name}`)
-      .then(res => {
-        if (Player.isObject(res.data)) {
-          if (Object.keys(res.data).length === 0) return null;
-          return res.data;
-        } else return new PlayerError('Unexpected data!', res.data);
-      })
-      .catch(err => new PlayerError(err.message, err));
+  /**
+   * The global rank of this player, `null` if unranked.
+   */
+  public globalRank: number | null;
 
-    if (!data || data instanceof PlayerError) return data;
+  /**
+   * The maximum earnable points from all DDNet maps.
+   */
+  public maxEarnablePoints: number;
 
-    const parsed = RawPlayerDataSchema.safeParse(data);
+  /**
+   * The amount of points left to be earned by this player out of {@link maxEarnablePoints}.
+   */
+  public earnablePoints: number;
 
-    if (parsed.success) return parsed.data;
+  /**
+   * Create a new instance of {@link Player} from API data.
+   */
+  public constructor(rawData: _PlayersJson2) {
+    this.rawData = rawData;
 
-    return new PlayerError(parsed.error.message, parsed.error);
-  }
-
-  public async fetch(): Promise<{ success: true } | { success: false; error: PlayerError }> {
-    const data = await Player.fetchAndParse(this.name);
-
-    if (data instanceof PlayerError) return { success: false, error: data };
-
-    if (!data) return { success: false, error: new PlayerError(`No data returned for '${this.name}'.`) };
-
-    this._data = data;
-    this._ready = true;
-
-    return { success: true };
+    this.name = this.rawData.player;
+    this.points = this.rawData.points.rank ? this.rawData.points.points : 0;
+    this.globalRank = this.rawData.points.rank;
+    this.maxEarnablePoints = this.rawData.points.total;
+    this.earnablePoints = this.maxEarnablePoints - this.points;
   }
 
   /**
-   * Wether the instance is ready. (i.e. The player data has been successfuly fetched with {@link Player.fetch})
+   * Fetch, parse and construct a new {@link Player} instance.
+   * @param name The name of this player.
    */
-  public get ready() {
-    return this._ready;
+  static async new(name: string): Promise<Player | DDNetError> {
+    const response = await makeRequest('players', 'json2', name);
+
+    if (response instanceof DDNetError) return response;
+
+    const parsed = _Schema_players_json2.safeParse(response);
+
+    if (parsed.success) return new Player(parsed.data);
+
+    return new DDNetError(parsed.error.message, parsed.error);
   }
 }
