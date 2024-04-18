@@ -5,12 +5,17 @@ import { DDNetError, makeRequest } from '../util.js';
  * Class representing a DDNet player.
  */
 export class Player {
-  private readonly rawData: _PlayersJson2;
+  readonly #_rawData: _PlayersJson2;
 
   /**
    * The name of this player.
    */
   public name: string;
+
+  /**
+   * The url of this player on ddnet.org
+   */
+  public url: string;
 
   /**
    * The amount of points this player has earned.
@@ -36,12 +41,13 @@ export class Player {
    * Create a new instance of {@link Player} from API data.
    */
   public constructor(rawData: _PlayersJson2) {
-    this.rawData = rawData;
+    this.#_rawData = rawData;
 
-    this.name = this.rawData.player;
-    this.points = this.rawData.points.rank ? this.rawData.points.points : 0;
-    this.globalRank = this.rawData.points.rank;
-    this.maxEarnablePoints = this.rawData.points.total;
+    this.name = this.#_rawData.player;
+    this.url = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
+    this.points = this.#_rawData.points.rank ? this.#_rawData.points.points : 0;
+    this.globalRank = this.#_rawData.points.rank;
+    this.maxEarnablePoints = this.#_rawData.points.total;
     this.earnablePoints = this.maxEarnablePoints - this.points;
   }
 
