@@ -4,7 +4,7 @@ import { DDNetError, makeRequest } from '../util.js';
 /**
  * Class representing a DDNet player.
  */
-class Player {
+export class Player {
   private readonly rawData: _PlayersJson2;
 
   /**
