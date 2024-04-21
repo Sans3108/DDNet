@@ -39,7 +39,7 @@
   "devDependencies": {
     "@babel/cli": "^7.24.1",
     "@types/got": "^9.6.12",
-    "@types/node": "20.10.0",
+    "@types/node": "20.12.7",
     "babel-plugin-root-import": "^6.6.0",
     "prettier": "3.2.5"
   },
