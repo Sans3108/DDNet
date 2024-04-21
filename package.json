@@ -46,7 +46,7 @@
   "dependencies": {
     "got": "^14.2.1",
     "typescript": "^5.4.5",
-    "zod": "^3.20.2"
+    "zod": "^3.22.5"
   },
   "types": "dist/index.d.ts"
 }
