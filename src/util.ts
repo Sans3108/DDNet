@@ -37,10 +37,10 @@ export async function makeMasterServerRequest(masterServerServerListUrl?: string
 /**
  * Requests all map releases.
  */
-export async function makeReleasesRequest(): Promise<object | DDNetError> {
+export async function makeReleasesRequest(): Promise<Array<unknown> | DDNetError> {
   const url = `https://ddnet.org/releases/maps.json`;
 
-  const response: object | DDNetError = await got(url)
+  const response: Array<unknown> | DDNetError = await got(url)
     //@ts-expect-error DT out of date
     .json()
     .catch((err: Error) => new DDNetError(err.message, err));

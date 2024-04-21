@@ -2,27 +2,6 @@ import { PlayerFinishes, PlayerLeaderboards, PlayerPartner } from '@classes';
 import { _PlayersJson2, _Schema_players_json2 } from '@schemas';
 import { DDNetError, makeRequest, timeString } from '@util';
 
-export interface BasePlayerMap {
-  mapName: string;
-  mapType: string;
-  points: number;
-  toMap: () => Promise<void>;
-}
-
-export interface UnfinishedMap extends BasePlayerMap {
-  finishes: 0;
-}
-
-export interface FinishedMap extends BasePlayerMap {
-  rank: number;
-  first_finish: number;
-  time: number;
-  finishes: number;
-  team_rank?: number;
-}
-
-export type PlayerMap = UnfinishedMap | FinishedMap;
-
 /**
  * Class representing a DDNet player.
  */
@@ -58,14 +37,14 @@ export class Player {
   public constructor(rawData: _PlayersJson2) {
     this.#_rawData = rawData;
 
-    console.log(this.#_rawData);
+    console.log(this.#_rawData.types['Fun']);
 
     this.name = this.#_rawData.player;
     this.url = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
 
     if (!this.#_rawData.points.rank) throw new DDNetError('Player points assumption turned out to be null.');
 
-    this.leaderboards = {
+    this.leaderboards = new PlayerLeaderboards({
       completionist: {
         rank: this.#_rawData.points.rank,
         points: this.#_rawData.points.points
@@ -74,12 +53,12 @@ export class Player {
       completionistLastWeek: this.#_rawData.points_last_week,
       rank: this.#_rawData.rank,
       team: this.#_rawData.team_rank
-    };
+    });
 
     this.totalCompletionistPoints = this.#_rawData.points.total;
     this.favoriteServer = this.#_rawData.favorite_server.server;
 
-    this.finishes = {
+    this.finishes = new PlayerFinishes({
       first: {
         mapName: this.#_rawData.first_finish.map,
         timestamp: this.#_rawData.first_finish.timestamp * 1000,
@@ -94,12 +73,15 @@ export class Player {
         timestamp: f.timestamp,
         timeString: timeString(f.time)
       }))
-    };
+    });
 
-    this.favoritePartners = this.#_rawData.favorite_partners.map(p => ({
-      name: p.name,
-      finishes: p.finishes
-    }));
+    this.favoritePartners = this.#_rawData.favorite_partners.map(
+      p =>
+        new PlayerPartner({
+          name: p.name,
+          finishes: p.finishes
+        })
+    );
   }
 
   /**
@@ -116,23 +98,6 @@ export class Player {
     if (parsed.success) return new Player(parsed.data);
 
     return new DDNetError(parsed.error.message, parsed.error);
-  }
-
-  #getServerType() {}
-
-  #mapPool() {
-    const pool: PlayerMap[] = [];
-
-    for (const type in this.#_rawData.types) {
-      const maps = this.#_rawData.types[type].maps;
-
-      for (const mapName in maps) {
-        //@ts-expect-error
-        pool.push(maps[mapName]);
-      }
-    }
-
-    return pool;
   }
 }
 

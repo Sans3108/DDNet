@@ -1,6 +1,23 @@
 import { MapAuthor, MapMaxFinish, MapRank, MapTeamRank } from '@classes';
 import { _MapsJson, _Schema_maps_json } from '@schemas';
-import { DDNetError, makeRequest, timeString } from '@util';
+import { DDNetError, makeReleasesRequest, makeRequest, timeString } from '@util';
+
+export enum MapType {
+  novice = 'Novice',
+  moderate = 'Moderate',
+  brutal = 'Brutal',
+  insane = 'Insane',
+  dummy = 'Dummy',
+  ddmaxEasy = 'DDmaX.Easy',
+  ddmaxNext = 'DDmaX.Next',
+  ddmaxPro = 'DDmaX.Pro',
+  ddmaxNut = 'DDmaX.Nut',
+  oldschool = 'Oldschool',
+  solo = 'Solo',
+  race = 'Race',
+  fun = 'Fun',
+  unknown = 'UNKNOWN'
+}
 
 export class Map {
   readonly #_rawData: _MapsJson;
@@ -13,7 +30,7 @@ export class Map {
 
   public webPreviewUrl: string;
 
-  public type: string;
+  public type: MapType;
 
   public points: number;
 
@@ -56,7 +73,7 @@ export class Map {
     this.url = this.#_rawData.website;
     this.thumbnailUrl = this.#_rawData.thumbnail;
     this.webPreviewUrl = this.#_rawData.web_preview;
-    this.type = this.#_rawData.type;
+    this.type = !Object.values<string>(MapType).includes(this.#_rawData.type) ? MapType.unknown : (this.#_rawData.type as MapType);
     this.points = this.#_rawData.points;
     this.difficulty = this.#_rawData.difficulty;
     this.mappers = this.#_rawData.mapper.split('&').map(mapperName => new MapAuthor({ name: mapperName.trim() }));
