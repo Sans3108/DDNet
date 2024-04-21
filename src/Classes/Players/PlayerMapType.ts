@@ -1,3 +1,1 @@
-export class PlayerMapType {
-  
-}
+export class PlayerMapType {}
