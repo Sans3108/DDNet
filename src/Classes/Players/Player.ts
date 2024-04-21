@@ -1,48 +1,6 @@
-import { _PlayersJson2, _Schema_players_json2 } from '../Schemas/index.js';
-import { DDNetError, makeRequest, timeString } from '../util.js';
-
-export interface PlayerRankingUnranked {
-  rank: null;
-}
-
-export interface PlayerRankingRanked {
-  rank: number;
-  points: number;
-}
-
-export type PlayerRanking = PlayerRankingRanked | PlayerRankingUnranked;
-
-export interface PlayerLeaderboards {
-  completionist: PlayerRankingRanked;
-  completionistLastMonth: PlayerRanking;
-  completionistLastWeek: PlayerRanking;
-  team: PlayerRanking;
-  rank: PlayerRanking;
-}
-
-export interface PlayerFinish {
-  timestamp: number;
-  mapName: string;
-  timeSeconds: number;
-  timeString: string;
-  toMap: () => Promise<void>;
-}
-
-export interface PlayerRecentFinish extends PlayerFinish {
-  server: string;
-  mapType: string;
-}
-
-export interface PlayerFinishes {
-  first: PlayerFinish;
-  recent: PlayerRecentFinish[];
-}
-
-export interface Partner {
-  name: string;
-  finishes: number;
-  toPlayer: () => Promise<Player | DDNetError>;
-}
+import { PlayerFinishes, PlayerLeaderboards, PlayerPartner } from '@classes';
+import { _PlayersJson2, _Schema_players_json2 } from '@schemas';
+import { DDNetError, makeRequest, timeString } from '@util';
 
 export interface BasePlayerMap {
   mapName: string;
@@ -92,7 +50,7 @@ export class Player {
 
   public finishes: PlayerFinishes;
 
-  public favoritePartners: Partner[];
+  public favoritePartners: PlayerPartner[];
 
   /**
    * Create a new instance of {@link Player} from API data.
@@ -126,8 +84,7 @@ export class Player {
         mapName: this.#_rawData.first_finish.map,
         timestamp: this.#_rawData.first_finish.timestamp * 1000,
         timeSeconds: this.#_rawData.first_finish.time,
-        timeString: timeString(this.#_rawData.first_finish.time),
-        toMap: async () => {}
+        timeString: timeString(this.#_rawData.first_finish.time)
       },
       recent: this.#_rawData.last_finishes.map(f => ({
         mapName: f.map,
@@ -135,15 +92,13 @@ export class Player {
         server: f.country,
         timeSeconds: f.time,
         timestamp: f.timestamp,
-        timeString: timeString(f.time),
-        toMap: async () => {}
+        timeString: timeString(f.time)
       }))
     };
 
     this.favoritePartners = this.#_rawData.favorite_partners.map(p => ({
       name: p.name,
-      finishes: p.finishes,
-      toPlayer: async () => await Player.new(p.name)
+      finishes: p.finishes
     }));
   }
 
@@ -151,7 +106,7 @@ export class Player {
    * Fetch, parse and construct a new {@link Player} instance.
    * @param name The name of this player.
    */
-  static async new(name: string): Promise<Player | DDNetError> {
+  public static async new(name: string): Promise<Player | DDNetError> {
     const response = await makeRequest('players', 'json2', name);
 
     if (response instanceof DDNetError) return response;
@@ -172,6 +127,7 @@ export class Player {
       const maps = this.#_rawData.types[type].maps;
 
       for (const mapName in maps) {
+        //@ts-expect-error
         pool.push(maps[mapName]);
       }
     }
@@ -185,7 +141,7 @@ const p = await Player.new(process.argv[2]);
 if (p instanceof DDNetError) {
   console.error(p);
 } else {
-  console.log(p.finishes.recent[0]);
+  console.log(p);
 }
 
 // const players = ['Cor', 'Freezestyler', 'Aoe', 'BaumWolle', 'Sans3108', 'Starkiller', 'Cireme', 'n9'];

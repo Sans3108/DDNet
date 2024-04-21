@@ -1,3 +1,4 @@
-export * from './Classes/Player.js';
-export * from './Schemas/index.js';
-export * from './util.js';
+export * from '@classes';
+export * from '@requests';
+export * from '@schemas';
+export * from '@util';

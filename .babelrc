@@ -1,0 +1,27 @@
+{
+  "plugins": [
+    [
+      "babel-plugin-root-import",
+      {
+        "paths": [
+          {
+            "rootPathSuffix": "./dist/Classes/index.js",
+            "rootPathPrefix": "@classes"
+          },
+          {
+            "rootPathSuffix": "./dist/Requests/index.js",
+            "rootPathPrefix": "@requests"
+          },
+          {
+            "rootPathSuffix": "./dist/Schemas/index.js",
+            "rootPathPrefix": "@schemas"
+          },
+          {
+            "rootPathSuffix": "./dist/util.js",
+            "rootPathPrefix": "@util"
+          }
+        ]
+      }
+    ]
+  ]
+}

@@ -7,9 +7,9 @@
     "node": ">=18.20.2"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && babel dist --out-dir dist",
+    "dev": "pnpm cleanup && pnpm build && node --enable-source-maps dist/Classes/Player/DDNetPlayer.js",
     "cleanup": "rmdir /s /q dist",
-    "dev": "pnpm cleanup && pnpm build",
     "prettier": "prettier . --write"
   },
   "keywords": [
@@ -37,8 +37,10 @@
     "dist/**/*"
   ],
   "devDependencies": {
+    "@babel/cli": "^7.24.1",
     "@types/got": "^9.6.12",
     "@types/node": "20.10.0",
+    "babel-plugin-root-import": "^6.6.0",
     "prettier": "3.2.5"
   },
   "dependencies": {

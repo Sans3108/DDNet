@@ -18,6 +18,23 @@ export class DDNetError extends Error {
 }
 
 /**
+ * Requests all servers from master server.
+ * @param masterServerServerListUrl The url to `servers.json` returned by the master server. Default: https://master1.ddnet.org/ddnet/15/servers.json
+ */
+export async function makeMasterServerRequest(masterServerServerListUrl?: string): Promise<object | DDNetError> {
+  const url = masterServerServerListUrl ?? `https://master1.ddnet.org/ddnet/15/servers.json`;
+
+  const response: object | DDNetError = await got(url)
+    //@ts-expect-error DT out of date
+    .json()
+    .catch((err: Error) => new DDNetError(err.message, err));
+
+  if (response instanceof DDNetError) return response;
+
+  return response;
+}
+
+/**
  * Requests all map releases.
  */
 export async function makeReleasesRequest(): Promise<object | DDNetError> {
@@ -62,4 +79,18 @@ export function timeString(totalSeconds: number): string {
   const seconds = Math.floor(remainingSecondsAfterHours % 60).toString();
 
   return hours === '0' ? `${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+// https://github.com/ddnet/ddnet-scripts/servers/scripts/ddnet.py#L185
+export function slugify(name: string): string {
+  const x: string = '[\t !"#$%&\'()*\\-/<=>?@[\\]^_`{|},.:]+';
+  let string: string = '';
+  for (const c of name) {
+    if (c.match(x) || c.charCodeAt(0) >= 128) {
+      string += `-${c.charCodeAt(0)}-`;
+    } else {
+      string += c;
+    }
+  }
+  return string;
 }
