@@ -1,4 +1,5 @@
-import { timeString } from '@util';
+import { Map } from '@classes';
+import { DDNetError, timeString } from '@util';
 
 export class PlayerFinish {
   public timestamp: number;
@@ -11,5 +12,9 @@ export class PlayerFinish {
     this.mapName = data.mapName;
     this.timeSeconds = data.timeSeconds;
     this.timeString = timeString(this.timeSeconds);
+  }
+
+  public async toMap(): Promise<{ success: true; instance: Map } | { success: false; error: DDNetError }> {
+    return await Map.new(this.mapName);
   }
 }

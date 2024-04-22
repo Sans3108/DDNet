@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc && babel dist --out-dir dist",
-    "dev": "pnpm cleanup && pnpm build && node --enable-source-maps dist/Classes/Maps/Map.js",
+    "dev": "pnpm cleanup && pnpm build && node --enable-source-maps .",
     "cleanup": "rmdir /s /q dist",
     "prettier": "prettier . --write"
   },

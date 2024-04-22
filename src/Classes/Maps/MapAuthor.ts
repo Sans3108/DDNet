@@ -1,4 +1,5 @@
-import { slugify } from '@util';
+import { Player } from '@classes';
+import { DDNetError, slugify } from '@util';
 
 export class MapAuthor {
   public name: string;
@@ -11,5 +12,13 @@ export class MapAuthor {
 
   public async getMaps(): Promise<void> {
     throw new Error('Not implemented.');
+  }
+
+  public toString(): string {
+    return this.name;
+  }
+
+  public async toPlayer(): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
+    return await Player.new(this.name);
   }
 }

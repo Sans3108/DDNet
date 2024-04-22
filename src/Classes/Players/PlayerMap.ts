@@ -1,14 +1,19 @@
-import { timeString } from '@util';
+import { Map, MapType } from '@classes';
+import { DDNetError, timeString } from '@util';
 
 export class PlayerMapBase {
   public mapName: string;
-  public mapType: string;
-  public points: number;
+  public mapType: MapType;
+  public pointsReward: number;
 
-  constructor(data: { mapName: string; mapType: string; points: number }) {
+  constructor(data: { mapName: string; mapType: MapType; pointsReward: number }) {
     this.mapName = data.mapName;
     this.mapType = data.mapType;
-    this.points = data.points;
+    this.pointsReward = data.pointsReward;
+  }
+
+  public async toMap(): Promise<{ success: true; instance: Map } | { success: false; error: DDNetError }> {
+    return await Map.new(this.mapName);
   }
 }
 

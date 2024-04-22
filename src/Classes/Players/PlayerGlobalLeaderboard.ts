@@ -1,17 +1,13 @@
-import { PlayerRanking, PlayerRankingRanked } from 'Classes/Players';
+import { PlayerLeaderboard, PlayerRanking, PlayerRankingRanked } from '@classes';
 
-export class PlayerLeaderboards {
-  public completionist: PlayerRankingRanked;
+export class PlayerGlobalLeaderboard extends PlayerLeaderboard {
   public completionistLastMonth: PlayerRanking;
   public completionistLastWeek: PlayerRanking;
-  public team: PlayerRanking;
-  public rank: PlayerRanking;
 
   constructor(data: { completionist: PlayerRankingRanked; completionistLastMonth: PlayerRanking; completionistLastWeek: PlayerRanking; team: PlayerRanking; rank: PlayerRanking }) {
-    this.completionist = data.completionist;
+    super(data);
+
     this.completionistLastMonth = data.completionistLastMonth;
     this.completionistLastWeek = data.completionistLastWeek;
-    this.rank = data.rank;
-    this.team = data.team;
   }
 }

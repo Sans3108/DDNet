@@ -1,6 +1,6 @@
-import { PlayerFinishes, PlayerLeaderboards, PlayerPartner } from '@classes';
+import { FinishedPlayerMap, MapType, PlayerActivity, PlayerFinish, PlayerFinishes, PlayerGlobalLeaderboard, PlayerLeaderboard, PlayerPartner, PlayerRankingRanked, PlayerRankingUnranked, PlayerRecentFinish, PlayerServer, PlayerServerTypes, UnfinishedPlayerMap } from '@classes';
 import { _PlayersJson2, _Schema_players_json2 } from '@schemas';
-import { DDNetError, makeRequest, timeString } from '@util';
+import { DDNetError, makeRequest } from '@util';
 
 /**
  * Class representing a DDNet player.
@@ -21,7 +21,7 @@ export class Player {
   /**
    * Global leaderboards ranks and points for this player.
    */
-  public leaderboards: PlayerLeaderboards;
+  public globalLeaderboard: PlayerGlobalLeaderboard;
 
   public totalCompletionistPoints: number;
 
@@ -31,20 +31,24 @@ export class Player {
 
   public favoritePartners: PlayerPartner[];
 
+  public serverTypes: PlayerServerTypes;
+
+  public activity: PlayerActivity[];
+
+  public hoursPlayedPast365days: number;
+
   /**
    * Create a new instance of {@link Player} from API data.
    */
   public constructor(rawData: _PlayersJson2) {
     this.#_rawData = rawData;
 
-    console.log(this.#_rawData.types['Fun']);
-
     this.name = this.#_rawData.player;
     this.url = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
 
     if (!this.#_rawData.points.rank) throw new DDNetError('Player points assumption turned out to be null.');
 
-    this.leaderboards = new PlayerLeaderboards({
+    this.globalLeaderboard = new PlayerGlobalLeaderboard({
       completionist: {
         rank: this.#_rawData.points.rank,
         points: this.#_rawData.points.points
@@ -59,20 +63,21 @@ export class Player {
     this.favoriteServer = this.#_rawData.favorite_server.server;
 
     this.finishes = new PlayerFinishes({
-      first: {
+      first: new PlayerFinish({
         mapName: this.#_rawData.first_finish.map,
         timestamp: this.#_rawData.first_finish.timestamp * 1000,
-        timeSeconds: this.#_rawData.first_finish.time,
-        timeString: timeString(this.#_rawData.first_finish.time)
-      },
-      recent: this.#_rawData.last_finishes.map(f => ({
-        mapName: f.map,
-        mapType: f.type,
-        server: f.country,
-        timeSeconds: f.time,
-        timestamp: f.timestamp,
-        timeString: timeString(f.time)
-      }))
+        timeSeconds: this.#_rawData.first_finish.time
+      }),
+      recent: this.#_rawData.last_finishes.map(
+        f =>
+          new PlayerRecentFinish({
+            mapName: f.map,
+            mapType: MapType[Object.entries(MapType).find(e => e[1] === f.type)?.[0] as unknown as keyof typeof MapType] ?? MapType.unknown,
+            server: f.country,
+            timeSeconds: f.time,
+            timestamp: f.timestamp
+          })
+      )
     });
 
     this.favoritePartners = this.#_rawData.favorite_partners.map(
@@ -82,31 +87,106 @@ export class Player {
           finishes: p.finishes
         })
     );
+
+    const keys = Object.keys(MapType).filter(k => k !== 'unknown');
+
+    const servers: PlayerServer[] = keys.map(k => {
+      const raw = this.#_rawData.types[MapType[k as keyof typeof MapType]];
+
+      const leaderboard = new PlayerLeaderboard({
+        completionist:
+          raw.points.rank ?
+            new PlayerRankingRanked({
+              rank: raw.points.rank,
+              points: raw.points.points
+            })
+          : new PlayerRankingUnranked(),
+        rank:
+          raw.rank.rank ?
+            new PlayerRankingRanked({
+              rank: raw.rank.rank,
+              points: raw.rank.points
+            })
+          : new PlayerRankingUnranked(),
+        team:
+          raw.team_rank.rank ?
+            new PlayerRankingRanked({
+              rank: raw.team_rank.rank,
+              points: raw.team_rank.points
+            })
+          : new PlayerRankingUnranked()
+      });
+
+      const maps = Object.keys(raw.maps).map(key => {
+        const map = raw.maps[key];
+
+        if (map.finishes === 0) {
+          return new UnfinishedPlayerMap({
+            mapName: key,
+            mapType: MapType[k as keyof typeof MapType],
+            pointsReward: map.points
+          });
+        } else {
+          // TS is dumb
+          const casted = map as {
+            points: number;
+            rank: number;
+            first_finish: number;
+            time: number;
+            finishes: number;
+            total_finishes: number;
+            team_rank?: number | undefined;
+          };
+
+          return new FinishedPlayerMap({
+            bestTimeSeconds: casted.time,
+            finishCount: casted.finishes,
+            firstFinishTimestamp: casted.first_finish,
+            mapName: key,
+            mapType: MapType[k as keyof typeof MapType],
+            pointsReward: casted.points,
+            rank: casted.rank,
+            teamRank: casted.team_rank
+          });
+        }
+      });
+
+      const server = new PlayerServer({
+        name: MapType[k as keyof typeof MapType],
+        leaderboard,
+        maps,
+        totalCompletionistPoints: raw.points.total
+      });
+
+      return server;
+    });
+
+    this.serverTypes = new PlayerServerTypes(servers);
+
+    this.activity = this.#_rawData.activity.map(a => new PlayerActivity({ date: a.date, hoursPlayed: a.hours_played }));
+
+    this.hoursPlayedPast365days = this.#_rawData.hours_played_past_365_days;
   }
 
   /**
    * Fetch, parse and construct a new {@link Player} instance.
    * @param name The name of this player.
    */
-  public static async new(name: string): Promise<Player | DDNetError> {
+  public static async new(name: string): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
     const response = await makeRequest('players', 'json2', name);
 
-    if (response instanceof DDNetError) return response;
+    if (response instanceof DDNetError) return { success: false, error: response };
 
     const parsed = _Schema_players_json2.safeParse(response);
 
-    if (parsed.success) return new Player(parsed.data);
+    if (parsed.success) return { success: true, instance: new Player(parsed.data) };
 
-    return new DDNetError(parsed.error.message, parsed.error);
+    return { success: false, error: new DDNetError(parsed.error.message, parsed.error) };
   }
-}
 
-const p = await Player.new(process.argv[2]);
-
-if (p instanceof DDNetError) {
-  console.error(p);
-} else {
-  console.log(p);
+  public toString(): string {
+    return this.name;
+  }
 }
 
 // const players = ['Cor', 'Freezestyler', 'Aoe', 'BaumWolle', 'Sans3108', 'Starkiller', 'Cireme', 'n9'];
