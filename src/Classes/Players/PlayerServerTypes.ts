@@ -1,25 +1,25 @@
-import { MapType, PlayerServer } from '@classes';
-import { DDNetError } from '@util';
+import { PlayerServerType } from '@classes';
+import { DDNetError, MapType } from '@util';
 
 // This code screams "please end me"
 // Surely there's a better way but I have no idea
 
 export class PlayerServerTypes {
-  public novice: PlayerServer;
-  public moderate: PlayerServer;
-  public brutal: PlayerServer;
-  public insane: PlayerServer;
-  public dummy: PlayerServer;
-  public ddmaxEasy: PlayerServer;
-  public ddmaxNext: PlayerServer;
-  public ddmaxPro: PlayerServer;
-  public ddmaxNut: PlayerServer;
-  public oldschool: PlayerServer;
-  public solo: PlayerServer;
-  public race: PlayerServer;
-  public fun: PlayerServer;
+  public novice: PlayerServerType;
+  public moderate: PlayerServerType;
+  public brutal: PlayerServerType;
+  public insane: PlayerServerType;
+  public dummy: PlayerServerType;
+  public ddmaxEasy: PlayerServerType;
+  public ddmaxNext: PlayerServerType;
+  public ddmaxPro: PlayerServerType;
+  public ddmaxNut: PlayerServerType;
+  public oldschool: PlayerServerType;
+  public solo: PlayerServerType;
+  public race: PlayerServerType;
+  public fun: PlayerServerType;
 
-  constructor(data: PlayerServer[]) {
+  constructor(data: PlayerServerType[]) {
     const novice = data.find(server => server.name === MapType.novice) ?? new DDNetError(`\`${MapType.novice}\` server not found in data!`);
     const moderate = data.find(server => server.name === MapType.moderate) ?? new DDNetError(`\`${MapType.moderate}\` server not found in data!`);
     const brutal = data.find(server => server.name === MapType.brutal) ?? new DDNetError(`\`${MapType.brutal}\` server not found in data!`);
@@ -42,18 +42,18 @@ export class PlayerServerTypes {
         types.filter(i => i instanceof DDNetError)
       );
 
-    this.novice = novice as PlayerServer;
-    this.moderate = moderate as PlayerServer;
-    this.brutal = brutal as PlayerServer;
-    this.insane = insane as PlayerServer;
-    this.dummy = dummy as PlayerServer;
-    this.ddmaxEasy = ddmaxEasy as PlayerServer;
-    this.ddmaxNext = ddmaxNext as PlayerServer;
-    this.ddmaxPro = ddmaxPro as PlayerServer;
-    this.ddmaxNut = ddmaxNut as PlayerServer;
-    this.oldschool = oldschool as PlayerServer;
-    this.solo = solo as PlayerServer;
-    this.race = race as PlayerServer;
-    this.fun = fun as PlayerServer;
+    this.novice = novice as PlayerServerType;
+    this.moderate = moderate as PlayerServerType;
+    this.brutal = brutal as PlayerServerType;
+    this.insane = insane as PlayerServerType;
+    this.dummy = dummy as PlayerServerType;
+    this.ddmaxEasy = ddmaxEasy as PlayerServerType;
+    this.ddmaxNext = ddmaxNext as PlayerServerType;
+    this.ddmaxPro = ddmaxPro as PlayerServerType;
+    this.ddmaxNut = ddmaxNut as PlayerServerType;
+    this.oldschool = oldschool as PlayerServerType;
+    this.solo = solo as PlayerServerType;
+    this.race = race as PlayerServerType;
+    this.fun = fun as PlayerServerType;
   }
 }

@@ -1,23 +1,6 @@
 import { MapAuthor, MapMaxFinish, MapRank, MapTeamRank } from '@classes';
 import { _MapsJson, _Schema_maps_json } from '@schemas';
-import { DDNetError, makeRequest, timeString } from '@util';
-
-export enum MapType {
-  novice = 'Novice',
-  moderate = 'Moderate',
-  brutal = 'Brutal',
-  insane = 'Insane',
-  dummy = 'Dummy',
-  ddmaxEasy = 'DDmaX.Easy',
-  ddmaxNext = 'DDmaX.Next',
-  ddmaxPro = 'DDmaX.Pro',
-  ddmaxNut = 'DDmaX.Nut',
-  oldschool = 'Oldschool',
-  solo = 'Solo',
-  race = 'Race',
-  fun = 'Fun',
-  unknown = 'UNKNOWN'
-}
+import { DDNetError, MapType, dePythonifyTime, makeRequest, timeString } from '@util';
 
 export class Map {
   readonly #_rawData: _MapsJson;
@@ -77,21 +60,18 @@ export class Map {
     this.points = this.#_rawData.points;
     this.difficulty = this.#_rawData.difficulty;
     this.mappers = this.#_rawData.mapper.split('&').map(mapperName => new MapAuthor({ name: mapperName.trim() }));
-    this.releasedTimestamp = this.#_rawData.release ?? null;
+    this.releasedTimestamp = this.#_rawData.release ? dePythonifyTime(this.#_rawData.release) : null;
     this.biggestTeam = this.#_rawData.biggest_team;
     this.width = this.#_rawData.width;
     this.height = this.#_rawData.height;
     this.tiles = this.#_rawData.tiles;
-    this.teamRanks = this.#_rawData.team_ranks.map(rank => new MapTeamRank({ country: rank.country, players: rank.players, rank: rank.rank, timeSeconds: rank.time, timestamp: rank.timestamp }));
-    this.ranks = this.#_rawData.ranks.map(rank => new MapRank({ country: rank.country, player: rank.player, rank: rank.rank, timeSeconds: rank.time, timestamp: rank.timestamp }));
-    this.maxFinishes = this.#_rawData.max_finishes.map(mf => new MapMaxFinish({ maxTimestamp: mf.max_timestamp, minTimestamp: mf.min_timestamp, count: mf.num, player: mf.player, rank: mf.rank, time: mf.time }));
-
-    console.log(this.#_rawData.max_finishes[0]);
-
+    this.teamRanks = this.#_rawData.team_ranks.map(rank => new MapTeamRank({ server: rank.country, players: rank.players, rank: rank.rank, timeSeconds: rank.time, timestamp: dePythonifyTime(rank.timestamp) }));
+    this.ranks = this.#_rawData.ranks.map(rank => new MapRank({ server: rank.country, player: rank.player, rank: rank.rank, timeSeconds: rank.time, timestamp: dePythonifyTime(rank.timestamp) }));
+    this.maxFinishes = this.#_rawData.max_finishes.map(mf => new MapMaxFinish({ maxTimestamp: dePythonifyTime(mf.max_timestamp), minTimestamp: dePythonifyTime(mf.min_timestamp), count: mf.num, player: mf.player, rank: mf.rank, time: mf.time }));
     this.medianTimeSeconds = this.#_rawData.median_time ?? -1;
     this.medianTimeString = timeString(this.medianTimeSeconds);
-    this.firstFinishTimestamp = this.#_rawData.first_finish ?? null;
-    this.lastFinishTimestamp = this.#_rawData.last_finish ?? null;
+    this.firstFinishTimestamp = this.#_rawData.first_finish ? dePythonifyTime(this.#_rawData.first_finish) : null;
+    this.lastFinishTimestamp = this.#_rawData.last_finish ? dePythonifyTime(this.#_rawData.last_finish) : null;
     this.finishCount = this.#_rawData.finishes ?? 0;
     this.finishersCount = this.#_rawData.finishers ?? 0;
   }

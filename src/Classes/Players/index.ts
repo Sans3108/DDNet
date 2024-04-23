@@ -12,5 +12,5 @@ export * from './PlayerMap.js';
 export * from './PlayerPartner.js';
 export * from './PlayerRanking.js';
 export * from './PlayerRecentFinish.js';
-export * from './PlayerServer.js';
+export * from './PlayerServerType.js';
 export * from './PlayerServerTypes.js';

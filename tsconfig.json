@@ -22,7 +22,6 @@
     "baseUrl": "./src",
     "paths": {
       "@classes": ["Classes/index.js"],
-      "@requests": ["Requests/index.js"],
       "@schemas": ["Schemas/index.js"],
       "@util": ["util.js"]
     }

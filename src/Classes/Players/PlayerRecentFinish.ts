@@ -1,13 +1,13 @@
-import { Map, MapType, PlayerFinish } from '@classes';
-import { DDNetError } from '@util';
+import { Map, PlayerFinish } from '@classes';
+import { DDNetError, MapType, ServerRegion } from '@util';
 
 export class PlayerRecentFinish extends PlayerFinish {
-  public server: string;
+  public server: ServerRegion;
   public mapType: MapType;
 
   constructor(data: ConstructorParameters<typeof PlayerFinish>[0] & { server: string; mapType: MapType }) {
     super(data);
-    this.server = data.server;
+    this.server = ServerRegion[data.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
     this.mapType = data.mapType;
   }
 

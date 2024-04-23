@@ -1,6 +1,7 @@
-import { MapType, PlayerLeaderboard, PlayerMap } from '@classes';
+import { PlayerLeaderboard, PlayerMap } from '@classes';
+import { MapType } from '@util';
 
-export class PlayerServer {
+export class PlayerServerType {
   public name: MapType;
   public leaderboard: PlayerLeaderboard;
   public totalCompletionistPoints: number;

@@ -9,10 +9,6 @@
             "rootPathPrefix": "@classes"
           },
           {
-            "rootPathSuffix": "./dist/Requests/index.js",
-            "rootPathPrefix": "@requests"
-          },
-          {
             "rootPathSuffix": "./dist/Schemas/index.js",
             "rootPathPrefix": "@schemas"
           },

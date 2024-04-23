@@ -1,17 +1,20 @@
-import { timeString } from '@util';
+import { timeString, ServerRegion } from '@util';
 
 export class MapBaseRank {
   public rank: number;
   public timeSeconds: number;
   public timeString: string;
   public timestamp: number;
-  public country: string;
+  public server: ServerRegion;
 
-  constructor(data: { rank: number; timeSeconds: number; timestamp: number; country: string }) {
+  constructor(data: { rank: number; timeSeconds: number; timestamp: number; server: string }) {
     this.rank = data.rank;
     this.timeSeconds = data.timeSeconds;
     this.timeString = timeString(this.timeSeconds);
     this.timestamp = data.timestamp;
-    this.country = data.country;
+
+    if (data.server in ServerRegion) {
+      this.server = ServerRegion[data.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
+    } else this.server = ServerRegion.UNK;
   }
 }

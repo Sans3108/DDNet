@@ -1,6 +1,6 @@
-import { FinishedPlayerMap, MapType, PlayerActivity, PlayerFinish, PlayerFinishes, PlayerGlobalLeaderboard, PlayerLeaderboard, PlayerPartner, PlayerRankingRanked, PlayerRankingUnranked, PlayerRecentFinish, PlayerServer, PlayerServerTypes, UnfinishedPlayerMap } from '@classes';
+import { FinishedPlayerMap, PlayerActivity, PlayerFinish, PlayerFinishes, PlayerGlobalLeaderboard, PlayerLeaderboard, PlayerPartner, PlayerRankingRanked, PlayerRankingUnranked, PlayerRecentFinish, PlayerServerType, PlayerServerTypes, UnfinishedPlayerMap } from '@classes';
 import { _PlayersJson2, _Schema_players_json2 } from '@schemas';
-import { DDNetError, makeRequest } from '@util';
+import { DDNetError, MapType, ServerRegion, dePythonifyTime, makeRequest } from '@util';
 
 /**
  * Class representing a DDNet player.
@@ -25,7 +25,7 @@ export class Player {
 
   public totalCompletionistPoints: number;
 
-  public favoriteServer: string;
+  public favoriteServer: ServerRegion;
 
   public finishes: PlayerFinishes;
 
@@ -60,12 +60,12 @@ export class Player {
     });
 
     this.totalCompletionistPoints = this.#_rawData.points.total;
-    this.favoriteServer = this.#_rawData.favorite_server.server;
+    this.favoriteServer = ServerRegion[this.#_rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
 
     this.finishes = new PlayerFinishes({
       first: new PlayerFinish({
         mapName: this.#_rawData.first_finish.map,
-        timestamp: this.#_rawData.first_finish.timestamp * 1000,
+        timestamp: dePythonifyTime(this.#_rawData.first_finish.timestamp),
         timeSeconds: this.#_rawData.first_finish.time
       }),
       recent: this.#_rawData.last_finishes.map(
@@ -75,7 +75,7 @@ export class Player {
             mapType: MapType[Object.entries(MapType).find(e => e[1] === f.type)?.[0] as unknown as keyof typeof MapType] ?? MapType.unknown,
             server: f.country,
             timeSeconds: f.time,
-            timestamp: f.timestamp
+            timestamp: dePythonifyTime(f.timestamp)
           })
       )
     });
@@ -90,7 +90,7 @@ export class Player {
 
     const keys = Object.keys(MapType).filter(k => k !== 'unknown');
 
-    const servers: PlayerServer[] = keys.map(k => {
+    const servers: PlayerServerType[] = keys.map(k => {
       const raw = this.#_rawData.types[MapType[k as keyof typeof MapType]];
 
       const leaderboard = new PlayerLeaderboard({
@@ -141,7 +141,7 @@ export class Player {
           return new FinishedPlayerMap({
             bestTimeSeconds: casted.time,
             finishCount: casted.finishes,
-            firstFinishTimestamp: casted.first_finish,
+            firstFinishTimestamp: dePythonifyTime(casted.first_finish),
             mapName: key,
             mapType: MapType[k as keyof typeof MapType],
             pointsReward: casted.points,
@@ -151,7 +151,7 @@ export class Player {
         }
       });
 
-      const server = new PlayerServer({
+      const server = new PlayerServerType({
         name: MapType[k as keyof typeof MapType],
         leaderboard,
         maps,
