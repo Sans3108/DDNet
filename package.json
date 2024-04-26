@@ -7,7 +7,7 @@
     "node": ">=18.20.2"
   },
   "scripts": {
-    "build": "tsc && babel dist --out-dir dist",
+    "build": "tsc",
     "dev": "pnpm cleanup && pnpm build && node --enable-source-maps .",
     "cleanup": "rmdir /s /q dist",
     "prettier": "prettier . --write"
@@ -37,14 +37,12 @@
     "dist/**/*"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.24.1",
-    "@types/got": "^9.6.12",
     "@types/node": "20.10.0",
-    "babel-plugin-root-import": "^6.6.0",
     "prettier": "3.2.5"
   },
   "dependencies": {
-    "got": "^14.2.1",
+    "axios": "^1.6.8",
+    "keyv": "^4.5.4",
     "typescript": "^5.4.5",
     "zod": "^3.22.5"
   },

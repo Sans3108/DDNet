@@ -1,5 +1,5 @@
-import { Map } from '@classes';
-import { DDNetError, timeString } from '@util';
+import { DDNetError, timeString } from '../../util.js';
+import { Map } from '../Maps/Map.js';
 
 export class PlayerFinish {
   public timestamp: number;

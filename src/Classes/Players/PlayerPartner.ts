@@ -1,5 +1,4 @@
-import { Player } from '@classes';
-import { DDNetError } from '@util';
+import { Player } from './Player.js';
 
 export class PlayerPartner {
   public name: string;
@@ -10,7 +9,7 @@ export class PlayerPartner {
     this.finishes = data.finishes;
   }
 
-  public async toPlayer(): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
+  public async toPlayer(): Promise<Player> {
     return await Player.new(this.name);
   }
 }

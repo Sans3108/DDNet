@@ -1,4 +1,4 @@
-import { timeString, ServerRegion } from '@util';
+import { ServerRegion, timeString } from '../../util.js';
 
 export class MapBaseRank {
   public rank: number;

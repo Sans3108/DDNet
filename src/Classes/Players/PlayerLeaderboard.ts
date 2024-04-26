@@ -1,4 +1,4 @@
-import { PlayerRanking } from '@classes';
+import { PlayerRanking } from './PlayerRanking.js';
 
 export class PlayerLeaderboard {
   public completionist: PlayerRanking;

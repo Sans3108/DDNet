@@ -1,5 +1,3 @@
-import got from 'got';
-
 /**
  * Wrapper class for the {@link Error} built-in class, used to also provide error context.
  */
@@ -16,6 +14,7 @@ export class DDNetError extends Error {
     super(reason ?? 'ERR');
   }
 }
+const got = async (a: string) => {};
 
 /**
  * Requests all servers from master server.

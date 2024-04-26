@@ -1,5 +1,5 @@
-import { Player } from '@classes';
-import { DDNetError, timeString } from '@util';
+import { timeString } from '../../util.js';
+import { Player } from '../Players/Player.js';
 
 export class MapMaxFinish {
   public rank: number;
@@ -20,7 +20,7 @@ export class MapMaxFinish {
     this.maxTimestamp = data.maxTimestamp;
   }
 
-  public async toPlayer(): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
+  public async toPlayer(): Promise<Player> {
     return await Player.new(this.player);
   }
 }

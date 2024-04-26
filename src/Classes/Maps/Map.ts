@@ -1,6 +1,9 @@
-import { MapAuthor, MapMaxFinish, MapRank, MapTeamRank } from '@classes';
-import { _MapsJson, _Schema_maps_json } from '@schemas';
-import { DDNetError, MapType, dePythonifyTime, makeRequest, timeString } from '@util';
+import { _MapsJson, _Schema_maps_json } from '../../Schemas/Maps/json.js';
+import { DDNetError, MapType, dePythonifyTime, makeRequest, timeString } from '../../util.js';
+import { MapAuthor } from './MapAuthor.js';
+import { MapMaxFinish } from './MapMaxFinish.js';
+import { MapRank } from './MapRank.js';
+import { MapTeamRank } from './MapTeamRank.js';
 
 export class Map {
   readonly #_rawData: _MapsJson;

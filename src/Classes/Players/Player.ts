@@ -1,74 +1,213 @@
-import { FinishedPlayerMap, PlayerActivity, PlayerFinish, PlayerFinishes, PlayerGlobalLeaderboard, PlayerLeaderboard, PlayerPartner, PlayerRankingRanked, PlayerRankingUnranked, PlayerRecentFinish, PlayerServerType, PlayerServerTypes, UnfinishedPlayerMap } from '@classes';
-import { _PlayersJson2, _Schema_players_json2 } from '@schemas';
-import { DDNetError, MapType, ServerRegion, dePythonifyTime, makeRequest } from '@util';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import Keyv from 'keyv';
+import { _PlayersJson2, _Schema_players_json2 } from '../../Schemas/Players/json2.js';
+import { DDNetError, MapType, ServerRegion, dePythonifyTime } from '../../util.js';
+import { PlayerActivity } from './PlayerActivity.js';
+import { PlayerFinish } from './PlayerFinish.js';
+import { PlayerFinishes } from './PlayerFinishes.js';
+import { PlayerGlobalLeaderboard } from './PlayerGlobalLeaderboard.js';
+import { PlayerLeaderboard } from './PlayerLeaderboard.js';
+import { FinishedPlayerMap, UnfinishedPlayerMap } from './PlayerMap.js';
+import { PlayerPartner } from './PlayerPartner.js';
+import { PlayerRankingRanked, PlayerRankingUnranked } from './PlayerRanking.js';
+import { PlayerRecentFinish } from './PlayerRecentFinish.js';
+import { PlayerServerType } from './PlayerServerType.js';
+import { PlayerServerTypes } from './PlayerServerTypes.js';
 
 /**
  * Class representing a DDNet player.
  */
 export class Player {
-  readonly #_rawData: _PlayersJson2;
+  //#region Cache
+
+  /**
+   * Player responses cache.
+   */
+  private static cache: Keyv<object> = new Keyv<object>({
+    namespace: 'player-cache'
+  });
+
+  /**
+   * "Time-To-Live" - How much time before a cached object becomes stale, and thus removed automatically.
+   */
+  private static ttl: number = 2 * 60 * 60 * 1000; // 2 hours
+
+  /**
+   * Sets the {@link Player.ttl TTL} for the {@link Player.cache Player responses cache}. Old objects are unaffected.
+   * @param timeMS The TTL time in milliseconds.
+   */
+  public static setTTL(timeMS: number): void {
+    this.ttl = timeMS;
+  }
+
+  /**
+   * Clears the {@link Player.cache Player responses cache}.
+   */
+  public static async clearCache(): Promise<void> {
+    return await this.cache.clear();
+  }
+
+  //#endregion
+
+  //#region Declarations
+
+  /**
+   * Raw data for this player.
+   */
+  private rawData!: _PlayersJson2;
 
   /**
    * The name of this player.
    */
-  public name: string;
+  public name!: string;
 
   /**
    * The url of this player on ddnet.org
    */
-  public url: string;
+  public url!: string;
 
   /**
    * Global leaderboards ranks and points for this player.
    */
-  public globalLeaderboard: PlayerGlobalLeaderboard;
+  public globalLeaderboard!: PlayerGlobalLeaderboard;
 
-  public totalCompletionistPoints: number;
+  /**
+   * Total amount of points earnable from first completions across all DDNet maps.
+   */
+  public totalCompletionistPoints!: number;
 
-  public favoriteServer: ServerRegion;
+  /**
+   * The favorite server region of this player.
+   */
+  public favoriteServer!: ServerRegion;
 
-  public finishes: PlayerFinishes;
+  /**
+   * First and recent finishes for this player.
+   */
+  public finishes!: PlayerFinishes;
 
-  public favoritePartners: PlayerPartner[];
+  /**
+   * Favorite partners of this player.
+   */
+  public favoritePartners!: PlayerPartner[];
 
-  public serverTypes: PlayerServerTypes;
+  /**
+   * Server types for this player along with information about each one.
+   */
+  public serverTypes!: PlayerServerTypes;
 
-  public activity: PlayerActivity[];
+  /**
+   * Daily player activity
+   */
+  public activity!: PlayerActivity[];
 
-  public hoursPlayedPast365days: number;
+  /**
+   * Number of hours played in the past 365 days by this player.
+   */
+  public hoursPlayedPast365days!: number;
+
+  //#endregion
 
   /**
    * Create a new instance of {@link Player} from API data.
+   * Not intended to be used, use {@link new Player.new} instead.
+   * @param rawData The raw data for this player.
    */
-  public constructor(rawData: _PlayersJson2) {
-    this.#_rawData = rawData;
+  private constructor(rawData: _PlayersJson2) {
+    this.populate(rawData);
+  }
 
-    this.name = this.#_rawData.player;
+  /**
+   * Fetch, parse and construct a new {@link Player} instance.
+   * @param name The name of this player.
+   * @param bypassCache Wether to bypass the player data cache.
+   */
+  public static async new(name: string, bypassCache = false): Promise<Player> {
+    const response = await this.makeRequest(name, bypassCache);
+
+    if (response instanceof DDNetError) throw response;
+
+    const parsed = this.parseObject(response.data);
+
+    if (!parsed.success) throw parsed.error;
+
+    return new this(parsed.data);
+  }
+
+  /**
+   * Parse an object using the player raw data zod schema.
+   * @param data The object to be parsed.
+   */
+  private static parseObject(data: object): { success: true; data: _PlayersJson2 } | { success: false; error: DDNetError } {
+    const parsed = _Schema_players_json2.safeParse(data);
+
+    if (parsed.success) return { success: true, data: parsed.data };
+
+    return { success: false, error: new DDNetError(parsed.error.message, parsed.error) };
+  }
+
+  /**
+   * Fetch the player data from the API.
+   * @param name The name of the player.
+   * @param force Wether to bypass the cache.
+   */
+  public static async makeRequest(name: string, force = false): Promise<{ data: object; fromCache: boolean } | DDNetError> {
+    const url = `https://ddnet.org/players/?json2=${encodeURIComponent(name)}`;
+
+    if (!force) {
+      if (await this.cache.has(url)) {
+        const data = await this.cache.get(url);
+
+        if (data) return { data, fromCache: true };
+      }
+    }
+
+    const response = await axios.get<object | string, AxiosResponse<object | string>>(url).catch((err: AxiosError) => new DDNetError(err.cause?.message, err));
+
+    if (response instanceof DDNetError) return response;
+
+    const data = response.data;
+
+    if (typeof data === 'string') return new DDNetError(`Invalid response!`, data);
+
+    await this.cache.set(url, data, this.ttl);
+
+    return { data, fromCache: false };
+  }
+
+  /**
+   * Populate the object with the raw player data.
+   * @param rawData The raw player data.
+   */
+  private populate(rawData: _PlayersJson2): this {
+    this.rawData = rawData;
+
+    this.name = this.rawData.player;
     this.url = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
 
-    if (!this.#_rawData.points.rank) throw new DDNetError('Player points assumption turned out to be null.');
+    if (!this.rawData.points.rank) throw new DDNetError('Player points assumption turned out to be null.');
 
     this.globalLeaderboard = new PlayerGlobalLeaderboard({
       completionist: {
-        rank: this.#_rawData.points.rank,
-        points: this.#_rawData.points.points
+        rank: this.rawData.points.rank,
+        points: this.rawData.points.points
       },
-      completionistLastMonth: this.#_rawData.points_last_month,
-      completionistLastWeek: this.#_rawData.points_last_week,
-      rank: this.#_rawData.rank,
-      team: this.#_rawData.team_rank
+      completionistLastMonth: this.rawData.points_last_month,
+      completionistLastWeek: this.rawData.points_last_week,
+      rank: this.rawData.rank,
+      team: this.rawData.team_rank
     });
 
-    this.totalCompletionistPoints = this.#_rawData.points.total;
-    this.favoriteServer = ServerRegion[this.#_rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
+    this.totalCompletionistPoints = this.rawData.points.total;
+    this.favoriteServer = ServerRegion[this.rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
 
     this.finishes = new PlayerFinishes({
       first: new PlayerFinish({
-        mapName: this.#_rawData.first_finish.map,
-        timestamp: dePythonifyTime(this.#_rawData.first_finish.timestamp),
-        timeSeconds: this.#_rawData.first_finish.time
+        mapName: this.rawData.first_finish.map,
+        timestamp: dePythonifyTime(this.rawData.first_finish.timestamp),
+        timeSeconds: this.rawData.first_finish.time
       }),
-      recent: this.#_rawData.last_finishes.map(
+      recent: this.rawData.last_finishes.map(
         f =>
           new PlayerRecentFinish({
             mapName: f.map,
@@ -80,7 +219,7 @@ export class Player {
       )
     });
 
-    this.favoritePartners = this.#_rawData.favorite_partners.map(
+    this.favoritePartners = this.rawData.favorite_partners.map(
       p =>
         new PlayerPartner({
           name: p.name,
@@ -91,7 +230,7 @@ export class Player {
     const keys = Object.keys(MapType).filter(k => k !== 'unknown');
 
     const servers: PlayerServerType[] = keys.map(k => {
-      const raw = this.#_rawData.types[MapType[k as keyof typeof MapType]];
+      const raw = this.rawData.types[MapType[k as keyof typeof MapType]];
 
       const leaderboard = new PlayerLeaderboard({
         completionist:
@@ -163,25 +302,26 @@ export class Player {
 
     this.serverTypes = new PlayerServerTypes(servers);
 
-    this.activity = this.#_rawData.activity.map(a => new PlayerActivity({ date: a.date, hoursPlayed: a.hours_played }));
+    this.activity = this.rawData.activity.map(a => new PlayerActivity({ date: a.date, hoursPlayed: a.hours_played }));
 
-    this.hoursPlayedPast365days = this.#_rawData.hours_played_past_365_days;
+    this.hoursPlayedPast365days = this.rawData.hours_played_past_365_days;
+
+    return this;
   }
 
   /**
-   * Fetch, parse and construct a new {@link Player} instance.
-   * @param name The name of this player.
+   * Refresh the data for this player.
    */
-  public static async new(name: string): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
-    const response = await makeRequest('players', 'json2', name);
+  public async refresh(): Promise<this> {
+    const data = await Player.makeRequest(this.name, true);
 
-    if (response instanceof DDNetError) return { success: false, error: response };
+    if (data instanceof DDNetError) throw new DDNetError(`Failed to refresh ${this}`, data);
 
-    const parsed = _Schema_players_json2.safeParse(response);
+    const parsed = Player.parseObject(data.data);
 
-    if (parsed.success) return { success: true, instance: new Player(parsed.data) };
+    if (!parsed.success) throw new DDNetError(`Failed to refresh ${this}`, parsed.error);
 
-    return { success: false, error: new DDNetError(parsed.error.message, parsed.error) };
+    return this.populate(parsed.data);
   }
 
   public toString(): string {

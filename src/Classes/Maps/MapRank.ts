@@ -1,5 +1,5 @@
-import { MapBaseRank, Player } from '@classes';
-import { DDNetError } from '@util';
+import { Player } from '../Players/Player.js';
+import { MapBaseRank } from './MapBaseRank.js';
 
 export class MapRank extends MapBaseRank {
   public player: string;
@@ -9,7 +9,7 @@ export class MapRank extends MapBaseRank {
     this.player = data.player;
   }
 
-  public async toPlayer(): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
+  public async toPlayer(): Promise<Player> {
     return await Player.new(this.player);
   }
 }

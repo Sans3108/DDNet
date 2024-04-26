@@ -1,5 +1,6 @@
-import { Map, PlayerFinish } from '@classes';
-import { DDNetError, MapType, ServerRegion } from '@util';
+import { DDNetError, MapType, ServerRegion } from '../../util.js';
+import { Map } from '../Maps/Map.js';
+import { PlayerFinish } from './PlayerFinish.js';
 
 export class PlayerRecentFinish extends PlayerFinish {
   public server: ServerRegion;

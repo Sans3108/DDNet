@@ -1,5 +1,5 @@
-import { Player } from '@classes';
-import { DDNetError, slugify } from '@util';
+import { slugify } from '../../util.js';
+import { Player } from '../Players/Player.js';
 
 export class MapAuthor {
   public name: string;
@@ -18,7 +18,7 @@ export class MapAuthor {
     return this.name;
   }
 
-  public async toPlayer(): Promise<{ success: true; instance: Player } | { success: false; error: DDNetError }> {
+  public async toPlayer(): Promise<Player> {
     return await Player.new(this.name);
   }
 }

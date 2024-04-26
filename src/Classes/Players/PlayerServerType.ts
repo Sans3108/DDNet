@@ -1,5 +1,6 @@
-import { PlayerLeaderboard, PlayerMap } from '@classes';
-import { MapType } from '@util';
+import { MapType } from '../../util.js';
+import { PlayerLeaderboard } from './PlayerLeaderboard.js';
+import { PlayerMap } from './PlayerMap.js';
 
 export class PlayerServerType {
   public name: MapType;

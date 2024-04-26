@@ -1,4 +1,6 @@
-import { PlayerLeaderboard, PlayerRanking, PlayerRankingRanked } from '@classes';
+import { PlayerLeaderboard } from "./PlayerLeaderboard.js";
+import { PlayerRanking, PlayerRankingRanked } from "./PlayerRanking.js";
+
 
 export class PlayerGlobalLeaderboard extends PlayerLeaderboard {
   public completionistLastMonth: PlayerRanking;

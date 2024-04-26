@@ -1,4 +1,5 @@
-import { PlayerFinish, PlayerRecentFinish } from '@classes';
+import { PlayerFinish } from './PlayerFinish.js';
+import { PlayerRecentFinish } from './PlayerRecentFinish.js';
 
 export class PlayerFinishes {
   public first: PlayerFinish;

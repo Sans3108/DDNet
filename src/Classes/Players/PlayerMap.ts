@@ -1,5 +1,6 @@
-import { Map } from '@classes';
-import { DDNetError, MapType, timeString } from '@util';
+import { DDNetError, MapType, timeString } from '../../util.js';
+import { Map } from '../Maps/Map.js';
+
 
 export class PlayerMapBase {
   public mapName: string;

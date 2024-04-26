@@ -1,5 +1,5 @@
-import { PlayerServerType } from '@classes';
-import { DDNetError, MapType } from '@util';
+import { DDNetError, MapType } from '../../util.js';
+import { PlayerServerType } from './PlayerServerType.js';
 
 // This code screams "please end me"
 // Surely there's a better way but I have no idea
