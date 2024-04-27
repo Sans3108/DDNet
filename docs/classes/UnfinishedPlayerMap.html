@@ -1,0 +1,185 @@
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>UnfinishedPlayerMap | ddnet</title><meta name="description" content="Documentation for ddnet"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script defer src="../assets/main.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-primary: #ffb59d;
+    --md-sys-color-on-primary: #5d1800;
+    --md-sys-color-primary-container: #832600;
+    --md-sys-color-on-primary-container: #ffdbd0;
+    --md-sys-color-secondary: #e7bdb1;
+    --md-sys-color-on-secondary: #442a21;
+    --md-sys-color-secondary-container: #5d4036;
+    --md-sys-color-on-secondary-container: #ffdbd0;
+    --md-sys-color-tertiary: #d7c68d;
+    --md-sys-color-on-tertiary: #3a3005;
+    --md-sys-color-tertiary-container: #51461a;
+    --md-sys-color-on-tertiary-container: #f4e2a7;
+    --md-sys-color-error: #ffb4ab;
+    --md-sys-color-on-error: #690005;
+    --md-sys-color-error-container: #93000a;
+    --md-sys-color-on-error-container: #ffb4ab;
+    --md-sys-color-background: #201a18;
+    --md-sys-color-on-background: #ede0dc;
+    --md-sys-color-surface: #201a18;
+    --md-sys-color-on-surface: #ede0dc;
+    --md-sys-color-surface-variant: #53433f;
+    --md-sys-color-on-surface-variant: #d8c2bb;
+    --md-sys-color-outline: #a08d87;
+    --md-sys-color-outline-variant: #53433f;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+    --md-sys-color-inverse-surface: #ede0dc;
+    --md-sys-color-inverse-on-surface: #362f2d;
+    --md-sys-color-inverse-primary: #ac3400;
+    --md-sys-color-surface-dim: #181210;
+    --md-sys-color-surface-bright: #3f3835;
+    --md-sys-color-surface-container-lowest: #120d0b;
+    --md-sys-color-surface-container-low: #201a18;
+    --md-sys-color-surface-container: #251e1c;
+    --md-sys-color-surface-container-high: #2f2826;
+    --md-sys-color-surface-container-highest: #3b3331
+  }
+}
+:root[data-theme="dark"] {
+  --md-sys-color-primary: #ffb59d;
+  --md-sys-color-on-primary: #5d1800;
+  --md-sys-color-primary-container: #832600;
+  --md-sys-color-on-primary-container: #ffdbd0;
+  --md-sys-color-secondary: #e7bdb1;
+  --md-sys-color-on-secondary: #442a21;
+  --md-sys-color-secondary-container: #5d4036;
+  --md-sys-color-on-secondary-container: #ffdbd0;
+  --md-sys-color-tertiary: #d7c68d;
+  --md-sys-color-on-tertiary: #3a3005;
+  --md-sys-color-tertiary-container: #51461a;
+  --md-sys-color-on-tertiary-container: #f4e2a7;
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffb4ab;
+  --md-sys-color-background: #201a18;
+  --md-sys-color-on-background: #ede0dc;
+  --md-sys-color-surface: #201a18;
+  --md-sys-color-on-surface: #ede0dc;
+  --md-sys-color-surface-variant: #53433f;
+  --md-sys-color-on-surface-variant: #d8c2bb;
+  --md-sys-color-outline: #a08d87;
+  --md-sys-color-outline-variant: #53433f;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #ede0dc;
+  --md-sys-color-inverse-on-surface: #362f2d;
+  --md-sys-color-inverse-primary: #ac3400;
+  --md-sys-color-surface-dim: #181210;
+  --md-sys-color-surface-bright: #3f3835;
+  --md-sys-color-surface-container-lowest: #120d0b;
+  --md-sys-color-surface-container-low: #201a18;
+  --md-sys-color-surface-container: #251e1c;
+  --md-sys-color-surface-container-high: #2f2826;
+  --md-sys-color-surface-container-highest: #3b3331
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --md-sys-color-primary: #ac3400;
+    --md-sys-color-on-primary: #ffffff;
+    --md-sys-color-primary-container: #ffdbd0;
+    --md-sys-color-on-primary-container: #390c00;
+    --md-sys-color-secondary: #77574d;
+    --md-sys-color-on-secondary: #ffffff;
+    --md-sys-color-secondary-container: #ffdbd0;
+    --md-sys-color-on-secondary-container: #2c160e;
+    --md-sys-color-tertiary: #6a5e2f;
+    --md-sys-color-on-tertiary: #ffffff;
+    --md-sys-color-tertiary-container: #f4e2a7;
+    --md-sys-color-on-tertiary-container: #221b00;
+    --md-sys-color-error: #ba1a1a;
+    --md-sys-color-on-error: #ffffff;
+    --md-sys-color-error-container: #ffdad6;
+    --md-sys-color-on-error-container: #410002;
+    --md-sys-color-background: #fffbff;
+    --md-sys-color-on-background: #201a18;
+    --md-sys-color-surface: #fffbff;
+    --md-sys-color-on-surface: #201a18;
+    --md-sys-color-surface-variant: #f5ded7;
+    --md-sys-color-on-surface-variant: #53433f;
+    --md-sys-color-outline: #85736e;
+    --md-sys-color-outline-variant: #d8c2bb;
+    --md-sys-color-shadow: #000000;
+    --md-sys-color-scrim: #000000;
+    --md-sys-color-inverse-surface: #362f2d;
+    --md-sys-color-inverse-on-surface: #fbeeea;
+    --md-sys-color-inverse-primary: #ffb59d;
+    --md-sys-color-surface-dim: #e4d7d4;
+    --md-sys-color-surface-bright: #fff8f6;
+    --md-sys-color-surface-container-lowest: #ffffff;
+    --md-sys-color-surface-container-low: #fef1ed;
+    --md-sys-color-surface-container: #f8ebe7;
+    --md-sys-color-surface-container-high: #f3e5e2;
+    --md-sys-color-surface-container-highest: #ede0dc
+  }
+}
+:root[data-theme="light"] {
+  --md-sys-color-primary: #ac3400;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #ffdbd0;
+  --md-sys-color-on-primary-container: #390c00;
+  --md-sys-color-secondary: #77574d;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #ffdbd0;
+  --md-sys-color-on-secondary-container: #2c160e;
+  --md-sys-color-tertiary: #6a5e2f;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #f4e2a7;
+  --md-sys-color-on-tertiary-container: #221b00;
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  --md-sys-color-background: #fffbff;
+  --md-sys-color-on-background: #201a18;
+  --md-sys-color-surface: #fffbff;
+  --md-sys-color-on-surface: #201a18;
+  --md-sys-color-surface-variant: #f5ded7;
+  --md-sys-color-on-surface-variant: #53433f;
+  --md-sys-color-outline: #85736e;
+  --md-sys-color-outline-variant: #d8c2bb;
+  --md-sys-color-shadow: #000000;
+  --md-sys-color-scrim: #000000;
+  --md-sys-color-inverse-surface: #362f2d;
+  --md-sys-color-inverse-on-surface: #fbeeea;
+  --md-sys-color-inverse-primary: #ffb59d;
+  --md-sys-color-surface-dim: #e4d7d4;
+  --md-sys-color-surface-bright: #fff8f6;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #fef1ed;
+  --md-sys-color-surface-container: #f8ebe7;
+  --md-sys-color-surface-container-high: #f3e5e2;
+  --md-sys-color-surface-container-highest: #ede0dc
+}
+</style><link rel="stylesheet" href="../assets/material-style.css"/></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><div class="table-cell" id="tsd-search" data-base=".."><div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="../assets/icons.svg#icon-search"></use></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div><div class="field"><div id="tsd-toolbar-links"></div></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">ddnet</a></div><div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb"><li><a href="../modules.html">ddnet</a></li><li><a href="UnfinishedPlayerMap.html">UnfinishedPlayerMap</a></li></ul><h1>Class UnfinishedPlayerMap</h1></div><section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography"><p>Class representing a player map that&#39;s unfinished.</p>
+</div><div class="tsd-comment tsd-typography"></div></section><section class="tsd-panel tsd-hierarchy"><h4>Hierarchy (<a class="link" href="../hierarchy.html#UnfinishedPlayerMap">view full</a>)</h4><ul class="tsd-hierarchy"><li><a href="PlayerMapBase.html" class="tsd-signature-type tsd-kind-class">PlayerMapBase</a><ul class="tsd-hierarchy"><li><span class="target">UnfinishedPlayerMap</span></li></ul></li></ul></section><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L37">src/Classes/Players/PlayerMap.ts:37</a></li></ul></aside><section class="tsd-panel-group tsd-index-group"><section class="tsd-panel tsd-index-panel"><details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><h5 class="tsd-index-heading uppercase" role="button" aria-expanded="false" tabIndex="0"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><use href="../assets/icons.svg#icon-chevronSmall"></use></svg> Index</h5></summary><div class="tsd-accordion-details"><section class="tsd-index-section"><h3 class="tsd-index-heading">Constructors</h3><div class="tsd-index-list"><a href="UnfinishedPlayerMap.html#constructor" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a>
+</div></section><section class="tsd-index-section"><h3 class="tsd-index-heading">Properties</h3><div class="tsd-index-list"><a href="UnfinishedPlayerMap.html#finishCount" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>finish<wbr/>Count</span></a>
+<a href="UnfinishedPlayerMap.html#mapName" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>map<wbr/>Name</span></a>
+<a href="UnfinishedPlayerMap.html#mapType" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>map<wbr/>Type</span></a>
+<a href="UnfinishedPlayerMap.html#pointsReward" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>points<wbr/>Reward</span></a>
+</div></section><section class="tsd-index-section"><h3 class="tsd-index-heading">Methods</h3><div class="tsd-index-list"><a href="UnfinishedPlayerMap.html#toMap" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-2048"></use></svg><span>to<wbr/>Map</span></a>
+</div></section></div></details></section></section><section class="tsd-panel-group tsd-member-group"><h2>Constructors</h2><section class="tsd-panel tsd-member"><a id="constructor" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures"><li class="tsd-signature tsd-anchor-link"><a id="constructor.new_UnfinishedPlayerMap" class="tsd-anchor"></a><span class="tsd-kind-constructor-signature">new <wbr/>Unfinished<wbr/>Player<wbr/>Map</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="UnfinishedPlayerMap.html" class="tsd-signature-type tsd-kind-class">UnfinishedPlayerMap</a><a href="#constructor.new_UnfinishedPlayerMap" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></li><li class="tsd-description"><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">data</span>: <span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">mapName</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">mapType</span><span class="tsd-signature-symbol">: </span><a href="../enums/MapType.html" class="tsd-signature-type tsd-kind-enum">MapType</a><span class="tsd-signature-symbol">; </span><br/><span>    </span><span class="tsd-kind-property">pointsReward</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span></span><ul class="tsd-parameters"><li class="tsd-parameter"><h5><span class="tsd-kind-property">map<wbr/>Name</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5></li><li class="tsd-parameter"><h5><span class="tsd-kind-property">map<wbr/>Type</span><span class="tsd-signature-symbol">: </span><a href="../enums/MapType.html" class="tsd-signature-type tsd-kind-enum">MapType</a></h5></li><li class="tsd-parameter"><h5><span class="tsd-kind-property">points<wbr/>Reward</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></h5></li></ul></li></ul></div><h4 class="tsd-returns-title">Returns <a href="UnfinishedPlayerMap.html" class="tsd-signature-type tsd-kind-class">UnfinishedPlayerMap</a></h4><aside class="tsd-sources"><p>Overrides <a href="PlayerMapBase.html">PlayerMapBase</a>.<a href="PlayerMapBase.html#constructor">constructor</a></p><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L43">src/Classes/Players/PlayerMap.ts:43</a></li></ul></aside></li></ul></section></section><section class="tsd-panel-group tsd-member-group"><h2>Properties</h2><section class="tsd-panel tsd-member"><a id="finishCount" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>finish<wbr/>Count</span><a href="#finishCount" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-property">finish<wbr/>Count</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">0</span><span class="tsd-signature-symbol"> = 0</span></div><div class="tsd-comment tsd-typography"><p>The amount of finishes on this map.</p>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L41">src/Classes/Players/PlayerMap.ts:41</a></li></ul></aside></section><section class="tsd-panel tsd-member tsd-is-inherited"><a id="mapName" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>map<wbr/>Name</span><a href="#mapName" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-property">map<wbr/>Name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><div class="tsd-comment tsd-typography"><p>The map name.</p>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><p>Inherited from <a href="PlayerMapBase.html">PlayerMapBase</a>.<a href="PlayerMapBase.html#mapName">mapName</a></p><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L11">src/Classes/Players/PlayerMap.ts:11</a></li></ul></aside></section><section class="tsd-panel tsd-member tsd-is-inherited"><a id="mapType" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>map<wbr/>Type</span><a href="#mapType" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-property">map<wbr/>Type</span><span class="tsd-signature-symbol">:</span> <a href="../enums/MapType.html" class="tsd-signature-type tsd-kind-enum">MapType</a></div><div class="tsd-comment tsd-typography"><p>The server type of this map.</p>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><p>Inherited from <a href="PlayerMapBase.html">PlayerMapBase</a>.<a href="PlayerMapBase.html#mapType">mapType</a></p><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L16">src/Classes/Players/PlayerMap.ts:16</a></li></ul></aside></section><section class="tsd-panel tsd-member tsd-is-inherited"><a id="pointsReward" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>points<wbr/>Reward</span><a href="#pointsReward" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><div class="tsd-signature"><span class="tsd-kind-property">points<wbr/>Reward</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><div class="tsd-comment tsd-typography"><p>The amount of points rewarded for this map.</p>
+</div><div class="tsd-comment tsd-typography"></div><aside class="tsd-sources"><p>Inherited from <a href="PlayerMapBase.html">PlayerMapBase</a>.<a href="PlayerMapBase.html#pointsReward">pointsReward</a></p><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L21">src/Classes/Players/PlayerMap.ts:21</a></li></ul></aside></section></section><section class="tsd-panel-group tsd-member-group"><h2>Methods</h2><section class="tsd-panel tsd-member tsd-is-inherited"><a id="toMap" class="tsd-anchor"></a><h3 class="tsd-anchor-link"><span>to<wbr/>Map</span><a href="#toMap" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3><ul class="tsd-signatures tsd-is-inherited"><li class="tsd-signature tsd-anchor-link"><a id="toMap.toMap-1" class="tsd-anchor"></a><span class="tsd-kind-call-signature">to<wbr/>Map</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="Map.html" class="tsd-signature-type tsd-kind-class">Map</a><span class="tsd-signature-symbol">&gt;</span><a href="#toMap.toMap-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></li><li class="tsd-description"><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="Map.html" class="tsd-signature-type tsd-kind-class">Map</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources"><p>Inherited from <a href="PlayerMapBase.html">PlayerMapBase</a>.<a href="PlayerMapBase.html#toMap">toMap</a></p><ul><li>Defined in <a href="https://github.com/Sans3108/DDNet/blob/693406f2423f0e32d795c88e68bab97a75fb2c2c/src/Classes/Players/PlayerMap.ts#L29">src/Classes/Players/PlayerMap.ts:29</a></li></ul></aside></li></ul></section></section></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-index-accordion"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><h4 class="uppercase">Member Visibility</h4><form><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div><div class="tsd-theme-toggle"><h4 class="uppercase">Theme</h4><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-index-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#constructor" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a><a href="#finishCount" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>finish<wbr/>Count</span></a><a href="#mapName" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>map<wbr/>Name</span></a><a href="#mapType" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>map<wbr/>Type</span></a><a href="#pointsReward" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1024"></use></svg><span>points<wbr/>Reward</span></a><a href="#toMap" class="tsd-is-inherited"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-2048"></use></svg><span>to<wbr/>Map</span></a></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="../assets/icons.svg#icon-1"></use></svg><span>ddnet</span></a><ul class="tsd-small-nested-navigation" id="tsd-nav-container" data-base=".."><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div><script>
+          try {
+            const generateLinkElement = document.querySelector(".tsd-generator a");
+            const link = document.createElement("a");
+            Object.assign(link, {
+              href: "https://github.com/dmnsgn/typedoc-material-theme",
+              target: "_blank",
+              rel: "noreferrer",
+              innerText: "typedoc-material-theme."
+            });
+            generateLinkElement.insertAdjacentElement("afterend", link);
+            generateLinkElement.insertAdjacentText("afterend", " with ");
+          } catch (error) {
+
+          }
+        </script></body></html>
