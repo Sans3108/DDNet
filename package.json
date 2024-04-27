@@ -1,18 +1,18 @@
 {
   "name": "ddnet",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "ddnet.org API wrapper",
   "main": "dist/index.js",
   "engines": {
     "node": ">=18.20.2"
   },
   "scripts": {
-    "build:src": "pnpm cleanup:dist && tsc --project tsconfig.json",
+    "build:code": "pnpm cleanup:code && tsc --project tsconfig.json",
     "build:docs": "pnpm cleanup:docs && typedoc --plugin typedoc-material-theme --themeColor '#ffa500'",
-    "cleanup:dist": "rimraf dist",
+    "cleanup:code": "rimraf dist",
     "cleanup:docs": "rimraf docs",
     "prettier": "prettier . --write",
-    "dev": "pnpm cleanup && tsc && node --enable-source-maps ."
+    "dev": "pnpm build:code && node --enable-source-maps ."
   },
   "keywords": [
     "ddnet",

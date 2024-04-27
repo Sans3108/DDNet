@@ -1,5 +1,5 @@
 import { timeString } from '../../util.js';
-import { Map } from '../Maps/Map.js';
+import { Map } from '../maps/Map.js';
 
 /**
  * Class representing a player map finish.

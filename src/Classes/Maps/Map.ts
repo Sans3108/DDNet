@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Keyv from 'keyv';
-import { _MapsJson, _Schema_maps_json } from '../../Schemas/Maps/json.js';
+import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
 import { DDNetError, MapType, dePythonifyTime, timeString } from '../../util.js';
 import { MapAuthor } from './MapAuthor.js';
 import { MapMaxFinish } from './MapMaxFinish.js';

@@ -1,5 +1,5 @@
 import { timeString } from '../../util.js';
-import { Player } from '../Players/Player.js';
+import { Player } from '../players/Player.js';
 
 /**
  * Class representing a player's highest amount of finishes on a map's leaderboard.

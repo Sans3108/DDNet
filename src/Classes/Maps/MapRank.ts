@@ -1,4 +1,4 @@
-import { Player } from '../Players/Player.js';
+import { Player } from '../players/Player.js';
 import { MapBaseRank } from './MapBaseRank.js';
 
 /**

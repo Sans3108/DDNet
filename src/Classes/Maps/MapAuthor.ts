@@ -1,5 +1,5 @@
 import { slugify } from '../../util.js';
-import { Player } from '../Players/Player.js';
+import { Player } from '../players/Player.js';
 
 /**
  * Class representing a map author.

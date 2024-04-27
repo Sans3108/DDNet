@@ -1,5 +1,5 @@
 import { MapType, timeString } from '../../util.js';
-import { Map } from '../Maps/Map.js';
+import { Map } from '../maps/Map.js';
 
 /**
  * Base class representing a player map status.

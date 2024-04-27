@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Keyv from 'keyv';
-import { _PlayersJson2, _Schema_players_json2 } from '../../Schemas/Players/json2.js';
+import { _PlayersJson2, _Schema_players_json2 } from '../../schemas/players/json2.js';
 import { DDNetError, MapType, ServerRegion, dePythonifyTime } from '../../util.js';
 import { PlayerActivity } from './PlayerActivity.js';
 import { PlayerFinish } from './PlayerFinish.js';

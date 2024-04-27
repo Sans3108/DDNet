@@ -1,27 +1,27 @@
 //#region Classes
 
 //#region Maps
-export * from './Classes/Maps/Map.js';
-export * from './Classes/Maps/MapAuthor.js';
-export * from './Classes/Maps/MapBaseRank.js';
-export * from './Classes/Maps/MapMaxFinish.js';
-export * from './Classes/Maps/MapRank.js';
-export * from './Classes/Maps/MapTeamRank.js';
+export * from './classes/maps/Map.js';
+export * from './classes/maps/MapAuthor.js';
+export * from './classes/maps/MapBaseRank.js';
+export * from './classes/maps/MapMaxFinish.js';
+export * from './classes/maps/MapRank.js';
+export * from './classes/maps/MapTeamRank.js';
 //#endregion
 
 //#region Players
-export * from './Classes/Players/Player.js';
-export * from './Classes/Players/PlayerActivity.js';
-export * from './Classes/Players/PlayerFinish.js';
-export * from './Classes/Players/PlayerFinishes.js';
-export * from './Classes/Players/PlayerGlobalLeaderboard.js';
-export * from './Classes/Players/PlayerLeaderboard.js';
-export * from './Classes/Players/PlayerMap.js';
-export * from './Classes/Players/PlayerPartner.js';
-export * from './Classes/Players/PlayerRanking.js';
-export * from './Classes/Players/PlayerRecentFinish.js';
-export * from './Classes/Players/PlayerServerType.js';
-export * from './Classes/Players/PlayerServerTypes.js';
+export * from './classes/players/Player.js';
+export * from './classes/players/PlayerActivity.js';
+export * from './classes/players/PlayerFinish.js';
+export * from './classes/players/PlayerFinishes.js';
+export * from './classes/players/PlayerGlobalLeaderboard.js';
+export * from './classes/players/PlayerLeaderboard.js';
+export * from './classes/players/PlayerMap.js';
+export * from './classes/players/PlayerPartner.js';
+export * from './classes/players/PlayerRanking.js';
+export * from './classes/players/PlayerRecentFinish.js';
+export * from './classes/players/PlayerServerType.js';
+export * from './classes/players/PlayerServerTypes.js';
 //#endregion
 
 //#region Other
@@ -32,19 +32,19 @@ export * from './Classes/Players/PlayerServerTypes.js';
 //#region Schemas
 
 //#region Maps
-export * from './Schemas/Maps/json.js';
-export * from './Schemas/Maps/qmapper.js';
-export * from './Schemas/Maps/query.js';
+export * from './schemas/maps/json.js';
+export * from './schemas/maps/qmapper.js';
+export * from './schemas/maps/query.js';
 //#endregion
 
 //#region Players
-export * from './Schemas/Players/json.js';
-export * from './Schemas/Players/json2.js';
-export * from './Schemas/Players/query.js';
+export * from './schemas/players/json.js';
+export * from './schemas/players/json2.js';
+export * from './schemas/players/query.js';
 //#endregion
 
 //#region Other
-export * from './Schemas/Other/releases.js';
+export * from './schemas/other/releases.js';
 //#endregion
 
 //#endregion
