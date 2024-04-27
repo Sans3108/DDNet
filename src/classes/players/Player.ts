@@ -19,7 +19,7 @@ import { PlayerServerTypes } from './PlayerServerTypes.js';
  * @example
  * ```ts
  *  const coolGuy = await Player.new('Sans3108');
- * 
+ *
  *  console.log(coolGuy.favoriteServer); // "GER"
  * ```
  */
