@@ -1,6 +1,9 @@
-import { DDNetError, MapType, timeString } from '../../util.js';
+import { MapType, timeString } from '../../util.js';
 import { Map } from '../Maps/Map.js';
 
+/**
+ * Base class representing a player map status.
+ */
 export class PlayerMapBase {
   public mapName: string;
   public mapType: MapType;
@@ -12,11 +15,14 @@ export class PlayerMapBase {
     this.pointsReward = data.pointsReward;
   }
 
-  public async toMap(): Promise<{ success: true; instance: Map } | { success: false; error: DDNetError }> {
+  public async toMap(): Promise<Map> {
     return await Map.new(this.mapName);
   }
 }
 
+/**
+ * Class representing a player map that's unfinished.
+ */
 export class UnfinishedPlayerMap extends PlayerMapBase {
   public finishCount: 0 = 0;
 
@@ -25,6 +31,9 @@ export class UnfinishedPlayerMap extends PlayerMapBase {
   }
 }
 
+/**
+ * Class representing a player map that was finished.
+ */
 export class FinishedPlayerMap extends PlayerMapBase {
   public rank: number;
   public firstFinishTimestamp: number;
@@ -52,5 +61,3 @@ export class FinishedPlayerMap extends PlayerMapBase {
     this.teamRank = data.teamRank ?? null;
   }
 }
-
-export type PlayerMap = FinishedPlayerMap | UnfinishedPlayerMap;

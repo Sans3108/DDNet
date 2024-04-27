@@ -4,6 +4,9 @@ import { PlayerServerType } from './PlayerServerType.js';
 // This code screams "please end me"
 // Surely there's a better way but I have no idea
 
+/**
+ * Wrapper class for all player server types.
+ */
 export class PlayerServerTypes {
   public novice: PlayerServerType;
   public moderate: PlayerServerType;

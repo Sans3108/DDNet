@@ -1,13 +1,45 @@
 import { timeString } from '../../util.js';
 import { Player } from '../Players/Player.js';
 
+/**
+ * Class representing a player's highest amount of finishes on a map's leaderboard.
+ */
 export class MapMaxFinish {
+  /**
+   * The obtained rank.
+   */
   public rank: number;
+
+  /**
+   * The name of the player which achieved this rank.
+   */
   public player: string;
+
+  /**
+   * The amount of times this map has been finished by the player.
+   */
   public count: number;
+
+  /**
+   * Total time from all runs in seconds.
+   */
   public timeSeconds: number;
+
+  /**
+   * Total time from all runs in DDNet time string format. (ex. 02:47:23)
+   */
   public timeString: string;
+
+  /**
+   * Undocumented.
+   * @note Could be the timestamp of the first time this map was finished.
+   */
   public minTimestamp: number;
+
+  /**
+   * Undocumented.
+   * @note Could be the timestamp of the last time this map was finished.
+   */
   public maxTimestamp: number;
 
   constructor(data: { rank: number; player: string; count: number; time: number; minTimestamp: number; maxTimestamp: number }) {
@@ -20,6 +52,9 @@ export class MapMaxFinish {
     this.maxTimestamp = data.maxTimestamp;
   }
 
+  /**
+   * Returns a new {@link Player} object from this rank.
+   */
   public async toPlayer(): Promise<Player> {
     return await Player.new(this.player);
   }

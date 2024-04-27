@@ -1,5 +1,15 @@
+/**
+ * Base class representing a player ranking.
+ */
 export class PlayerRankingBase {
+  /**
+   * The rank obtained.
+   */
   public rank: number | null;
+
+  /**
+   * The points obtained.
+   */
   public points?: number;
 
   constructor(data: { rank: null } | { rank: number; points: number }) {
@@ -9,18 +19,24 @@ export class PlayerRankingBase {
   }
 }
 
+/**
+ * Class representing an unranked status.
+ */
 export class PlayerRankingUnranked extends PlayerRankingBase {
   public rank: null;
 
   constructor() {
     super({ rank: null });
 
-    delete this.points; // undefined still shows up for no reason, so just delete the key
+    delete this.points; // undefined still shows up when logged for no reason, so just delete the key
 
     this.rank = null;
   }
 }
 
+/**
+ * Class representing a ranked status.
+ */
 export class PlayerRankingRanked extends PlayerRankingBase {
   public rank: number;
   public points: number;
@@ -32,5 +48,3 @@ export class PlayerRankingRanked extends PlayerRankingBase {
     this.points = data.points;
   }
 }
-
-export type PlayerRanking = PlayerRankingRanked | PlayerRankingUnranked;

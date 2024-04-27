@@ -1,5 +1,5 @@
 /**
- * Wrapper class for the {@link Error} built-in class, used to also provide error context.
+ * Wrapper class for the {@link Error} built-in class, used as a catch all option and to also provide error context.
  */
 export class DDNetError extends Error {
   /**
@@ -11,7 +11,7 @@ export class DDNetError extends Error {
     reason?: string,
     public context?: unknown
   ) {
-    super(reason ?? 'ERR');
+    super(reason ?? 'No error message provided, see context.');
   }
 }
 const got = async (a: string) => {};

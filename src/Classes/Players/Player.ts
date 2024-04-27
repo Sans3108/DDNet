@@ -54,7 +54,7 @@ export class Player {
   /**
    * Raw data for this player.
    */
-  private rawData!: _PlayersJson2;
+  #rawData!: _PlayersJson2; // Marked private with vanilla JS syntax for better logging.
 
   /**
    * The name of this player.
@@ -119,11 +119,11 @@ export class Player {
 
   /**
    * Fetch, parse and construct a new {@link Player} instance.
-   * @param name The name of this player.
+   * @param nameOrUrl The name or ddnet.org url of this player.
    * @param bypassCache Wether to bypass the player data cache.
    */
-  public static async new(name: string, bypassCache = false): Promise<Player> {
-    const response = await this.makeRequest(name, bypassCache);
+  public static async new(nameOrUrl: string, bypassCache = false): Promise<Player> {
+    const response = await this.makeRequest(nameOrUrl, bypassCache);
 
     if (response instanceof DDNetError) throw response;
 
@@ -148,11 +148,11 @@ export class Player {
 
   /**
    * Fetch the player data from the API.
-   * @param name The name of the player.
+   * @param nameOrUrl The name or url of the player.
    * @param force Wether to bypass the cache.
    */
-  public static async makeRequest(name: string, force = false): Promise<{ data: object; fromCache: boolean } | DDNetError> {
-    const url = `https://ddnet.org/players/?json2=${encodeURIComponent(name)}`;
+  public static async makeRequest(nameOrUrl: string, force = false): Promise<{ data: object; fromCache: boolean } | DDNetError> {
+    const url = nameOrUrl.startsWith('https://ddnet.org/players/') ? nameOrUrl : `https://ddnet.org/players/?json2=${encodeURIComponent(nameOrUrl)}`;
 
     if (!force) {
       if (await this.cache.has(url)) {
@@ -162,7 +162,13 @@ export class Player {
       }
     }
 
-    const response = await axios.get<object | string, AxiosResponse<object | string>>(url).catch((err: AxiosError) => new DDNetError(err.cause?.message, err));
+    const response = await axios
+      .get<object | string, AxiosResponse<object | string>>(url, {
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      })
+      .catch((err: AxiosError) => new DDNetError(err.cause?.message, err));
 
     if (response instanceof DDNetError) return response;
 
@@ -180,34 +186,34 @@ export class Player {
    * @param rawData The raw player data.
    */
   private populate(rawData: _PlayersJson2): this {
-    this.rawData = rawData;
+    this.#rawData = rawData;
 
-    this.name = this.rawData.player;
+    this.name = this.#rawData.player;
     this.url = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
 
-    if (!this.rawData.points.rank) throw new DDNetError('Player points assumption turned out to be null.');
+    if (!this.#rawData.points.rank) throw new DDNetError('Player points assumption turned out to be null.');
 
     this.globalLeaderboard = new PlayerGlobalLeaderboard({
       completionist: {
-        rank: this.rawData.points.rank,
-        points: this.rawData.points.points
+        rank: this.#rawData.points.rank,
+        points: this.#rawData.points.points
       },
-      completionistLastMonth: this.rawData.points_last_month,
-      completionistLastWeek: this.rawData.points_last_week,
-      rank: this.rawData.rank,
-      team: this.rawData.team_rank
+      completionistLastMonth: this.#rawData.points_last_month,
+      completionistLastWeek: this.#rawData.points_last_week,
+      rank: this.#rawData.rank,
+      team: this.#rawData.team_rank
     });
 
-    this.totalCompletionistPoints = this.rawData.points.total;
-    this.favoriteServer = ServerRegion[this.rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
+    this.totalCompletionistPoints = this.#rawData.points.total;
+    this.favoriteServer = ServerRegion[this.#rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
 
     this.finishes = new PlayerFinishes({
       first: new PlayerFinish({
-        mapName: this.rawData.first_finish.map,
-        timestamp: dePythonifyTime(this.rawData.first_finish.timestamp),
-        timeSeconds: this.rawData.first_finish.time
+        mapName: this.#rawData.first_finish.map,
+        timestamp: dePythonifyTime(this.#rawData.first_finish.timestamp),
+        timeSeconds: this.#rawData.first_finish.time
       }),
-      recent: this.rawData.last_finishes.map(
+      recent: this.#rawData.last_finishes.map(
         f =>
           new PlayerRecentFinish({
             mapName: f.map,
@@ -219,7 +225,7 @@ export class Player {
       )
     });
 
-    this.favoritePartners = this.rawData.favorite_partners.map(
+    this.favoritePartners = this.#rawData.favorite_partners.map(
       p =>
         new PlayerPartner({
           name: p.name,
@@ -230,7 +236,7 @@ export class Player {
     const keys = Object.keys(MapType).filter(k => k !== 'unknown');
 
     const servers: PlayerServerType[] = keys.map(k => {
-      const raw = this.rawData.types[MapType[k as keyof typeof MapType]];
+      const raw = this.#rawData.types[MapType[k as keyof typeof MapType]];
 
       const leaderboard = new PlayerLeaderboard({
         completionist:
@@ -302,9 +308,9 @@ export class Player {
 
     this.serverTypes = new PlayerServerTypes(servers);
 
-    this.activity = this.rawData.activity.map(a => new PlayerActivity({ date: a.date, hoursPlayed: a.hours_played }));
+    this.activity = this.#rawData.activity.map(a => new PlayerActivity({ date: a.date, hoursPlayed: a.hours_played }));
 
-    this.hoursPlayedPast365days = this.rawData.hours_played_past_365_days;
+    this.hoursPlayedPast365days = this.#rawData.hours_played_past_365_days;
 
     return this;
   }
