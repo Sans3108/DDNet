@@ -38,13 +38,14 @@
   ],
   "devDependencies": {
     "@types/node": "20.10.0",
-    "prettier": "3.2.5"
+    "prettier": "3.2.5",
+    "typedoc": "^0.25.13"
   },
   "dependencies": {
     "axios": "^1.6.8",
     "keyv": "^4.5.4",
     "typescript": "^5.4.5",
-    "zod": "^3.22.5"
+    "zod": "^3.23.4"
   },
   "types": "dist/index.d.ts"
 }
