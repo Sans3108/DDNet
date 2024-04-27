@@ -23,10 +23,13 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Install deps
+        run: pnpm i
+
       - name: Build package
         run: pnpm build:src
 
-      - run: pnpm i
-      - run: pnpm publish --no-git-checks
+      - name: Publish package
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
