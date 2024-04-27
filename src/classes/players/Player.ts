@@ -16,6 +16,12 @@ import { PlayerServerTypes } from './PlayerServerTypes.js';
 
 /**
  * Class representing a DDNet player.
+ * @example
+ * ```ts
+ *  const coolGuy = await Player.new('Sans3108');
+ * 
+ *  console.log(coolGuy.favoriteServer); // "GER"
+ * ```
  */
 export class Player {
   //#region Cache

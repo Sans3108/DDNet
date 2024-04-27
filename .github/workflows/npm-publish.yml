@@ -27,7 +27,7 @@ jobs:
         run: pnpm i
 
       - name: Build package
-        run: pnpm build:code
+        run: pnpm build
 
       - name: Publish package
         run: pnpm publish --no-git-checks
