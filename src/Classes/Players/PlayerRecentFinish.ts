@@ -1,5 +1,4 @@
 import { MapType, ServerRegion } from '../../util.js';
-import { Map } from '../Maps/Map.js';
 import { PlayerFinish } from './PlayerFinish.js';
 
 /**

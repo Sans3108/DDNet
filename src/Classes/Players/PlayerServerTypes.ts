@@ -8,18 +8,69 @@ import { PlayerServerType } from './PlayerServerType.js';
  * Wrapper class for all player server types.
  */
 export class PlayerServerTypes {
+  /**
+   * Novice server.
+   */
   public novice: PlayerServerType;
+
+  /**
+   * Moderate server.
+   */
   public moderate: PlayerServerType;
+
+  /**
+   * Brutal server.
+   */
   public brutal: PlayerServerType;
+
+  /**
+   * Insane server.
+   */
   public insane: PlayerServerType;
+
+  /**
+   * Dummy server.
+   */
   public dummy: PlayerServerType;
+
+  /**
+   * DDmaX.Easy server.
+   */
   public ddmaxEasy: PlayerServerType;
+
+  /**
+   * DDmaX.Next server.
+   */
   public ddmaxNext: PlayerServerType;
+
+  /**
+   * DDmaX.Pro server.
+   */
   public ddmaxPro: PlayerServerType;
+
+  /**
+   * DDmaX.Nut server.
+   */
   public ddmaxNut: PlayerServerType;
+
+  /**
+   * Oldschool server.
+   */
   public oldschool: PlayerServerType;
+
+  /**
+   * Solo server.
+   */
   public solo: PlayerServerType;
+
+  /**
+   * Race server.
+   */
   public race: PlayerServerType;
+
+  /**
+   * Fun server.
+   */
   public fun: PlayerServerType;
 
   constructor(data: PlayerServerType[]) {

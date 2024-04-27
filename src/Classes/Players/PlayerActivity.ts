@@ -6,6 +6,7 @@ export class PlayerActivity {
    * Timestamp accurate to the day of this player activity.
    */
   public timestamp: number;
+  
   /**
    * Number of hours played.
    */

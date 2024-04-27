@@ -23,6 +23,9 @@ export class PlayerRankingBase {
  * Class representing an unranked status.
  */
 export class PlayerRankingUnranked extends PlayerRankingBase {
+  /**
+   * The rank obtained.
+   */
   public rank: null;
 
   constructor() {
@@ -38,7 +41,14 @@ export class PlayerRankingUnranked extends PlayerRankingBase {
  * Class representing a ranked status.
  */
 export class PlayerRankingRanked extends PlayerRankingBase {
+  /**
+   * The rank obtained.
+   */
   public rank: number;
+
+  /**
+   * The points obtained.
+   */
   public points: number;
 
   constructor(data: { rank: number; points: number }) {
