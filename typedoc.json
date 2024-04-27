@@ -2,7 +2,7 @@
   "entryPoints": ["src/index.ts"],
   "out": "./docs",
   "commentStyle": "jsdoc",
-  "name": "DDNet Documentation",
+  "name": "DDNet",
   "includeVersion": true,
   "cleanOutputDir": true,
   "customCss": "./docFonts.css"
