@@ -1,13 +1,13 @@
 {
   "name": "ddnet",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "ddnet.org API wrapper",
   "main": "dist/index.js",
   "engines": {
     "node": ">=18.20.2"
   },
   "scripts": {
-    "build:src": "pnpm cleanup:dist && tsc",
+    "build:src": "pnpm cleanup:dist && tsc --project tsconfig.json",
     "build:docs": "pnpm cleanup:docs && typedoc --plugin typedoc-material-theme --themeColor '#ffa500'",
     "cleanup:dist": "rimraf dist",
     "cleanup:docs": "rimraf docs",
