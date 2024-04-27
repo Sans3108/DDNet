@@ -1,5 +1,9 @@
 # DDNet
 
+# This readme is outdated!
+
+## A new one is coming as soon as possible.
+
 Hey there, this package is very early in development, if you have questions, feedback you can find me over on Discord, my tag is `Sans#0001`.
 
 (Better) Documentation coming soon™️
