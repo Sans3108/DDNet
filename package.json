@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "ddnet.org API wrapper",
   "main": "dist/index.js",
   "engines": {
