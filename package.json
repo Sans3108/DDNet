@@ -43,12 +43,12 @@
     "prettier": "3.2.5",
     "rimraf": "^5.0.5",
     "typedoc": "^0.25.13",
-    "typedoc-material-theme": "^1.0.2"
+    "typedoc-material-theme": "^1.0.2",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "axios": "^1.6.8",
     "keyv": "^4.5.4",
-    "typescript": "^5.4.5",
     "zod": "^3.23.4"
   },
   "types": "dist/index.d.ts"
