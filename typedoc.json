@@ -5,7 +5,5 @@
   "name": "DDNet",
   "includeVersion": true,
   "cleanOutputDir": true,
-  "customCss": "./docFonts.css",
-  "gitRemote": "origin",
-  "gitRevision": "master"
+  "customCss": "./docFonts.css"
 }
