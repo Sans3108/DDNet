@@ -1,6 +1,6 @@
 # DDNet
 
-![NPM Version](https://img.shields.io/npm/v/ddnet?logo=npm&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fddnet) ![NPM Downloads](https://img.shields.io/npm/dm/ddnet?logo=npm&label=Downloads&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fddnet) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Sans3108/DDNet?logo=github&label=Issues&link=https%3A%2F%2Fgithub.com%2FSans3108%2FDDNet%2Fissues)
+![NPM Version](https://img.shields.io/npm/v/ddnet?logo=npm) ![NPM Downloads](https://img.shields.io/npm/dm/ddnet?logo=npm&label=Downloads) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Sans3108/DDNet?logo=github&label=Issues)
 
 A typescript npm package for interacting with data from ddnet.org
 
@@ -113,6 +113,6 @@ CompletedMapStats {
 
 If you've made it this far and you consider this package useful, please consider starring this repository so more people can see it!
 
-![GitHub Repo stars](https://img.shields.io/github/stars/Sans3108/DDNet?link=https%3A%2F%2Fgithub.com%2FSans3108%2FDDNet)
+![GitHub Repo stars](https://img.shields.io/github/stars/Sans3108/DDNet)
 
 Any bugs can be reported [here](https://github.com/Sans3108/DDNet/issues) or on discord by adding me: `Sans#0001`.
