@@ -202,7 +202,7 @@ export class Map {
    * @param nameOrUrl The name or url of the map.
    * @param force Wether to bypass the cache.
    */
-  public static async makeRequest(nameOrUrl: string, force = false): Promise<{ data: object; fromCache: boolean } | DDNetError> {
+  private static async makeRequest(nameOrUrl: string, force = false): Promise<{ data: object; fromCache: boolean } | DDNetError> {
     const url = nameOrUrl.startsWith('https://ddnet.org/maps/') ? nameOrUrl : `https://ddnet.org/maps/?json=${encodeURIComponent(nameOrUrl)}`;
 
     if (!force) {

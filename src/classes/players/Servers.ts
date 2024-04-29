@@ -1,5 +1,5 @@
 import { DDNetError, MapType } from '../../util.js';
-import { PlayerServerType } from './PlayerServerType.js';
+import { ServerStats } from './ServerStats.js';
 
 // This code screams "please end me"
 // Surely there's a better way but I have no idea
@@ -7,73 +7,73 @@ import { PlayerServerType } from './PlayerServerType.js';
 /**
  * Wrapper class for all player server types.
  */
-export class PlayerServerTypes {
+export class Servers {
   /**
-   * Novice server.
+   * Novice server stats.
    */
-  public novice: PlayerServerType;
+  public novice: ServerStats;
 
   /**
-   * Moderate server.
+   * Moderate server stats.
    */
-  public moderate: PlayerServerType;
+  public moderate: ServerStats;
 
   /**
-   * Brutal server.
+   * Brutal server stats.
    */
-  public brutal: PlayerServerType;
+  public brutal: ServerStats;
 
   /**
-   * Insane server.
+   * Insane server stats.
    */
-  public insane: PlayerServerType;
+  public insane: ServerStats;
 
   /**
-   * Dummy server.
+   * Dummy server stats.
    */
-  public dummy: PlayerServerType;
+  public dummy: ServerStats;
 
   /**
-   * DDmaX.Easy server.
+   * DDmaX.Easy server stats.
    */
-  public ddmaxEasy: PlayerServerType;
+  public ddmaxEasy: ServerStats;
 
   /**
-   * DDmaX.Next server.
+   * DDmaX.Next server stats.
    */
-  public ddmaxNext: PlayerServerType;
+  public ddmaxNext: ServerStats;
 
   /**
-   * DDmaX.Pro server.
+   * DDmaX.Pro server stats.
    */
-  public ddmaxPro: PlayerServerType;
+  public ddmaxPro: ServerStats;
 
   /**
-   * DDmaX.Nut server.
+   * DDmaX.Nut server stats.
    */
-  public ddmaxNut: PlayerServerType;
+  public ddmaxNut: ServerStats;
 
   /**
-   * Oldschool server.
+   * Oldschool server stats.
    */
-  public oldschool: PlayerServerType;
+  public oldschool: ServerStats;
 
   /**
-   * Solo server.
+   * Solo server stats.
    */
-  public solo: PlayerServerType;
+  public solo: ServerStats;
 
   /**
-   * Race server.
+   * Race server stats.
    */
-  public race: PlayerServerType;
+  public race: ServerStats;
 
   /**
-   * Fun server.
+   * Fun server stats.
    */
-  public fun: PlayerServerType;
+  public fun: ServerStats;
 
-  constructor(data: PlayerServerType[]) {
+  constructor(data: ServerStats[]) {
     const novice = data.find(server => server.name === MapType.novice) ?? new DDNetError(`\`${MapType.novice}\` server not found in data!`);
     const moderate = data.find(server => server.name === MapType.moderate) ?? new DDNetError(`\`${MapType.moderate}\` server not found in data!`);
     const brutal = data.find(server => server.name === MapType.brutal) ?? new DDNetError(`\`${MapType.brutal}\` server not found in data!`);
@@ -96,18 +96,18 @@ export class PlayerServerTypes {
         types.filter(i => i instanceof DDNetError)
       );
 
-    this.novice = novice as PlayerServerType;
-    this.moderate = moderate as PlayerServerType;
-    this.brutal = brutal as PlayerServerType;
-    this.insane = insane as PlayerServerType;
-    this.dummy = dummy as PlayerServerType;
-    this.ddmaxEasy = ddmaxEasy as PlayerServerType;
-    this.ddmaxNext = ddmaxNext as PlayerServerType;
-    this.ddmaxPro = ddmaxPro as PlayerServerType;
-    this.ddmaxNut = ddmaxNut as PlayerServerType;
-    this.oldschool = oldschool as PlayerServerType;
-    this.solo = solo as PlayerServerType;
-    this.race = race as PlayerServerType;
-    this.fun = fun as PlayerServerType;
+    this.novice = novice as ServerStats;
+    this.moderate = moderate as ServerStats;
+    this.brutal = brutal as ServerStats;
+    this.insane = insane as ServerStats;
+    this.dummy = dummy as ServerStats;
+    this.ddmaxEasy = ddmaxEasy as ServerStats;
+    this.ddmaxNext = ddmaxNext as ServerStats;
+    this.ddmaxPro = ddmaxPro as ServerStats;
+    this.ddmaxNut = ddmaxNut as ServerStats;
+    this.oldschool = oldschool as ServerStats;
+    this.solo = solo as ServerStats;
+    this.race = race as ServerStats;
+    this.fun = fun as ServerStats;
   }
 }

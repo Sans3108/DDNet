@@ -2,9 +2,9 @@ import { MapType, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 
 /**
- * Base class representing a player map status.
+ * Base class representing a player's map stats.
  */
-export class PlayerMapBase {
+export abstract class MapStatsBase {
   /**
    * The map name.
    */
@@ -16,46 +16,55 @@ export class PlayerMapBase {
   public mapType: MapType;
 
   /**
-   * The amount of points rewarded for this map.
+   * The amount of points awarded for completing this map.
    */
-  public pointsReward: number;
+  public points: number;
 
   constructor(data: { mapName: string; mapType: MapType; pointsReward: number }) {
     this.mapName = data.mapName;
     this.mapType = data.mapType;
-    this.pointsReward = data.pointsReward;
+    this.points = data.pointsReward;
   }
 
+  /**
+   * Returns a new {@link Map} object from the {@link mapName} of this finish.
+   */
   public async toMap(): Promise<Map> {
     return await Map.new(this.mapName);
   }
 }
 
 /**
- * Class representing a player map that's unfinished.
+ * Represents a player's unfinished map stats.
  */
-export class UnfinishedPlayerMap extends PlayerMapBase {
+export class UncompletedMapStats extends MapStatsBase {
   /**
    * The amount of finishes on this map.
+   *
+   * @remarks This will always be 0.
    */
-  public finishCount: 0 = 0;
+  public finishCount: number;
 
-  constructor(data: ConstructorParameters<typeof PlayerMapBase>[0]) {
+  /**
+   * Construct a new {@link UncompletedMapStats} instance.
+   */
+  constructor(data: ConstructorParameters<typeof MapStatsBase>[0]) {
     super(data);
+    this.finishCount = 0;
   }
 }
 
 /**
- * Class representing a player map that was finished.
+ * Represents a player's finished map stats.
  */
-export class FinishedPlayerMap extends PlayerMapBase {
+export class CompletedMapStats extends MapStatsBase {
   /**
-   * The rank obtained on this map.
+   * The placement obtained on this map.
    */
-  public rank: number;
+  public placement: number;
 
   /**
-   * Timestamp for the first finish on this map.
+   * Timestamp for the first ever finish on this map.
    */
   public firstFinishTimestamp: number;
 
@@ -65,7 +74,9 @@ export class FinishedPlayerMap extends PlayerMapBase {
   public bestTimeSeconds: number;
 
   /**
-   * Best finish time for this map in DDNet time string format (ex. 23:32)
+   * The string formatted best finish time for this map.
+   *
+   * @example "03:23"
    */
   public bestTimeString: string;
 
@@ -79,8 +90,11 @@ export class FinishedPlayerMap extends PlayerMapBase {
    */
   public teamRank: number | null;
 
+  /**
+   * Construct a new {@link CompletedMapStats} instance.
+   */
   constructor(
-    data: ConstructorParameters<typeof PlayerMapBase>[0] & {
+    data: ConstructorParameters<typeof MapStatsBase>[0] & {
       rank: number;
       firstFinishTimestamp: number;
       bestTimeSeconds: number;
@@ -90,7 +104,7 @@ export class FinishedPlayerMap extends PlayerMapBase {
   ) {
     super(data);
 
-    this.rank = data.rank;
+    this.placement = data.rank;
     this.firstFinishTimestamp = data.firstFinishTimestamp;
     this.bestTimeSeconds = data.bestTimeSeconds;
     this.bestTimeString = timeString(this.bestTimeSeconds);

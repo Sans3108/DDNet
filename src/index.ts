@@ -11,17 +11,17 @@ export * from './classes/maps/MapTeamRank.js';
 
 //#region Players
 export * from './classes/players/Player.js';
-export * from './classes/players/PlayerActivity.js';
-export * from './classes/players/PlayerFinish.js';
-export * from './classes/players/PlayerFinishes.js';
-export * from './classes/players/PlayerGlobalLeaderboard.js';
-export * from './classes/players/PlayerLeaderboard.js';
-export * from './classes/players/PlayerMap.js';
-export * from './classes/players/PlayerPartner.js';
-export * from './classes/players/PlayerRanking.js';
-export * from './classes/players/PlayerRecentFinish.js';
-export * from './classes/players/PlayerServerType.js';
-export * from './classes/players/PlayerServerTypes.js';
+export * from './classes/players/Activity.js';
+export * from './classes/players/Finish.js';
+export * from './classes/players/Finishes.js';
+export * from './classes/players/GlobalLeaderboard.js';
+export * from './classes/players/Leaderboard.js';
+export * from './classes/players/MapStats.js';
+export * from './classes/players/Partner.js';
+export * from './classes/players/Rank.js';
+export * from './classes/players/RecentFinish.js';
+export * from './classes/players/ServerStats.js';
+export * from './classes/players/Servers.js';
 //#endregion
 
 //#region Other

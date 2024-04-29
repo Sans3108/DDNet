@@ -3,7 +3,12 @@
 import { z } from 'zod';
 
 /**
- * The zod schema for map data, as constructed by [maps.py](https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/maps.py) when the query includes `json`.
+ * The zod schema for map data.
+ *
+ * @see
+ * [maps.py](https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/maps.py)
+ *
+ * @internal
  */
 export const _Schema_maps_json = z.object({
   name: z.string(),
@@ -56,5 +61,7 @@ export const _Schema_maps_json = z.object({
 
 /**
  * Raw player data type, inferred from {@link _Schema_maps_json}
+ *
+ * @internal
  */
 export type _MapsJson = z.infer<typeof _Schema_maps_json>;

@@ -3,7 +3,12 @@
 import { z } from 'zod';
 
 /**
- * The zod schema for player data, as constructed by [players.py](https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/players.py) when the query includes `json2`.
+ * The zod schema for player data.
+ *
+ * @see
+ * [players.py](https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/players.py)
+ *
+ * @internal
  */
 export const _Schema_players_json2 = z.object({
   player: z.string(),
@@ -142,5 +147,7 @@ export const _Schema_players_json2 = z.object({
 
 /**
  * Raw player data type, inferred from {@link _Schema_players_json2}
+ *
+ * @internal
  */
 export type _PlayersJson2 = z.infer<typeof _Schema_players_json2>;

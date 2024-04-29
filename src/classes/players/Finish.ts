@@ -2,26 +2,34 @@ import { timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 
 /**
- * Class representing a player map finish.
+ * Represents a player finish.
  */
-export class PlayerFinish {
+export class Finish {
   /**
-   * Finish date timestamp.
+   * The timestamp of this finish.
    */
   public timestamp: number;
+
   /**
-   * The name of the map finished.
+   * The name of the map.
    */
   public mapName: string;
+
   /**
    * The time in seconds of this finish.
    */
   public timeSeconds: number;
+
   /**
-   * The time of this finish in DDNet-like time string. (ex. 03:23)
+   * The string formatted time of this finish.
+   *
+   * @example "03:23"
    */
   public timeString: string;
 
+  /**
+   * Construct a new {@link Finish} instance.
+   */
   constructor(data: { timestamp: number; mapName: string; timeSeconds: number }) {
     this.timestamp = data.timestamp;
     this.mapName = data.mapName;
@@ -30,7 +38,7 @@ export class PlayerFinish {
   }
 
   /**
-   * Returns a new {@link Map} object from the {@link PlayerFinish.mapName name} of this finish.
+   * Returns a new {@link Map} object from the {@link mapName} of this finish.
    */
   public async toMap(): Promise<Map> {
     return await Map.new(this.mapName);

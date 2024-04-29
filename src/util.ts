@@ -4,11 +4,16 @@
 export class DDNetError extends Error {
   /**
    * Create a new instance of {@link DDNetError}
-   * @param reason The reason for this error.
-   * @param context Context for this error, usually an {@link Error} object, array or a string, ultimately unknown type.
    */
   constructor(
+    /**
+     * The reason for this error.
+     */
     reason?: string,
+
+    /**
+     * Context for this error, usually an {@link Error} object, array or a string, ultimately unknown type.
+     */
     public context?: unknown
   ) {
     super(reason ?? 'No error message provided, see context.');
