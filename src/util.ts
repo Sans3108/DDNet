@@ -19,60 +19,18 @@ export class DDNetError extends Error {
     super(reason ?? 'No error message provided, see context.');
   }
 }
-const got = async (a: string) => {};
 
 /**
- * Requests all servers from master server.
- * @param masterServerServerListUrl The url to `servers.json` returned by the master server. Default: https://master1.ddnet.org/ddnet/15/servers.json
+ * Converts a number of seconds to a DDNet finish time string.
+ *
+ * @example "03:23"
  */
-export async function makeMasterServerRequest(masterServerServerListUrl?: string): Promise<object | DDNetError> {
-  const url = masterServerServerListUrl ?? `https://master1.ddnet.org/ddnet/15/servers.json`;
-
-  const response: object | DDNetError = await got(url)
-    //@ts-expect-error DT out of date
-    .json()
-    .catch((err: Error) => new DDNetError(err.message, err));
-
-  if (response instanceof DDNetError) return response;
-
-  return response;
-}
-
-/**
- * Requests all map releases.
- */
-export async function makeReleasesRequest(): Promise<Array<unknown> | DDNetError> {
-  const url = `https://ddnet.org/releases/maps.json`;
-
-  const response: Array<unknown> | DDNetError = await got(url)
-    //@ts-expect-error DT out of date
-    .json()
-    .catch((err: Error) => new DDNetError(err.message, err));
-
-  if (response instanceof DDNetError) return response;
-
-  return response;
-}
-
-/**
- * Handles `players` and `maps` requests, and their different query parameters.
- */
-export async function makeRequest(path: 'players', qs: 'json2' | 'query' | 'json', qsValue: string): Promise<object | DDNetError>;
-export async function makeRequest(path: 'maps', qs: 'qmapper' | 'query' | 'json', qsValue: string): Promise<object | DDNetError>;
-export async function makeRequest(path: string, qs: string, qsValue: string): Promise<object | DDNetError> {
-  const url = `https://ddnet.org/${path}/?${qs}=${encodeURIComponent(qsValue)}`;
-
-  const response: object | DDNetError = await got(url)
-    //@ts-expect-error DT out of date
-    .json()
-    .catch((err: Error) => new DDNetError(err.message, err));
-
-  if (response instanceof DDNetError) return response;
-
-  return response;
-}
-
-export function timeString(totalSeconds: number): string {
+export function timeString(
+  /**
+   * The time in seconds to convert.
+   */
+  totalSeconds: number
+): string {
   if (totalSeconds < 0) return '--:--';
 
   const pad = (s: string) => (s.length < 2 ? `0${s}` : s);
@@ -86,6 +44,9 @@ export function timeString(totalSeconds: number): string {
 }
 
 /**
+ * Slugifies a name to safely use it in a url.
+ *
+ * @see
  * https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/ddnet.py#L185
  */
 export function slugify(name: string): string {
@@ -101,9 +62,15 @@ export function slugify(name: string): string {
   return string;
 }
 
-export function dePythonifyTime(pyDateString: string): number;
-export function dePythonifyTime(pyTimestamp: number): number;
-export function dePythonifyTime(time: number | string): number {
+/**
+ * Converts a python date time string or timestamp into a valid javascript timestamp.
+ */
+export function dePythonifyTime(
+  /**
+   * The time to convert.
+   */
+  time: number | string
+): number {
   if (typeof time === 'string') return new Date(time).getTime();
 
   const d = new Date(time);
@@ -114,7 +81,10 @@ export function dePythonifyTime(time: number | string): number {
   return d.getTime();
 }
 
-export enum MapType {
+/**
+ * Represents the different DDNet types.
+ */
+export enum Type {
   novice = 'Novice',
   moderate = 'Moderate',
   brutal = 'Brutal',
@@ -132,9 +102,12 @@ export enum MapType {
 }
 
 /**
+ * Represents server regions.
+ *
+ * @see
  * https://github.com/ddnet/ddnet-web/tree/master/www/countryflags
  */
-export enum ServerRegion {
+export enum Region {
   ARG = 'ARG',
   AUS = 'AUS',
   BRA = 'BRA',
@@ -166,9 +139,12 @@ export enum ServerRegion {
 }
 
 /**
+ * Represents player countries
+ *
+ * @see
  * https://github.com/ddnet/ddnet/tree/master/data/countryflags
  */
-export enum PlayerCountry {
+export enum Country {
   AD = 'AD',
   AE = 'AE',
   AF = 'AF',

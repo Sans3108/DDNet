@@ -1,23 +1,19 @@
 //#region Classes
 
 //#region Maps
+export * from './classes/maps/Author.js';
 export * from './classes/maps/Map.js';
-export * from './classes/maps/MapAuthor.js';
-export * from './classes/maps/MapBaseRank.js';
-export * from './classes/maps/MapMaxFinish.js';
-export * from './classes/maps/MapRank.js';
-export * from './classes/maps/MapTeamRank.js';
+export * from './classes/maps/MaxFinish.js';
 //#endregion
 
 //#region Players
-export * from './classes/players/Player.js';
 export * from './classes/players/Activity.js';
-export * from './classes/players/Finish.js';
 export * from './classes/players/Finishes.js';
 export * from './classes/players/GlobalLeaderboard.js';
 export * from './classes/players/Leaderboard.js';
 export * from './classes/players/MapStats.js';
 export * from './classes/players/Partner.js';
+export * from './classes/players/Player.js';
 export * from './classes/players/Rank.js';
 export * from './classes/players/RecentFinish.js';
 export * from './classes/players/ServerStats.js';
@@ -25,6 +21,7 @@ export * from './classes/players/Servers.js';
 //#endregion
 
 //#region Other
+export * from './classes/other/Finish.js';
 //#endregion
 
 //#endregion

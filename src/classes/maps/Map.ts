@@ -1,14 +1,31 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Keyv from 'keyv';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
-import { DDNetError, MapType, dePythonifyTime, timeString } from '../../util.js';
-import { MapAuthor } from './MapAuthor.js';
-import { MapMaxFinish } from './MapMaxFinish.js';
-import { MapRank } from './MapRank.js';
-import { MapTeamRank } from './MapTeamRank.js';
+import { DDNetError, Region, Type, dePythonifyTime, timeString } from '../../util.js';
+import { Author } from './Author.js';
+import { MaxFinish } from './MaxFinish.js';
+import { Finish } from '../other/Finish.js';
 
 /**
- * Class representing a DDNet map.
+ * Represents a DDNet map.
+ *
+ * @example
+ * ```ts
+ * const myFavMap = await Map.new('Kobra 4');
+ *
+ * console.log(myFavMap.webPreviewUrl); // "https://ddnet.org/mappreview/?map=Kobra+4"
+ * console.log(myFavMap.difficulty); // 4
+ * console.log(myFavMap.maxFinishes[0]);
+ * // MapMaxFinish {
+ * //   rank: 1,
+ * //   player: 'nameless tee',
+ * //   count: 659,
+ * //   timeSeconds: 1754617.6977539062,
+ * //   timeString: '487:23:37',
+ * //   minTimestamp: 1438545584000,
+ * //   maxTimestamp: 1714287869000
+ * // }
+ * ```
  */
 export class Map {
   //#region Cache
@@ -21,20 +38,16 @@ export class Map {
   });
 
   /**
-   * "Time-To-Live" - How much time before a cached object becomes stale, and thus removed automatically.
+   * "Time-To-Live" - How much time (in milliseconds) before a cached object becomes stale, and thus removed automatically.
+   *
+   * Changing this value does not affect old objects.
+   *
+   * @default 7200000 // 2 hours
    */
-  private static ttl: number = 2 * 60 * 60 * 1000; // 2 hours
+  public static ttl: number = 2 * 60 * 60 * 1000; // 2h
 
   /**
-   * Sets the {@link Map.ttl TTL} for the {@link Map.cache Map responses cache}. Old objects are unaffected.
-   * @param timeMS The TTL time in milliseconds.
-   */
-  public static setTTL(timeMS: number): void {
-    this.ttl = timeMS;
-  }
-
-  /**
-   * Clears the {@link Map.cache Map responses cache}.
+   * Clears the {@link Map.cache}.
    */
   public static async clearCache(): Promise<void> {
     return await this.cache.clear();
@@ -43,6 +56,7 @@ export class Map {
   //#endregion
 
   //#region Declarations
+
   /**
    * Raw data for this map.
    */
@@ -71,10 +85,10 @@ export class Map {
   /**
    * The type of this map.
    */
-  public type!: MapType;
+  public type!: Type;
 
   /**
-   * Amount of points rewarded for completing this map.
+   * Amount of points awarded for completing this map.
    */
   public points!: number;
 
@@ -86,7 +100,7 @@ export class Map {
   /**
    * Authors of this map.
    */
-  public mappers!: MapAuthor[];
+  public mappers!: Author[];
 
   /**
    * Release timestamp of this map.
@@ -114,27 +128,29 @@ export class Map {
   public tiles!: string[];
 
   /**
-   * Team ranks for this map.
+   * Team finishes for this map.
    */
-  public teamRanks!: MapTeamRank[];
+  public teamFinishes!: Finish[];
 
   /**
    * Ranks for this map.
    */
-  public ranks!: MapRank[];
+  public finishes!: Finish[];
 
   /**
    * Top of most amount of finishes on this map.
    */
-  public maxFinishes!: MapMaxFinish[];
+  public maxFinishes!: MaxFinish[];
 
   /**
-   * The average finish time of this map.
+   * The average finish time of this map in seconds.
    */
   public medianTimeSeconds!: number;
 
   /**
-   * The average finish time of this map in DDNet time format (ex. 23:56)
+   * String formatted average finish time.
+   *
+   * @example "03:23"
    */
   public medianTimeString!: string;
 
@@ -162,18 +178,29 @@ export class Map {
   /**
    * Create a new instance of {@link Map} from API data.
    * Not intended to be used, use {@link new Map.new} instead.
-   * @param rawData The raw data for this map.
    */
-  private constructor(rawData: _MapsJson) {
+  private constructor(
+    /**
+     * The raw data for this map.
+     */
+    rawData: _MapsJson
+  ) {
     this.populate(rawData);
   }
 
   /**
    * Fetch, parse and construct a new {@link Map} instance.
-   * @param nameOrUrl The name or url of this map.
-   * @param bypassCache Wether to bypass the map data cache.
    */
-  public static async new(nameOrUrl: string, bypassCache = false): Promise<Map> {
+  public static async new(
+    /**
+     * The name or ddnet.org url of this map.
+     */
+    nameOrUrl: string,
+    /**
+     * Wether to bypass the map data cache.
+     */
+    bypassCache = false
+  ): Promise<Map> {
     const response = await this.makeRequest(nameOrUrl, bypassCache);
 
     if (response instanceof DDNetError) throw response;
@@ -186,10 +213,14 @@ export class Map {
   }
 
   /**
-   * Parse an object using the map raw data zod schema.
-   * @param data The object to be parsed.
+   * Parse an object using the {@link _Schema_maps_json map raw data zod schema}.
    */
-  private static parseObject(data: object): { success: true; data: _MapsJson } | { success: false; error: DDNetError } {
+  private static parseObject(
+    /**
+     * The object to be parsed.
+     */
+    data: object
+  ): { success: true; data: _MapsJson } | { success: false; error: DDNetError } {
     const parsed = _Schema_maps_json.safeParse(data);
 
     if (parsed.success) return { success: true, data: parsed.data };
@@ -199,10 +230,17 @@ export class Map {
 
   /**
    * Fetch the map data from the API.
-   * @param nameOrUrl The name or url of the map.
-   * @param force Wether to bypass the cache.
    */
-  private static async makeRequest(nameOrUrl: string, force = false): Promise<{ data: object; fromCache: boolean } | DDNetError> {
+  private static async makeRequest(
+    /**
+     * The name or url of the map.
+     */
+    nameOrUrl: string,
+    /**
+     * Wether to bypass the cache.
+     */
+    force = false
+  ): Promise<{ data: object; fromCache: boolean } | DDNetError> {
     const url = nameOrUrl.startsWith('https://ddnet.org/maps/') ? nameOrUrl : `https://ddnet.org/maps/?json=${encodeURIComponent(nameOrUrl)}`;
 
     if (!force) {
@@ -234,27 +272,60 @@ export class Map {
 
   /**
    * Populate the object with the raw map data.
-   * @param rawData The raw map data.
    */
-  private populate(rawData: _MapsJson): this {
+  private populate(
+    /**
+     * The raw map data.
+     */
+    rawData: _MapsJson
+  ): this {
     this.#rawData = rawData;
 
     this.name = this.#rawData.name;
     this.url = this.#rawData.website;
     this.thumbnailUrl = this.#rawData.thumbnail;
     this.webPreviewUrl = this.#rawData.web_preview;
-    this.type = !Object.values<string>(MapType).includes(this.#rawData.type) ? MapType.unknown : (this.#rawData.type as MapType);
+    this.type = !Object.values<string>(Type).includes(this.#rawData.type) ? Type.unknown : (this.#rawData.type as Type);
     this.points = this.#rawData.points;
     this.difficulty = this.#rawData.difficulty;
-    this.mappers = this.#rawData.mapper.split('&').map(mapperName => new MapAuthor({ name: mapperName.trim() }));
+    this.mappers = this.#rawData.mapper.split('&').map(mapperName => new Author({ name: mapperName.trim() }));
     this.releasedTimestamp = this.#rawData.release ? dePythonifyTime(this.#rawData.release) : null;
     this.biggestTeam = this.#rawData.biggest_team;
     this.width = this.#rawData.width;
     this.height = this.#rawData.height;
     this.tiles = this.#rawData.tiles;
-    this.teamRanks = this.#rawData.team_ranks.map(rank => new MapTeamRank({ server: rank.country, players: rank.players, rank: rank.rank, timeSeconds: rank.time, timestamp: dePythonifyTime(rank.timestamp) }));
-    this.ranks = this.#rawData.ranks.map(rank => new MapRank({ server: rank.country, player: rank.player, rank: rank.rank, timeSeconds: rank.time, timestamp: dePythonifyTime(rank.timestamp) }));
-    this.maxFinishes = this.#rawData.max_finishes.map(mf => new MapMaxFinish({ maxTimestamp: dePythonifyTime(mf.max_timestamp), minTimestamp: dePythonifyTime(mf.min_timestamp), count: mf.num, player: mf.player, rank: mf.rank, time: mf.time }));
+
+    this.teamFinishes = this.#rawData.team_ranks.map(
+      rank =>
+        new Finish({
+          region: !Object.values<string>(Region).includes(rank.country) ? Region.UNK : (rank.country as Region),
+          mapName: this.name,
+          players: rank.players,
+          rank: {
+            placement: rank.rank,
+            points: this.points
+          },
+          timeSeconds: rank.time,
+          timestamp: dePythonifyTime(rank.timestamp)
+        })
+    );
+
+    this.finishes = this.#rawData.ranks.map(
+      rank =>
+        new Finish({
+          region: !Object.values<string>(Region).includes(rank.country) ? Region.UNK : (rank.country as Region),
+          mapName: this.name,
+          players: [rank.player],
+          rank: {
+            placement: rank.rank,
+            points: this.points
+          },
+          timeSeconds: rank.time,
+          timestamp: dePythonifyTime(rank.timestamp)
+        })
+    );
+
+    this.maxFinishes = this.#rawData.max_finishes.map(mf => new MaxFinish({ maxTimestamp: dePythonifyTime(mf.max_timestamp), minTimestamp: dePythonifyTime(mf.min_timestamp), count: mf.num, player: mf.player, rank: mf.rank, time: mf.time }));
     this.medianTimeSeconds = this.#rawData.median_time ?? -1;
     this.medianTimeString = timeString(this.medianTimeSeconds);
     this.firstFinishTimestamp = this.#rawData.first_finish ? dePythonifyTime(this.#rawData.first_finish) : null;
@@ -280,7 +351,10 @@ export class Map {
     return this.populate(parsed.data);
   }
 
+  /**
+   * Returns the name and url of this map in markdown format.
+   */
   public toString(): string {
-    return this.name;
+    return `[${this.name}](${this.url})`;
   }
 }

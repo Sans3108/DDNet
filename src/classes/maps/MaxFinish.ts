@@ -2,9 +2,9 @@ import { timeString } from '../../util.js';
 import { Player } from '../players/Player.js';
 
 /**
- * Class representing a player's highest amount of finishes on a map's leaderboard.
+ * Represents a player's highest amount of finishes on a map.
  */
-export class MapMaxFinish {
+export class MaxFinish {
   /**
    * The obtained rank.
    */
@@ -31,14 +31,14 @@ export class MapMaxFinish {
   public timeString: string;
 
   /**
-   * Undocumented.
-   * @note Could be the timestamp of the first time this map was finished.
+   * Could be the timestamp of the first time this map was finished.
+   * @note I haven't figured out what minTimestamp is supposed to represent.
    */
   public minTimestamp: number;
 
   /**
-   * Undocumented.
-   * @note Could be the timestamp of the last time this map was finished.
+   * Could be the timestamp of the last time this map was finished.
+   * @note I haven't figured out what minTimestamp is supposed to represent.
    */
   public maxTimestamp: number;
 

@@ -1,10 +1,11 @@
 import { slugify } from '../../util.js';
 import { Player } from '../players/Player.js';
+import { Map } from './Map.js';
 
 /**
- * Class representing a map author.
+ * Represents a map author.
  */
-export class MapAuthor {
+export class Author {
   /**
    * The name of this author.
    */
@@ -20,15 +21,24 @@ export class MapAuthor {
    */
   public playerUrl: string;
 
+  /**
+   * Construct a new {@link Author} instance.
+   */
   constructor(data: { name: string }) {
     this.name = data.name;
     this.mapShowcaseUrl = `https://ddnet.org/mappers/${slugify(this.name)}`;
     this.playerUrl = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
   }
 
-  // TODO: MapAuthor.getMaps
-  public async getMaps(): Promise<void> {
-    console.log(`<MapAuthor>#getMaps is not implemented.`);
+  // TODO: Author.getMaps
+  /**
+   * Returns a list of objects holding a map name and
+   * a function to turn each of them into a proper {@link Map} object.
+   *
+   * @throws Not implemented yet.
+   */
+  public async getMaps(): Promise<Map[]> {
+    throw new Error(`<MapAuthor>#getMaps is not implemented.`);
   }
 
   /**
@@ -38,7 +48,10 @@ export class MapAuthor {
     return await Player.new(this.name);
   }
 
+  /**
+   * Returns the name and mapShowcaseUrl of this Author in markdown format.
+   */
   public toString(): string {
-    return this.name;
+    return `[${this.name}](${this.mapShowcaseUrl})`;
   }
 }

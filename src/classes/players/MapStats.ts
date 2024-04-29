@@ -1,4 +1,4 @@
-import { MapType, timeString } from '../../util.js';
+import { Type, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 
 /**
@@ -13,14 +13,14 @@ export abstract class MapStatsBase {
   /**
    * The server type of this map.
    */
-  public mapType: MapType;
+  public mapType: Type;
 
   /**
    * The amount of points awarded for completing this map.
    */
   public points: number;
 
-  constructor(data: { mapName: string; mapType: MapType; pointsReward: number }) {
+  constructor(data: { mapName: string; mapType: Type; pointsReward: number }) {
     this.mapName = data.mapName;
     this.mapType = data.mapType;
     this.points = data.pointsReward;

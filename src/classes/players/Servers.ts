@@ -1,4 +1,4 @@
-import { DDNetError, MapType } from '../../util.js';
+import { DDNetError, Type } from '../../util.js';
 import { ServerStats } from './ServerStats.js';
 
 // This code screams "please end me"
@@ -74,19 +74,19 @@ export class Servers {
   public fun: ServerStats;
 
   constructor(data: ServerStats[]) {
-    const novice = data.find(server => server.name === MapType.novice) ?? new DDNetError(`\`${MapType.novice}\` server not found in data!`);
-    const moderate = data.find(server => server.name === MapType.moderate) ?? new DDNetError(`\`${MapType.moderate}\` server not found in data!`);
-    const brutal = data.find(server => server.name === MapType.brutal) ?? new DDNetError(`\`${MapType.brutal}\` server not found in data!`);
-    const insane = data.find(server => server.name === MapType.insane) ?? new DDNetError(`\`${MapType.insane}\` server not found in data!`);
-    const dummy = data.find(server => server.name === MapType.dummy) ?? new DDNetError(`\`${MapType.dummy}\` server not found in data!`);
-    const ddmaxEasy = data.find(server => server.name === MapType.ddmaxEasy) ?? new DDNetError(`\`${MapType.ddmaxEasy}\` server not found in data!`);
-    const ddmaxNext = data.find(server => server.name === MapType.ddmaxNext) ?? new DDNetError(`\`${MapType.ddmaxNext}\` server not found in data!`);
-    const ddmaxPro = data.find(server => server.name === MapType.ddmaxPro) ?? new DDNetError(`\`${MapType.ddmaxPro}\` server not found in data!`);
-    const ddmaxNut = data.find(server => server.name === MapType.ddmaxNut) ?? new DDNetError(`\`${MapType.ddmaxNut}\` server not found in data!`);
-    const oldschool = data.find(server => server.name === MapType.oldschool) ?? new DDNetError(`\`${MapType.oldschool}\` server not found in data!`);
-    const solo = data.find(server => server.name === MapType.solo) ?? new DDNetError(`\`${MapType.solo}\` server not found in data!`);
-    const race = data.find(server => server.name === MapType.race) ?? new DDNetError(`\`${MapType.race}\` server not found in data!`);
-    const fun = data.find(server => server.name === MapType.fun) ?? new DDNetError(`\`${MapType.fun}\` server not found in data!`);
+    const novice = data.find(server => server.name === Type.novice) ?? new DDNetError(`\`${Type.novice}\` server not found in data!`);
+    const moderate = data.find(server => server.name === Type.moderate) ?? new DDNetError(`\`${Type.moderate}\` server not found in data!`);
+    const brutal = data.find(server => server.name === Type.brutal) ?? new DDNetError(`\`${Type.brutal}\` server not found in data!`);
+    const insane = data.find(server => server.name === Type.insane) ?? new DDNetError(`\`${Type.insane}\` server not found in data!`);
+    const dummy = data.find(server => server.name === Type.dummy) ?? new DDNetError(`\`${Type.dummy}\` server not found in data!`);
+    const ddmaxEasy = data.find(server => server.name === Type.ddmaxEasy) ?? new DDNetError(`\`${Type.ddmaxEasy}\` server not found in data!`);
+    const ddmaxNext = data.find(server => server.name === Type.ddmaxNext) ?? new DDNetError(`\`${Type.ddmaxNext}\` server not found in data!`);
+    const ddmaxPro = data.find(server => server.name === Type.ddmaxPro) ?? new DDNetError(`\`${Type.ddmaxPro}\` server not found in data!`);
+    const ddmaxNut = data.find(server => server.name === Type.ddmaxNut) ?? new DDNetError(`\`${Type.ddmaxNut}\` server not found in data!`);
+    const oldschool = data.find(server => server.name === Type.oldschool) ?? new DDNetError(`\`${Type.oldschool}\` server not found in data!`);
+    const solo = data.find(server => server.name === Type.solo) ?? new DDNetError(`\`${Type.solo}\` server not found in data!`);
+    const race = data.find(server => server.name === Type.race) ?? new DDNetError(`\`${Type.race}\` server not found in data!`);
+    const fun = data.find(server => server.name === Type.fun) ?? new DDNetError(`\`${Type.fun}\` server not found in data!`);
 
     const types = [novice, moderate, brutal, insane, dummy, ddmaxEasy, ddmaxNext, ddmaxPro, ddmaxNut, oldschool, solo, race, fun];
 

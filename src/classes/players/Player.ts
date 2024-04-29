@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Keyv from 'keyv';
 import { _PlayersJson2, _Schema_players_json2 } from '../../schemas/players/json2.js';
-import { DDNetError, MapType, ServerRegion, dePythonifyTime } from '../../util.js';
+import { DDNetError, Region, Type, dePythonifyTime } from '../../util.js';
+import { Finish } from '../other/Finish.js';
 import { Activity } from './Activity.js';
-import { Finish } from './Finish.js';
 import { Finishes } from './Finishes.js';
 import { GlobalLeaderboard } from './GlobalLeaderboard.js';
 import { Leaderboard } from './Leaderboard.js';
@@ -14,7 +14,8 @@ import { ServerStats } from './ServerStats.js';
 import { Servers } from './Servers.js';
 
 /**
- * Class representing a DDNet player.
+ * Represents a DDNet player.
+ *
  * @example
  * ```ts
  * const coolGuy = await Player.new('Sans3108');
@@ -81,10 +82,12 @@ export class Player {
   /**
    * The favorite server region of this player.
    */
-  public favoriteServer!: ServerRegion;
+  public favoriteServer!: Region;
 
   /**
    * First and recent finishes for this player.
+   *
+   * @remarks Does not include rank information for any finishes, values are set to `-1`.
    */
   public finishes!: Finishes;
 
@@ -148,7 +151,7 @@ export class Player {
   }
 
   /**
-   * Parse an object using the player raw data zod schema.
+   * Parse an object using the player {@link _Schema_players_json2 raw data zod schema}.
    */
   private static parseObject(
     /**
@@ -257,20 +260,31 @@ export class Player {
     });
 
     this.totalCompletionistPoints = this.#rawData.points.total;
-    this.favoriteServer = ServerRegion[this.#rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
+    this.favoriteServer = Region[this.#rawData.favorite_server.server as keyof typeof Region] ?? Region.UNK;
 
     this.finishes = new Finishes({
       first: new Finish({
         mapName: this.#rawData.first_finish.map,
-        timestamp: dePythonifyTime(this.#rawData.first_finish.timestamp),
-        timeSeconds: this.#rawData.first_finish.time
+        players: [this.name],
+        rank: {
+          placement: -1,
+          points: -1
+        },
+        region: Region.UNK,
+        timeSeconds: this.#rawData.first_finish.time,
+        timestamp: dePythonifyTime(this.#rawData.first_finish.timestamp)
       }),
       recent: this.#rawData.last_finishes.map(
         f =>
           new RecentFinish({
             mapName: f.map,
-            mapType: MapType[Object.entries(MapType).find(e => e[1] === f.type)?.[0] as unknown as keyof typeof MapType] ?? MapType.unknown,
-            server: f.country,
+            mapType: Type[Object.entries(Type).find(e => e[1] === f.type)?.[0] as unknown as keyof typeof Type] ?? Type.unknown,
+            players: [this.name],
+            rank: {
+              placement: -1,
+              points: -1
+            },
+            region: Region[f.country as keyof typeof Region] ?? Region.UNK,
             timeSeconds: f.time,
             timestamp: dePythonifyTime(f.timestamp)
           })
@@ -285,10 +299,10 @@ export class Player {
         })
     );
 
-    const keys = Object.keys(MapType).filter(k => k !== 'unknown');
+    const keys = Object.keys(Type).filter(k => k !== 'unknown');
 
     const servers: ServerStats[] = keys.map(k => {
-      const raw = this.#rawData.types[MapType[k as keyof typeof MapType]];
+      const raw = this.#rawData.types[Type[k as keyof typeof Type]];
 
       const leaderboard = new Leaderboard({
         completionist:
@@ -320,7 +334,7 @@ export class Player {
         if (map.finishes === 0) {
           return new UncompletedMapStats({
             mapName: key,
-            mapType: MapType[k as keyof typeof MapType],
+            mapType: Type[k as keyof typeof Type],
             pointsReward: map.points
           });
         } else {
@@ -340,7 +354,7 @@ export class Player {
             finishCount: casted.finishes,
             firstFinishTimestamp: dePythonifyTime(casted.first_finish),
             mapName: key,
-            mapType: MapType[k as keyof typeof MapType],
+            mapType: Type[k as keyof typeof Type],
             pointsReward: casted.points,
             rank: casted.rank,
             teamRank: casted.team_rank
@@ -349,7 +363,7 @@ export class Player {
       });
 
       const server = new ServerStats({
-        name: MapType[k as keyof typeof MapType],
+        name: Type[k as keyof typeof Type],
         leaderboard,
         maps,
         totalCompletionistPoints: raw.points.total
@@ -383,9 +397,9 @@ export class Player {
   }
 
   /**
-   * Returns the name of this player.
+   * Returns the name and url of this player in markdown format.
    */
   public toString(): string {
-    return this.name;
+    return `[${this.name}](${this.url})`;
   }
 }

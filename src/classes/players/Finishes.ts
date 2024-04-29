@@ -1,4 +1,4 @@
-import { Finish } from './Finish.js';
+import { Finish } from '../other/Finish.js';
 import { RecentFinish } from './RecentFinish.js';
 
 /**
