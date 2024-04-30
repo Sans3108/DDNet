@@ -379,8 +379,8 @@ import { DDNetError } from './util.js';
  * @see
  * https://master1.ddnet.org/ddnet/15/servers.json
  */
-async function makeMasterRequest(): Promise<object | DDNetError> {
-  const url = `https://master1.ddnet.org/ddnet/15/servers.json`;
+export async function makeMasterRequest(masterSrv?: string): Promise<object | DDNetError> {
+  const url = masterSrv ?? `https://master1.ddnet.org/ddnet/15/servers.json`;
 
   const response = await axios
     .get<object | string, AxiosResponse<object | string>>(url, {

@@ -1,11 +1,10 @@
 {
   "name": "ddnet",
-  "version": "0.4.0-beta.1",
+  "version": "0.4.0-beta.2",
   "description": "ddnet.org API wrapper",
   "main": "dist/DDNet.js",
-  "exports": {
-    ".": "./dist/DDNet.js",
-    "./master": "./dist/Master.js"
+  "imports": {
+    "ddnet/master": "./dist/Master.js"
   },
   "engines": {
     "node": ">=18.20.2"
