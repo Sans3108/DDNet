@@ -1,6 +1,7 @@
-import { slugify } from '../../util.js';
+import { Type, slugify } from '../../util.js';
+import { Release } from '../other/Release.js';
+import { Releases } from '../other/Releases.js';
 import { Player } from '../players/Player.js';
-import { Map } from './Map.js';
 
 /**
  * Represents a map author.
@@ -30,15 +31,24 @@ export class Author {
     this.playerUrl = `https://ddnet.org/players/${encodeURIComponent(this.name)}`;
   }
 
-  // TODO: Author.getMaps
   /**
-   * Returns a list of objects holding a map name and
-   * a function to turn each of them into a proper {@link Map} object.
-   *
-   * @throws Not implemented yet.
+   * Returns an array of releases by this author.
    */
-  public async getMaps(): Promise<Map[]> {
-    throw new Error(`<MapAuthor>#getMaps is not implemented.`);
+  public async getMaps(
+    /**
+     * If provided, the method will return only releases of this type.
+     */
+    type?: Type
+  ): Promise<Release[]> {
+    const releases = await Releases.new();
+
+    const maps = releases.maps.filter(r => r.mappers.map(a => a.name).includes(this.name));
+
+    if (type) {
+      return maps.filter(m => m.type === type);
+    }
+
+    return maps;
   }
 
   /**

@@ -23,7 +23,7 @@ Import the `Player` class from the package and create a new instance of it.
 ```ts
 import { Player } from 'ddnet';
 
-const me = new Player('Sans3108');
+const me = await Player.new('Sans3108');
 
 console.log(me);
 
@@ -106,7 +106,7 @@ const fastestTime = completed.sort((a, b) => a.bestTimeSeconds - b.bestTimeSecon
 console.log(`${fastestTime.mapName} ${fastestTime.bestTimeString}`); // "Tangerine 00:42"
 ```
 
-Let's say you're interested in player data that much, and you want to check out on some maps, to do that:
+Let's say you're not interested in player data that much, and you want to check out on some maps, to do that:
 
 ```ts
 import { Map } from 'ddnet';

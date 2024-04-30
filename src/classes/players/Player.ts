@@ -2,14 +2,13 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import Keyv from 'keyv';
 import { _PlayersJson2, _Schema_players_json2 } from '../../schemas/players/json2.js';
 import { DDNetError, Region, Type, dePythonifyTime } from '../../util.js';
-import { Finish } from '../other/Finish.js';
+import { Finish, RecentFinish } from '../other/Finish.js';
 import { Activity } from './Activity.js';
 import { Finishes } from './Finishes.js';
 import { GlobalLeaderboard } from './GlobalLeaderboard.js';
 import { Leaderboard } from './Leaderboard.js';
 import { CompletedMapStats, UncompletedMapStats } from './MapStats.js';
 import { Partner } from './Partner.js';
-import { RecentFinish } from './RecentFinish.js';
 import { ServerStats } from './ServerStats.js';
 import { Servers } from './Servers.js';
 

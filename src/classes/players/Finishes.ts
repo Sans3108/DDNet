@@ -1,5 +1,4 @@
-import { Finish } from '../other/Finish.js';
-import { RecentFinish } from './RecentFinish.js';
+import { Finish, RecentFinish } from '../other/Finish.js';
 
 /**
  * Wrapper class for a player's first and recent finishes.
