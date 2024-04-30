@@ -82,7 +82,7 @@ export function dePythonifyTime(
 }
 
 /**
- * Represents the different DDNet types.
+ * Represents the different DDNet server types.
  */
 export enum Type {
   novice = 'Novice',
@@ -139,7 +139,7 @@ export enum Region {
 }
 
 /**
- * Represents player countries
+ * Represents player countries.
  *
  * @see
  * https://github.com/ddnet/ddnet/tree/master/data/countryflags
@@ -395,4 +395,99 @@ export enum Country {
   ZM = 'ZM',
   ZW = 'ZW',
   default = 'default'
+}
+
+/**
+ * Represents map tiles.
+ *
+ * @see
+ * https://github.com/ddnet/ddnet-web/tree/master/www/tiles
+ */
+export enum Tile {
+  BONUS = 'BONUS',
+  BOOST = 'BOOST',
+  CHECKPOINT_FIRST = 'CHECKPOINT_FIRST',
+  CRAZY_SHOTGUN = 'CRAZY_SHOTGUN',
+  DEATH = 'DEATH',
+  DFREEZE = 'DFREEZE',
+  DOOR = 'DOOR',
+  DRAGGER = 'DRAGGER',
+  EHOOK_START = 'EHOOK_START',
+  HIT_END = 'HIT_END',
+  JETPACK_START = 'JETPACK_START',
+  JUMP = 'JUMP',
+  LASER_STOP = 'LASER_STOP',
+  NPC_START = 'NPC_START',
+  NPH_START = 'NPH_START',
+  OLDLASER = 'OLDLASER',
+  PLASMAE = 'PLASMAE',
+  PLASMAF = 'PLASMAF',
+  PLASMAU = 'PLASMAU',
+  POWERUP_NINJA = 'POWERUP_NINJA',
+  SOLO_START = 'SOLO_START',
+  STOP = 'STOP',
+  SUPER_START = 'SUPER_START',
+  SWITCH = 'SWITCH',
+  SWITCH_TIMED = 'SWITCH_TIMED',
+  TELECHECK = 'TELECHECK',
+  TELECHECKIN = 'TELECHECKIN',
+  TELEIN = 'TELEIN',
+  TELEINEVIL = 'TELEINEVIL',
+  TELEINHOOK = 'TELEINHOOK',
+  TELEINWEAPON = 'TELEINWEAPON',
+  TELE_GRENADE = 'TELE_GRENADE',
+  TELE_GUN = 'TELE_GUN',
+  TELE_LASER = 'TELE_LASER',
+  THROUGH = 'THROUGH',
+  THROUGH_ALL = 'THROUGH_ALL',
+  TUNE = 'TUNE',
+  WALLJUMP = 'WALLJUMP',
+  WEAPON_GRENADE = 'WEAPON_GRENADE',
+  WEAPON_RIFLE = 'WEAPON_RIFLE',
+  WEAPON_SHOTGUN = 'WEAPON_SHOTGUN',
+  UNKNOWN_TILE = 'UNKNOWN_TILE'
+}
+
+/**
+ * Gets a direct image url from the provided {@link Region}.
+ */
+export function getImageUrl<T extends 'region'>(
+  /**
+   * The region to get the image for.
+   */
+  region: Region,
+  kind: T
+): `https://raw.githubusercontent.com/ddnet/ddnet-web/master/www/countryflags/${string}.png`;
+/**
+ * Gets a direct image url from the provided {@link Country}.
+ */
+export function getImageUrl<T extends 'country'>(
+  /**
+   * The country to get the image for.
+   */
+  country: Country,
+  kind: T
+): `https://raw.githubusercontent.com/ddnet/ddnet/master/data/countryflags/${string}.png`;
+/**
+ * Gets a direct image url from the provided {@link Tile}.
+ */
+export function getImageUrl<T extends 'tile'>(
+  /**
+   * The tile to get the image for.
+   */
+  tile: Tile,
+  kind: T
+): `https://raw.githubusercontent.com/ddnet/ddnet-web/master/www/tiles/${string}.png`;
+/**
+ * @param kind The kind of image wanted, this is used at run-time to determine which url gets returned for overlapping members.
+ * @typeParam T Used in combination with the {@link kind} param to also determine the kind of image wanted at compile-time.
+ */
+export function getImageUrl<T extends 'region' | 'country' | 'tile'>(eMem: Region | Country | Tile, kind: T): string {
+  if (kind === 'country') return `https://raw.githubusercontent.com/ddnet/ddnet/master/data/countryflags/${eMem}.png`;
+
+  if (kind === 'region') return `https://raw.githubusercontent.com/ddnet/ddnet-web/master/www/countryflags/${eMem}.png`;
+
+  if (kind === 'tile') return `https://raw.githubusercontent.com/ddnet/ddnet-web/master/www/tiles/${eMem}.png`;
+
+  throw new DDNetError(`Unknown error.`);
 }

@@ -1,4 +1,4 @@
-# DDNet
+# DDNet Readme
 
 ![NPM Version](https://img.shields.io/npm/v/ddnet?logo=npm) ![NPM Downloads](https://img.shields.io/npm/dm/ddnet?logo=npm&label=Downloads) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Sans3108/DDNet?logo=github&label=Issues)
 
@@ -7,6 +7,14 @@ A typescript npm package for interacting with data from ddnet.org
 ## Why?
 
 I was bored, and also I needed a decent package to use for interacting with ddnet.org programatically.
+
+## Installation
+
+Using your node package manager of choice, for example `pnpm`:
+
+```
+$ pnpm add ddnet
+```
 
 ## Example Usage
 
@@ -95,23 +103,160 @@ const player = await Player.new('Sans3108');
 const completed = player.serverTypes.novice.maps.filter(map => map.finishCount > 0) as CompletedMapStats[];
 const fastestTime = completed.sort((a, b) => a.bestTimeSeconds - b.bestTimeSeconds)[0];
 
-console.log(fastestTime);
+console.log(`${fastestTime.mapName} ${fastestTime.bestTimeString}`); // "Tangerine 00:42"
+```
+
+Let's say you're interested in player data that much, and you want to check out on some maps, to do that:
+
+```ts
+import { Map } from 'ddnet';
+const map = await Map.new('Kobra 4');
+
+console.log(map);
 /*
-CompletedMapStats {
-  mapName: 'Tangerine',
-  mapType: 'Novice',
-  points: 1,
-  placement: 7264,
-  firstFinishTimestamp: 1637630856000,
-  bestTimeSeconds: 42.86,
-  bestTimeString: '00:42',
-  finishCount: 6,
-  teamRank: 112
+Map {
+  name: 'Kobra 4',
+  url: 'https://ddnet.org/maps/Kobra-32-4',
+  thumbnailUrl: 'https://ddnet.org/ranks/maps/Kobra_4.png',
+  webPreviewUrl: 'https://ddnet.org/mappreview/?map=Kobra+4',
+  type: 'Novice',
+  points: 4,
+  difficulty: 4,
+  mappers: [
+    Author {
+      name: 'Zerodin',
+      mapShowcaseUrl: 'https://ddnet.org/mappers/Zerodin',
+      playerUrl: 'https://ddnet.org/players/Zerodin'
+    }
+  ],
+  releasedTimestamp: 1438538340000,
+  biggestTeam: 8,
+  width: 500,
+  height: 500,
+  tiles: [
+    'DEATH',          'THROUGH',
+    'DFREEZE',        'EHOOK_START',
+    ...
+  ],
+  teamFinishes: [
+    Finish {
+      timestamp: 1662539643000,
+      mapName: 'Kobra 4',
+      timeSeconds: 693.46,
+      timeString: '11:33',
+      rank: [Object],
+      region: 'CHN',
+      players: [Array]
+    },
+    ...
+  ],
+  finishes: [
+    Finish {
+      timestamp: 1662539643000,
+      mapName: 'Kobra 4',
+      timeSeconds: 693.46,
+      timeString: '11:33',
+      rank: [Object],
+      region: 'CHN',
+      players: [Array]
+    },
+    ...
+  ],
+  maxFinishes: [
+    MaxFinish {
+      rank: 1,
+      player: 'nameless tee',
+      count: 659,
+      timeSeconds: 1754617.6977539062,
+      timeString: '487:23:37',
+      minTimestamp: 1438545584000,
+      maxTimestamp: 1714287869000
+    },
+    ...
+  ],
+  medianTimeSeconds: 2974.6999511719,
+  medianTimeString: '49:34',
+  firstFinishTimestamp: 1438539743000,
+  lastFinishTimestamp: 1714430160000,
+  finishCount: 230707,
+  finishersCount: 73166
 }
 */
 ```
 
-If you've made it this far and you consider this package useful, please consider starring this repository so more people can see it!
+Like before, this may be a bit much, so let's see some examples. Here are some showcasing how to get a map's author, the number of points it awards upon completion, and the current time record:
+
+```ts
+// Author
+
+import { Map } from 'ddnet';
+
+const map = await Map.new('Grandma');
+
+console.log(map.mappers[0].name); // "Fňokurka oo7"
+
+// If the map has multiple authors, then:
+const map = await Map.new('Nagi');
+
+console.log(map.mappers.map(a => a.name).join(' & ')); // "Cøke & Arrow"
+```
+
+```ts
+// Points
+import { Map } from 'ddnet';
+
+const map = await Map.new('EasyRight');
+
+console.log(map.points); // 4
+```
+
+```ts
+// Current record
+import { Map } from 'ddnet';
+
+const map = await Map.new('Baby Aim 1.0');
+
+console.log(`${map.finishes[0].players[0].name} ${map.finishes[0].timeString}`); // "Cireme 06:25"
+```
+
+## Building
+
+For building this package yourself you will need at least Node v18.20.2, and some knowledge of typescript. Package manager choice should not matter, but for smooth operations I recommend `pnpm`.
+
+First, clone the repository and navigate to it:
+
+```
+$ git clone https://github.com/Sans3108/DDNet.git
+$ cd DDNet
+```
+
+Install the dependencies with:
+
+```
+$ pnpm install
+```
+
+After that, you're ready to open up the project in your code editor of choice, or, if you don't wish to change anything, simply run the following command to build the project:
+
+```
+$ pnpm build
+```
+
+Additionaly you may re-build the `typedoc` documentation website with:
+
+```
+$ pnpm typedoc
+```
+
+And after that everything in the /docs directory should be up to date with your changes.
+
+## Contributions & Notes
+
+Help is always appreciated, if you are able to contribute and have the know-how, please do! I will look over every PR and potentially we can integrate your changes!
+
+This readme may not showcase everything, but that's why the [documentation website](https://sans3108.github.io/DDNet) exists! Please check it out, explore and find what you need there if it wasn't shown here.
+
+If you've made it this far and you consider this package useful, please consider starring [this repository](https://github.com/Sans3108/DDNet) so more people can see it!
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/Sans3108/DDNet)
 

@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Keyv from 'keyv';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
-import { DDNetError, Region, Type, dePythonifyTime, timeString } from '../../util.js';
+import { DDNetError, Region, Tile, Type, dePythonifyTime, timeString } from '../../util.js';
+import { Finish } from '../other/Finish.js';
 import { Author } from './Author.js';
 import { MaxFinish } from './MaxFinish.js';
-import { Finish } from '../other/Finish.js';
 
 /**
  * Represents a DDNet map.
@@ -125,7 +125,7 @@ export class Map {
   /**
    * Array of tiles used in this map.
    */
-  public tiles!: string[];
+  public tiles!: Tile[];
 
   /**
    * Team finishes for this map.
@@ -293,7 +293,11 @@ export class Map {
     this.biggestTeam = this.#rawData.biggest_team;
     this.width = this.#rawData.width;
     this.height = this.#rawData.height;
-    this.tiles = this.#rawData.tiles;
+    this.tiles = this.#rawData.tiles.map(tile => {
+      const values = Object.values<string>(Tile).filter(t => t !== Tile.UNKNOWN_TILE);
+
+      return !values.includes(tile) ? Tile.UNKNOWN_TILE : (tile as Tile);
+    });
 
     this.teamFinishes = this.#rawData.team_ranks.map(
       rank =>
