@@ -180,12 +180,13 @@ export interface MasterSrvFoundPlayer {
   server: {
     name: string;
     addresses: string[];
+    self: MasterServerData['servers'][number];
   };
 }
 
 /**
  * Finds a player on the master server by their name or clan.
- * 
+ *
  * @example
  * ```ts
  * const players = await findPlayer('nameless tee');
@@ -233,7 +234,8 @@ export async function findPlayer(
       toPlayer: async () => await Player.new(client.name),
       server: {
         name: srv.name,
-        addresses: srv.addresses
+        addresses: srv.addresses,
+        self: srv.self
       }
     };
   });
