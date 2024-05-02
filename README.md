@@ -6,7 +6,7 @@ A typescript npm package for interacting with data from ddnet.org
 
 ## Why?
 
-I was bored, and also I needed a decent package to use for interacting with ddnet.org programatically.
+I was bored, and also I needed a decent package to use for interacting with ddnet.org programatically. It is also my first package and I tried my best to make it as good as possible.
 
 ## Installation
 
@@ -17,6 +17,8 @@ $ pnpm add ddnet
 ```
 
 ## Example Usage
+
+### Player class examples
 
 Import the `Player` class from the package and create a new instance of it.
 
@@ -105,6 +107,8 @@ const fastestTime = completed.sort((a, b) => a.bestTimeSeconds - b.bestTimeSecon
 
 console.log(`${fastestTime.mapName} ${fastestTime.bestTimeString}`); // "Tangerine 00:42"
 ```
+
+### Map class examples
 
 Let's say you're not interested in player data that much, and you want to check out on some maps, to do that:
 
@@ -248,13 +252,15 @@ Additionaly you may re-build the `typedoc` documentation website with:
 $ pnpm typedoc
 ```
 
-And after that everything in the /docs directory should be up to date with your changes.
+And after that everything in the `/docs` directory should be up to date with your changes.
 
 ## Contributions & Notes
 
 Help is always appreciated, if you are able to contribute and have the know-how, please do! I will look over every PR and potentially we can integrate your changes!
 
 This readme may not showcase everything, but that's why the [documentation website](https://sans3108.github.io/DDNet) exists! Please check it out, explore and find what you need there if it wasn't shown here.
+
+If something is missing or you would like to suggest something please [submit an issue](https://github.com/Sans3108/DDNet/issues/new) about it!
 
 If you've made it this far and you consider this package useful, please consider starring [this repository](https://github.com/Sans3108/DDNet) so more people can see it!
 

@@ -1,7 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Keyv from 'keyv';
+import { _Schema_players_json } from '../../schemas/players/json.js';
 import { _PlayersJson2, _Schema_players_json2 } from '../../schemas/players/json2.js';
+import { _Schema_players_query } from '../../schemas/players/query.js';
 import { DDNetError, Region, Type, dePythonifyTime } from '../../util.js';
+import { Map } from '../maps/Map.js';
+import { CacheManager } from '../other/CacheManager.js';
 import { Finish, RecentFinish } from '../other/Finish.js';
 import { Activity } from './Activity.js';
 import { Finishes } from './Finishes.js';
@@ -24,39 +27,27 @@ import { Servers } from './Servers.js';
  * ```
  */
 export class Player {
-  //#region Cache
-
-  /**
-   * Player responses cache.
-   */
-  private static cache: Keyv<object> = new Keyv<object>({
-    namespace: 'player-cache'
-  });
-
-  /**
-   * "Time-To-Live" - How much time (in milliseconds) before a cached object becomes stale, and thus removed automatically.
-   *
-   * Changing this value does not affect old objects.
-   *
-   * @default 7200000 // 2 hours
-   */
-  public static ttl: number = 2 * 60 * 60 * 1000; // 2h
-
-  /**
-   * Clears the {@link Player.cache}.
-   */
-  public static async clearCache(): Promise<void> {
-    return await this.cache.clear();
-  }
-
-  //#endregion
-
   //#region Declarations
 
   /**
    * Raw data for this player.
    */
   #rawData!: _PlayersJson2; // Marked private with vanilla JS syntax for better logging.
+
+  /**
+   * Player responses cache. (2h default TTL)
+   */
+  private static cache = new CacheManager<object>('player-cache');
+
+  /**
+   * Sets the TTL (Time-To-Live) for objects in cache.
+   */
+  public static setTTL = this.cache.setTTL;
+
+  /**
+   * Clears the {@link Player.cache}.
+   */
+  public static clearCache = this.cache.clearCache;
 
   /**
    * The name of this player.
@@ -109,6 +100,11 @@ export class Player {
    * Number of hours played in the past 365 days by this player.
    */
   public hoursPlayedPast365days!: number;
+
+  /**
+   * All maps stats for this player.
+   */
+  public allMapStats!: (UncompletedMapStats | CompletedMapStats)[];
 
   //#endregion
 
@@ -202,7 +198,7 @@ export class Player {
 
     if (typeof data === 'string') return new DDNetError(`Invalid response!`, data);
 
-    await this.cache.set(url, data, this.ttl);
+    await this.cache.set(url, data);
 
     return { data, fromCache: false };
   }
@@ -377,6 +373,16 @@ export class Player {
 
     this.hoursPlayedPast365days = this.#rawData.hours_played_past_365_days;
 
+    this.allMapStats = [];
+
+    for (const key in this.serverTypes) {
+      const k = key as keyof typeof this.serverTypes;
+
+      const maps = this.serverTypes[k].maps;
+
+      this.allMapStats.push(...maps);
+    }
+
     return this;
   }
 
@@ -400,5 +406,51 @@ export class Player {
    */
   public toString(): string {
     return `[${this.name}](${this.url})`;
+  }
+
+  /**
+   * Returns an array of objects containing the names of all finished maps and a function to turn them into proper {@link Map} objects.
+   */
+  public async getAllFinishedMapNames(
+    /**
+     * Wether to bypass the cache.
+     */
+    force = false
+  ): Promise<{ name: string; toMap: () => Promise<Map> }[]> {
+    const data = await Player.makeRequest(`https://ddnet.org/players/?json=${encodeURIComponent(this.name)}`, force);
+
+    if (data instanceof DDNetError) throw data;
+
+    const parsed = _Schema_players_json.safeParse(data.data);
+
+    if (!parsed.success) throw new DDNetError(`Failed to parse received data.`, parsed.error);
+
+    return parsed.data.map(map => ({ name: map, toMap: async () => await Map.new(map) }));
+  }
+
+  /**
+   * Search for a player.
+   */
+  public static async search(
+    /**
+     * The value to search for.
+     */
+    value: string,
+    /**
+     * Wether to bypass the cache.
+     */
+    force = false
+  ): Promise<{ name: string; points: number; toPlayer: () => Promise<Player> }[] | null> {
+    const data = await Player.makeRequest(`https://ddnet.org/players/?query=${encodeURIComponent(value)}`, force);
+
+    if (data instanceof DDNetError) throw data;
+
+    const parsed = _Schema_players_query.safeParse(data.data);
+
+    if (!parsed.success) throw new DDNetError(`Failed to parse received data.`, parsed.error);
+
+    if (parsed.data.length === 0) return null;
+
+    return parsed.data.map(player => ({ name: player.name, points: player.points, toPlayer: async () => await Player.new(player.name) }));
   }
 }

@@ -1,6 +1,3 @@
-import { Player } from './DDNet.js';
-import { getMasterSrvData } from './Master.js';
-
 /**
  * Wrapper class for the {@link Error} built-in class, used as a catch all option and to also provide error context.
  */

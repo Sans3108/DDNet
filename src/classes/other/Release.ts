@@ -1,5 +1,5 @@
 import { Tile, Type } from '../../util.js';
-import { Author } from '../maps/Author.js';
+import { Mapper } from '../maps/Mapper.js';
 import { Map } from '../maps/Map.js';
 
 /**
@@ -44,7 +44,7 @@ export class Release {
   /**
    * Authors of this map.
    */
-  public mappers: Author[];
+  public mappers: Mapper[];
 
   /**
    * Release timestamp of this map.
@@ -77,7 +77,7 @@ export class Release {
     this.webPreviewUrl = data.web_preview;
     this.points = data.points;
     this.difficulty = data.difficulty;
-    this.mappers = data.mapper.split('&').map(mapperName => new Author({ name: mapperName.trim() }));
+    this.mappers = data.mapper.split('&').map(mapperName => new Mapper({ name: mapperName.trim() }));
     this.releasedTimestamp = isNaN(data.releaseTimestamp) ? null : data.releaseTimestamp;
     this.width = data.width;
     this.height = data.height;

@@ -1,10 +1,12 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Keyv from 'keyv';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
+import { _Schema_maps_query } from '../../schemas/maps/query.js';
 import { DDNetError, Region, Tile, Type, dePythonifyTime, timeString } from '../../util.js';
+import { CacheManager } from '../other/CacheManager.js';
 import { Finish } from '../other/Finish.js';
-import { Author } from './Author.js';
+import { Mapper } from './Mapper.js';
 import { MaxFinish } from './MaxFinish.js';
+import { Player } from '../players/Player.js';
 
 /**
  * Represents a DDNet map.
@@ -28,39 +30,27 @@ import { MaxFinish } from './MaxFinish.js';
  * ```
  */
 export class Map {
-  //#region Cache
-
-  /**
-   * Map responses cache.
-   */
-  private static cache: Keyv<object> = new Keyv<object>({
-    namespace: 'map-cache'
-  });
-
-  /**
-   * "Time-To-Live" - How much time (in milliseconds) before a cached object becomes stale, and thus removed automatically.
-   *
-   * Changing this value does not affect old objects.
-   *
-   * @default 7200000 // 2 hours
-   */
-  public static ttl: number = 2 * 60 * 60 * 1000; // 2h
-
-  /**
-   * Clears the {@link Map.cache}.
-   */
-  public static async clearCache(): Promise<void> {
-    return await this.cache.clear();
-  }
-
-  //#endregion
-
   //#region Declarations
 
   /**
    * Raw data for this map.
    */
   #rawData!: _MapsJson; // Marked private with vanilla JS syntax for better logging.
+
+  /**
+   * Map responses cache. (8h default TTL)
+   */
+  private static cache = new CacheManager<object>('map-cache', 8 * 60 * 60 * 1000); // 8h
+
+  /**
+   * Sets the TTL (Time-To-Live) for objects in cache.
+   */
+  public static setTTL = this.cache.setTTL;
+
+  /**
+   * Clears the {@link Map.cache}.
+   */
+  public static clearCache = this.cache.clearCache;
 
   /**
    * The name of this map.
@@ -100,7 +90,7 @@ export class Map {
   /**
    * Authors of this map.
    */
-  public mappers!: Author[];
+  public mappers!: Mapper[];
 
   /**
    * Release timestamp of this map.
@@ -265,7 +255,7 @@ export class Map {
 
     if (typeof data === 'string') return new DDNetError(`Invalid response!`, data);
 
-    await this.cache.set(url, data, this.ttl);
+    await this.cache.set(url, data);
 
     return { data, fromCache: false };
   }
@@ -288,7 +278,7 @@ export class Map {
     this.type = !Object.values<string>(Type).includes(this.#rawData.type) ? Type.unknown : (this.#rawData.type as Type);
     this.points = this.#rawData.points;
     this.difficulty = this.#rawData.difficulty;
-    this.mappers = this.#rawData.mapper.split('&').map(mapperName => new Author({ name: mapperName.trim() }));
+    this.mappers = this.#rawData.mapper.split('&').map(mapperName => new Mapper({ name: mapperName.trim() }));
     this.releasedTimestamp = this.#rawData.release ? dePythonifyTime(this.#rawData.release) : null;
     this.biggestTeam = this.#rawData.biggest_team;
     this.width = this.#rawData.width;
@@ -360,5 +350,40 @@ export class Map {
    */
   public toString(): string {
     return `[${this.name}](${this.url})`;
+  }
+
+  /**
+   * Search for a map.
+   */
+  public static async search(
+    /**
+     * The value to search for.
+     */
+    value: string,
+    /**
+     * Wether to bypass the cache.
+     */
+    force = false
+  ): Promise<{ mappers: { name: string; toMapper: () => Mapper; toPlayer: () => Promise<Player> }[]; type: Type; name: string; toMap: () => Promise<Map> }[] | null> {
+    const data = await Map.makeRequest(`https://ddnet.org/maps/?query=${encodeURIComponent(value)}`, force);
+
+    if (data instanceof DDNetError) throw data;
+
+    const parsed = _Schema_maps_query.safeParse(data.data);
+
+    if (!parsed.success) throw new DDNetError(`Failed to parse received data.`, parsed.error);
+
+    if (parsed.data.length === 0) return null;
+
+    return parsed.data.map(map => ({
+      name: map.name,
+      mappers: map.mapper.split('&').map(mapperName => ({
+        name: mapperName.trim(),
+        toMapper: () => new Mapper({ name: mapperName.trim() }),
+        toPlayer: async () => await Player.new(mapperName.trim())
+      })),
+      type: !Object.values<string>(Type).includes(map.type) ? Type.unknown : (map.type as Type),
+      toMap: async () => await Map.new(map.name)
+    }));
   }
 }

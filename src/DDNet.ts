@@ -9,15 +9,18 @@
 //#region Classes
 
 //#region Maps
-export * from './classes/maps/Author.js';
 export * from './classes/maps/Map.js';
+export * from './classes/maps/Mapper.js';
 export * from './classes/maps/MaxFinish.js';
 //#endregion
 
 //#region Other
+export * from './classes/other/CacheManager.js';
 export * from './classes/other/Finish.js';
 export * from './classes/other/Release.js';
 export * from './classes/other/Releases.js';
+export * from './classes/other/ServerListStatuses.js';
+export * from './classes/other/ServerStatus.js';
 //#endregion
 
 //#region Players
@@ -45,6 +48,7 @@ export * from './schemas/maps/query.js';
 
 //#region Other
 export * from './schemas/other/releases.js';
+export * from './schemas/other/status.js';
 //#endregion
 
 //#region Players

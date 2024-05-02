@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.4.0-beta.7",
+  "version": "0.4.0",
   "description": "ddnet.org API wrapper",
   "packageManager": "pnpm@9.0.6",
   "main": "dist/DDNet.js",
