@@ -1,12 +1,12 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
 import { _Schema_maps_query } from '../../schemas/maps/query.js';
-import { DDNetError, Region, Tile, Type, dePythonifyTime, timeString } from '../../util.js';
+import { DDNetError, Region, Tile, Type, dePythonifyTime, splitMappers, timeString } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish } from '../other/Finish.js';
+import { Player } from '../players/Player.js';
 import { Mapper } from './Mapper.js';
 import { MaxFinish } from './MaxFinish.js';
-import { Player } from '../players/Player.js';
 
 /**
  * Represents a DDNet map.
@@ -278,7 +278,7 @@ export class Map {
     this.type = !Object.values<string>(Type).includes(this.#rawData.type) ? Type.unknown : (this.#rawData.type as Type);
     this.points = this.#rawData.points;
     this.difficulty = this.#rawData.difficulty;
-    this.mappers = this.#rawData.mapper.split('&').map(mapperName => new Mapper({ name: mapperName.trim() }));
+    this.mappers = splitMappers(this.#rawData.mapper).map(mapperName => new Mapper({ name: mapperName }));
     this.releasedTimestamp = this.#rawData.release ? dePythonifyTime(this.#rawData.release) : null;
     this.biggestTeam = this.#rawData.biggest_team;
     this.width = this.#rawData.width;
@@ -377,7 +377,7 @@ export class Map {
 
     return parsed.data.map(map => ({
       name: map.name,
-      mappers: map.mapper.split('&').map(mapperName => ({
+      mappers: splitMappers(map.mapper).map(mapperName => ({
         name: mapperName.trim(),
         toMapper: () => new Mapper({ name: mapperName.trim() }),
         toPlayer: async () => await Player.new(mapperName.trim())

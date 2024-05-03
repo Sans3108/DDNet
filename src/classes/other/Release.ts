@@ -1,6 +1,6 @@
-import { Tile, Type } from '../../util.js';
-import { Mapper } from '../maps/Mapper.js';
+import { Tile, Type, splitMappers } from '../../util.js';
 import { Map } from '../maps/Map.js';
+import { Mapper } from '../maps/Mapper.js';
 
 /**
  * Represents a map release.
@@ -77,7 +77,7 @@ export class Release {
     this.webPreviewUrl = data.web_preview;
     this.points = data.points;
     this.difficulty = data.difficulty;
-    this.mappers = data.mapper.split('&').map(mapperName => new Mapper({ name: mapperName.trim() }));
+    this.mappers = splitMappers(data.mapper).map(mapperName => new Mapper({ name: mapperName.trim() }));
     this.releasedTimestamp = isNaN(data.releaseTimestamp) ? null : data.releaseTimestamp;
     this.width = data.width;
     this.height = data.height;

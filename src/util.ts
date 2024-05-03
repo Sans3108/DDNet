@@ -491,3 +491,17 @@ export function getImageUrl<T extends 'region' | 'country' | 'tile'>(eMem: Regio
 
   throw new DDNetError(`Unknown error.`);
 }
+
+/**
+ * Splits a mapper name string into an array of mapper names.
+ *
+ * @see
+ * https://github.com/ddnet/ddnet-scripts/blob/8e0909edbeb5d7a6446349dc66a3beb0f5ddccc7/servers/scripts/ddnet.py#L213
+ */
+export function splitMappers(mapperNames: string): string[] {
+  let names: string[] = mapperNames.split(', ');
+  if (names.length) {
+    names = names.slice(0, -1).concat(names[names.length - 1].split(' & '));
+  }
+  return names;
+}
