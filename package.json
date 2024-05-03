@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "ddnet.org API wrapper",
   "packageManager": "pnpm@9.0.6",
   "main": "dist/DDNet.js",
@@ -52,8 +52,6 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
-    "canvas": "^2.11.2",
-    "chart.js": "^4.4.2",
     "keyv": "^4.5.4",
     "zod": "^3.23.4"
   },
