@@ -12,14 +12,14 @@ export class Partner {
   /**
    * The amount of finishes the player and this partner share.
    */
-  public finishes: number;
+  public finishCount: number;
 
   /**
    * Construct a new {@link Partner} instance.
    */
-  constructor(data: { name: string; finishes: number }) {
+  constructor(data: { name: string; finishCount: number }) {
     this.name = data.name;
-    this.finishes = data.finishes;
+    this.finishCount = data.finishCount;
   }
 
   /**

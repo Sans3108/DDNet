@@ -1,4 +1,4 @@
-import { _ServerStatus } from '../../DDNet';
+import { _ServerStatus } from '../../schemas/other/status.js';
 
 /**
  * Represents a DDNet server's status.

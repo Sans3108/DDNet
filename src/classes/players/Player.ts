@@ -92,7 +92,7 @@ export class Player {
   public serverTypes!: Servers;
 
   /**
-   * Daily player activity.
+   * Recorded player activity.
    */
   public activity!: ActivityEntry[];
 
@@ -290,7 +290,7 @@ export class Player {
       p =>
         new Partner({
           name: p.name,
-          finishes: p.finishes
+          finishCount: p.finishes
         })
     );
 

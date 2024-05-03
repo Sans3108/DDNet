@@ -54,7 +54,7 @@ export class Mapper {
    */
   public async getMaps(
     /**
-     * If provided, the method will return only releases of this type.
+     * If provided, the method will only return releases of this type.
      */
     type?: Type
   ): Promise<Release[]> {
