@@ -7,5 +7,9 @@
   "cleanOutputDir": true,
   "customCss": "./docFonts.css",
   "gitRemote": "origin",
-  "gitRevision": "master"
+  "gitRevision": "master",
+  "validation": {
+    "notExported": true,
+    "invalidLink": true
+  }
 }

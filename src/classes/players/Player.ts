@@ -6,7 +6,7 @@ import { DDNetError, Region, Type, dePythonifyTime } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish, RecentFinish } from '../other/Finish.js';
-import { Activity } from './Activity.js';
+import { ActivityEntry } from './ActivityEntry.js';
 import { Finishes } from './Finishes.js';
 import { GlobalLeaderboard } from './GlobalLeaderboard.js';
 import { Leaderboard } from './Leaderboard.js';
@@ -94,7 +94,7 @@ export class Player {
   /**
    * Daily player activity.
    */
-  public activity!: Activity[];
+  public activity!: ActivityEntry[];
 
   /**
    * Number of hours played in the past 365 days by this player.
@@ -369,7 +369,7 @@ export class Player {
 
     this.serverTypes = new Servers(servers);
 
-    this.activity = this.#rawData.activity.map(a => new Activity({ date: a.date, hoursPlayed: a.hours_played }));
+    this.activity = this.#rawData.activity.map(a => new ActivityEntry({ date: a.date, hoursPlayed: a.hours_played }));
 
     this.hoursPlayedPast365days = this.#rawData.hours_played_past_365_days;
 
