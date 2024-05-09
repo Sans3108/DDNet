@@ -175,6 +175,7 @@ await mySkin.render({ eyeVariant: 'eye-happy', saveFilePath: 'my-skin.png' }); /
 ```
 
 _my-skin.png_
+
 ![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/my-skin.png)
 
 ## Building
