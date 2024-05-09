@@ -1,7 +1,7 @@
 {
   "name": "ddnet",
-  "version": "0.4.2",
-  "description": "ddnet.org API wrapper",
+  "version": "0.5.0",
+  "description": "A typescript npm package for interacting with data from ddnet.org",
   "packageManager": "pnpm@9.0.6",
   "main": "dist/DDNet.js",
   "exports": {
@@ -53,6 +53,8 @@
   "dependencies": {
     "axios": "^1.6.8",
     "keyv": "^4.5.4",
+    "node-png": "^0.4.3",
+    "sharp": "^0.33.3",
     "zod": "^3.23.4"
   },
   "types": "dist/DDNet.d.ts"

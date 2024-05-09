@@ -1,6 +1,6 @@
 # DDNet Readme
 
-![NPM Version](https://img.shields.io/npm/v/ddnet?logo=npm) ![NPM Downloads](https://img.shields.io/npm/dm/ddnet?logo=npm&label=Downloads) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Sans3108/DDNet?logo=github&label=Issues)
+[![NPM Version](https://img.shields.io/npm/v/ddnet?logo=npm)](https://www.npmjs.com/package/ddnet) [![NPM Downloads](https://img.shields.io/npm/dm/ddnet?logo=npm&label=Downloads)](https://www.npmjs.com/package/ddnet) [![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Sans3108/DDNet?logo=github&label=Issues)](https://github.com/Sans3108/DDNet/issues)
 
 A typescript npm package for interacting with data from ddnet.org
 
@@ -57,24 +57,7 @@ Player {
       ...
     ]
   },
-  favoritePartners: [
-    Partner { name: 'SPOOK04', finishes: 7 },
-    ...
-  ],
-  serverTypes: Servers {
-    novice: ServerStats {
-      name: 'Novice',
-      leaderboard: [Leaderboard],
-      totalCompletionistPoints: 537,
-      maps: [Array]
-    },
-    ...
-  },
-  activity: [
-    Activity { timestamp: 1627689600000, hours: 1 },
-    ...   
-  ],
-  hoursPlayedPast365days: 369
+  ... (lots of other data)
 }
 */
 ```
@@ -134,56 +117,7 @@ Map {
     }
   ],
   releasedTimestamp: 1438538340000,
-  biggestTeam: 8,
-  width: 500,
-  height: 500,
-  tiles: [
-    'DEATH',          'THROUGH',
-    'DFREEZE',        'EHOOK_START',
-    ...
-  ],
-  teamFinishes: [
-    Finish {
-      timestamp: 1662539643000,
-      mapName: 'Kobra 4',
-      timeSeconds: 693.46,
-      timeString: '11:33',
-      rank: [Object],
-      region: 'CHN',
-      players: [Array]
-    },
-    ...
-  ],
-  finishes: [
-    Finish {
-      timestamp: 1662539643000,
-      mapName: 'Kobra 4',
-      timeSeconds: 693.46,
-      timeString: '11:33',
-      rank: [Object],
-      region: 'CHN',
-      players: [Array]
-    },
-    ...
-  ],
-  maxFinishes: [
-    MaxFinish {
-      rank: 1,
-      player: 'nameless tee',
-      count: 659,
-      timeSeconds: 1754617.6977539062,
-      timeString: '487:23:37',
-      minTimestamp: 1438545584000,
-      maxTimestamp: 1714287869000
-    },
-    ...
-  ],
-  medianTimeSeconds: 2974.6999511719,
-  medianTimeString: '49:34',
-  firstFinishTimestamp: 1438539743000,
-  lastFinishTimestamp: 1714430160000,
-  finishCount: 230707,
-  finishersCount: 73166
+  ... (lots of other data)
 }
 */
 ```
@@ -222,6 +156,26 @@ const map = await Map.new('Baby Aim 1.0');
 
 console.log(`${map.finishes[0].players[0].name} ${map.finishes[0].timeString}`); // "Cireme 06:25"
 ```
+
+### TW 0.6 Skin rendering
+
+I tried my hand at making a renderer based on [TeeAssembler-2.0](https://github.com/AlexIsTheGuy/TeeAssembler-2.0) by [AlexIsTheGuy](https://github.com/AlexIsTheGuy), and I think I nailed it.
+
+Example usage:
+
+```ts
+import { TeeSkin6 } from 'ddnet';
+
+const mySkin = new TeeSkin6({ skinResource: { type: 'name', name: 'CrystalCat' } });
+const rendered = await mySkin.render({ eyeVariant: 'eye-happy' });
+// Do something with the rendered skin buffer, like sending it in a message on discord as an attachment
+
+// Or optionally, save it to a file by providing a file path, like this:
+await mySkin.render({ eyeVariant: 'eye-happy', saveFilePath: 'my-skin.png' }); // Still returns a buffer
+```
+
+_my-skin.png_
+![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/my-skin.png)
 
 ## Building
 
@@ -264,6 +218,6 @@ If something is missing or you would like to suggest something please [submit an
 
 If you've made it this far and you consider this package useful, please consider starring [this repository](https://github.com/Sans3108/DDNet) so more people can see it!
 
-![GitHub Repo stars](https://img.shields.io/github/stars/Sans3108/DDNet)
+[![GitHub Repo stars](https://img.shields.io/github/stars/Sans3108/DDNet)](https://github.com/Sans3108/DDNet)
 
 Any bugs can be reported [here](https://github.com/Sans3108/DDNet/issues) or on discord by adding me: `Sans#0001`.
