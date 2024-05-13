@@ -176,6 +176,7 @@ export async function getMasterSrvData(
 export interface MasterSrvFoundPlayer {
   name: string;
   clan: string;
+  self: MasterServerData['servers'][number]['info']['clients'][number];
   toPlayer: () => Promise<Player>;
   server: {
     name: string;
@@ -231,6 +232,7 @@ export async function findPlayer(
     return {
       name: client.name,
       clan: client.clan,
+      self: client,
       toPlayer: async () => await Player.new(client.name),
       server: {
         name: srv.name,

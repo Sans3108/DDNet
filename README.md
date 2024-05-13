@@ -166,7 +166,7 @@ Example usage:
 ```ts
 import { TeeSkin6 } from 'ddnet';
 
-const mySkin = new TeeSkin6({ skinResource: { type: 'name', name: 'CrystalCat' } });
+const mySkin = new TeeSkin6({ skinResource: 'CrystalCat' });
 const rendered = await mySkin.render({ eyeVariant: 'eye-happy' });
 // Do something with the rendered skin buffer, like sending it in a message on discord as an attachment
 
@@ -177,6 +177,49 @@ await mySkin.render({ eyeVariant: 'eye-happy', saveFilePath: 'my-skin.png' }); /
 _my-skin.png_
 
 ![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/my-skin.png)
+
+### TW 0.7 Skin rendering
+
+I also tried creating a TW 0.7 skin renderer, which is similar to the 0.6 renderer but with a few changes.
+
+Example usage:
+
+```ts
+import { TeeSkin7 } from 'ddnet';
+
+const skin = new TeeSkin7({
+  body: 'fox',
+  marking: 'fox',
+  eyes: 'colorable'
+});
+
+const rendered = await skin.render({
+  customColors: {
+    bodyTWcode: 1102443,
+    markingTWcode: -485425166,
+    feetTWcode: 1102450,
+    eyesTWcode: 1441632
+  },
+  eyeVariant: 'eye-evil'
+});
+// Do something with the rendered skin buffer, like sending it in a message on discord as an attachment
+
+// Or optionally, save it to a file by providing a file path, like this:
+await skin.render({
+  customColors: {
+    bodyTWcode: 1102443,
+    markingTWcode: -485425166,
+    feetTWcode: 1102450,
+    eyesTWcode: 1441632
+  },
+  saveFilePath: 'fox.png',
+  eyeVariant: 'eye-evil'
+}); // Still returns a buffer
+```
+
+_fox.png_
+
+![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/fox.png)
 
 ## Building
 
