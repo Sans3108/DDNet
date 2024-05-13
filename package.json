@@ -2,7 +2,6 @@
   "name": "ddnet",
   "version": "0.5.1",
   "description": "A typescript npm package for interacting with data from ddnet.org",
-  "packageManager": "pnpm@9.1.0",
   "main": "dist/DDNet.js",
   "exports": {
     ".": "./dist/DDNet.js",
