@@ -45,7 +45,7 @@
     "@types/node": "20.10.0",
     "prettier": "3.2.5",
     "rimraf": "^5.0.5",
-    "typedoc": "^0.25.13",
+    "typedoc": "^0.26.2",
     "typedoc-material-theme": "^1.0.2",
     "typescript": "^5.4.5"
   },
