@@ -68,14 +68,3 @@ export * from './schemas/players/query.js';
 export * from './util.js';
 
 export { findPlayer } from './Master.js';
-
-import { findPlayer } from './Master.js';
-import { renderTee } from './classes/skins/TeeSkinUtils.js';
-
-const found = await findPlayer('Tomer');
-
-if (found) {
-  await renderTee(found[0].self.skin, {
-    saveFilePath: 'test.png'
-  });
-}
