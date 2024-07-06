@@ -2,8 +2,10 @@
 import { PNG } from 'node-png';
 
 import sharp, { OutputInfo } from 'sharp';
-import { getMasterSrvData } from '../../Master.js';
+import { MasterServerClient, getMasterSrvData } from '../../Master.js';
 import { DDNetError } from '../../util.js';
+import { TeeSkin6 } from './TeeSkin6.js';
+import { TeeSkin7, assertSkinPart } from './TeeSkin7.js';
 
 /**
  * Gets width and height from an image buffer.
@@ -385,4 +387,47 @@ export interface TeeSkinRenderOptions {
    * 96
    */
   size?: number;
+}
+
+/**
+ * Helper function to quickly render any tee using the skin data from any client on any server reported by the master server. Custom colors are automatically handled.
+ */
+export async function renderTee(
+  /**
+   * The skin data to use.
+   */
+  skinData: MasterServerClient['skin'],
+  /**
+   * Render options excluding custom colors.
+   */
+  renderOpts?: Omit<TeeSkinRenderOptions, 'customColors'>
+): Promise<Buffer> {
+  if (!skinData) return await new TeeSkin6().render(renderOpts);
+
+  if (skinData.name) {
+    return await new TeeSkin6({ skinResource: skinData.name }).render({
+      ...renderOpts,
+      customColors: {
+        bodyTWcode: skinData.color_body,
+        feetTWcode: skinData.color_feet
+      }
+    });
+  }
+
+  return await new TeeSkin7({
+    body: !assertSkinPart('body', skinData.body?.name) ? undefined : skinData.body.name,
+    decoration: !assertSkinPart('decoration', skinData.decoration?.name) ? undefined : skinData.decoration.name,
+    eyes: !assertSkinPart('eyes', skinData.eyes?.name) ? undefined : skinData.eyes.name,
+    feet: !assertSkinPart('feet', skinData.feet?.name) ? undefined : skinData.feet.name,
+    marking: !assertSkinPart('marking', skinData.marking?.name) ? undefined : skinData.marking.name
+  }).render({
+    ...renderOpts,
+    customColors: {
+      bodyTWcode: skinData.body?.color,
+      markingTWcode: skinData.decoration?.color,
+      decorationTWcode: skinData.eyes?.color,
+      feetTWcode: skinData.feet?.color,
+      eyesTWcode: skinData.marking?.color
+    }
+  });
 }

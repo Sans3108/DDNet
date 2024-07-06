@@ -171,12 +171,17 @@ export async function getMasterSrvData(
 }
 
 /**
+ * Represents a client on found on a server reported by the master.
+ */
+export type MasterServerClient = MasterServerData['servers'][number]['info']['clients'][number];
+
+/**
  * Represents a player found on the master server.
  */
 export interface MasterSrvFoundPlayer {
   name: string;
   clan: string;
-  self: MasterServerData['servers'][number]['info']['clients'][number];
+  self: MasterServerClient;
   toPlayer: () => Promise<Player>;
   server: {
     name: string;
