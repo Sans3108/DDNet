@@ -38,7 +38,7 @@ importers:
         version: 0.26.3(typescript@5.5.3)
       typedoc-material-theme:
         specifier: ^1.0.2
-        version: 1.0.2(typedoc@0.26.3(typescript@5.5.3))
+        version: 1.1.0(typedoc@0.26.3(typescript@5.5.3))
       typescript:
         specifier: ^5.4.5
         version: 5.5.3
@@ -406,11 +406,11 @@ packages:
   tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  typedoc-material-theme@1.0.2:
-    resolution: {integrity: sha512-/nH/twYeHrnz5sZaaXzYJ85EOgKqnbl1ivzBKmuEAga1dBsARttwQUTPKAT7XrCPD+rRcoqxuCOdXZ6EGiqRQA==}
+  typedoc-material-theme@1.1.0:
+    resolution: {integrity: sha512-LLWGVb8w+i+QGnsu/a0JKjcuzndFQt/UeGVOQz0HFFGGocROEHv5QYudIACrj+phL2LDwH05tJx0Ob3pYYH2UA==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
     peerDependencies:
-      typedoc: ^0.25.3
+      typedoc: ^0.25.13 || ^0.26.3
 
   typedoc@0.26.3:
     resolution: {integrity: sha512-6d2Sw9disvvpdk4K7VNjKr5/3hzijtfQVHRthhDqJgnhMHy1wQz4yPMJVKXElvnZhFr0nkzo+GzjXDTRV5yLpg==}
@@ -779,7 +779,7 @@ snapshots:
   tslib@2.6.2:
     optional: true
 
-  typedoc-material-theme@1.0.2(typedoc@0.26.3(typescript@5.5.3)):
+  typedoc-material-theme@1.1.0(typedoc@0.26.3(typescript@5.5.3)):
     dependencies:
       '@material/material-color-utilities': 0.2.7
       typedoc: 0.26.3(typescript@5.5.3)
