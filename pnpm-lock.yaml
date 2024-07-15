@@ -35,10 +35,10 @@ importers:
         version: 5.0.8
       typedoc:
         specifier: ^0.26.3
-        version: 0.26.3(typescript@5.5.3)
+        version: 0.26.4(typescript@5.5.3)
       typedoc-material-theme:
         specifier: ^1.0.2
-        version: 1.1.0(typedoc@0.26.3(typescript@5.5.3))
+        version: 1.1.0(typedoc@0.26.4(typescript@5.5.3))
       typescript:
         specifier: ^5.4.5
         version: 5.5.3
@@ -408,8 +408,8 @@ packages:
     peerDependencies:
       typedoc: ^0.25.13 || ^0.26.3
 
-  typedoc@0.26.3:
-    resolution: {integrity: sha512-6d2Sw9disvvpdk4K7VNjKr5/3hzijtfQVHRthhDqJgnhMHy1wQz4yPMJVKXElvnZhFr0nkzo+GzjXDTRV5yLpg==}
+  typedoc@0.26.4:
+    resolution: {integrity: sha512-FlW6HpvULDKgc3rK04V+nbFyXogPV88hurarDPOjuuB5HAwuAlrCMQ5NeH7Zt68a/ikOKu6Z/0hFXAeC9xPccQ==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
@@ -771,12 +771,12 @@ snapshots:
   tslib@2.6.2:
     optional: true
 
-  typedoc-material-theme@1.1.0(typedoc@0.26.3(typescript@5.5.3)):
+  typedoc-material-theme@1.1.0(typedoc@0.26.4(typescript@5.5.3)):
     dependencies:
       '@material/material-color-utilities': 0.2.7
-      typedoc: 0.26.3(typescript@5.5.3)
+      typedoc: 0.26.4(typescript@5.5.3)
 
-  typedoc@0.26.3(typescript@5.5.3):
+  typedoc@0.26.4(typescript@5.5.3):
     dependencies:
       lunr: 2.3.9
       markdown-it: 14.1.0
