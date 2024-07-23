@@ -32,13 +32,13 @@ export class MaxFinish {
 
   /**
    * Could be the timestamp of the first time this map was finished.
-   * @note I haven't figured out what minTimestamp is supposed to represent.
+   * @remarks I haven't figured out what minTimestamp is supposed to represent.
    */
   public minTimestamp: number;
 
   /**
    * Could be the timestamp of the last time this map was finished.
-   * @note I haven't figured out what minTimestamp is supposed to represent.
+   * @remarks I haven't figured out what minTimestamp is supposed to represent.
    */
   public maxTimestamp: number;
 

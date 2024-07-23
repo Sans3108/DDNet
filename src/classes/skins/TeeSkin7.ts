@@ -8,8 +8,9 @@ import { CacheManager } from '../other/CacheManager.js';
 
 /**
  * All the assets I found in the teeworlds repo under datasrc/skins
+ * @internal
  */
-const TeeSkin7AssetTypes = {
+export const TeeSkin7AssetTypes = {
   body: ['bat', 'bear', 'beaver', 'dog', 'force', 'fox', 'hippo', 'kitty', 'koala', 'monkey', 'mouse', 'piglet', 'raccoon', 'spiky', 'standard', 'x_ninja'],
   marking: [
     'bear',
