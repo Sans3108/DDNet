@@ -2,8 +2,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
+import { CacheManager } from '../other/CacheManager.js';
 import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, colorImage, cropImage, flipImage, getImgSize, scaleImage } from './TeeSkinUtils.js';
-import Keyv from 'keyv';
 
 /**
  * Tee skin component types
@@ -59,25 +59,17 @@ export class TeeSkin6 {
   /**
    * 0.6 Tee Skin file responses cache.
    */
-  private static cache: Keyv<ArrayBuffer> = new Keyv<ArrayBuffer>({
-    namespace: 'teeSkins6-cache'
-  });
+  private static cache = new CacheManager<ArrayBuffer>('teeSkins6-cache', 24 * 60 * 60 * 1000); // 24h ttl
 
   /**
-   * "Time-To-Live" - How much time (in milliseconds) before a cached object becomes stale, and thus removed automatically.
-   *
-   * Changing this value does not affect old objects.
-   *
-   * @default 86400000 // 24 hours
+   * Sets the TTL (Time-To-Live) for objects in cache.
    */
-  public static ttl: number = 24 * 60 * 60 * 1000; // 24h
+  public static setTTL = this.cache.setTTL;
 
   /**
    * Clears the {@link TeeSkin6.cache}.
    */
-  public static async clearCache(): Promise<void> {
-    return await this.cache.clear();
-  }
+  public static clearCache = this.cache.clearCache;
 
   //#endregion
 

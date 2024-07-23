@@ -1,5 +1,8 @@
 import Keyv from 'keyv';
 
+//@ts-ignore
+const sqliteAvailable = await import('@keyv/sqlite').then(() => true).catch(() => false);
+
 /**
  * A simple cache manager.
  *
@@ -40,8 +43,11 @@ export class CacheManager<T> {
      */
     ttl?: number
   ) {
-    this.store = new Keyv<T>({ namespace });
+    this.store = new Keyv<T>({ namespace, uri: sqliteAvailable ? 'sqlite://ddnet_cache.sqlite' : undefined });
+
     this.ttl = ttl ?? CacheManager.defaultTTL;
+
+    console.log(`[${this.store.opts.namespace}] SQLite store?: ${sqliteAvailable}`);
   }
 
   /**

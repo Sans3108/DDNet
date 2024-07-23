@@ -221,6 +221,14 @@ _fox.png_
 
 ![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/fox.png)
 
+## Cache
+
+Most classes cache results, by default this is done in memory but there is an option to use sqlite to store things, for that you will need the [@keyv/sqlite](https://www.npmjs.com/package/@keyv/sqlite) package, once installed cache will be stored on disk in the `ddnet_cache.sqlite` file.
+
+```
+$ pnpm install @keyv/sqlite
+```
+
 ## Building
 
 For building this package yourself you will need at least Node v18.20.2, and some knowledge of typescript. Package manager choice should not matter, but for smooth operations I recommend `pnpm`.

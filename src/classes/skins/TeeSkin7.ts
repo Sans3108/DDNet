@@ -4,6 +4,7 @@ import Keyv from 'keyv';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, colorImage, cropImage, scaleImage } from './TeeSkinUtils.js';
+import { CacheManager } from '../other/CacheManager.js';
 
 /**
  * All the assets I found in the teeworlds repo under datasrc/skins
@@ -106,25 +107,17 @@ export class TeeSkin7 {
   /**
    * 0.7 Tee Skin part responses cache.
    */
-  private static cache: Keyv<ArrayBuffer> = new Keyv<ArrayBuffer>({
-    namespace: 'teeParts7-cache'
-  });
+  private static cache = new CacheManager<ArrayBuffer>('teeParts7-cache', 24 * 60 * 60 * 1000); // 24h ttl
 
   /**
-   * "Time-To-Live" - How much time (in milliseconds) before a cached object becomes stale, and thus removed automatically.
-   *
-   * Changing this value does not affect old objects.
-   *
-   * @default 86400000 // 24 hours
+   * Sets the TTL (Time-To-Live) for objects in cache.
    */
-  public static ttl: number = 24 * 60 * 60 * 1000; // 24h
+  public static setTTL = this.cache.setTTL;
 
   /**
    * Clears the {@link TeeSkin7.cache}.
    */
-  public static async clearCache(): Promise<void> {
-    return await this.cache.clear();
-  }
+  public static clearCache = this.cache.clearCache;
 
   //#endregion
 

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import Keyv from 'keyv';
 import { _Releases, _Schema_releases } from '../../schemas/other/releases.js';
 import { DDNetError, Type, dePythonifyTime } from '../../util.js';
+import { CacheManager } from './CacheManager.js';
 import { Release } from './Release.js';
 
 /**
@@ -13,25 +13,17 @@ export class Releases {
   /**
    * Releases responses cache.
    */
-  private static cache: Keyv<object> = new Keyv<object>({
-    namespace: 'releases-cache'
-  });
+  private static cache = new CacheManager<object>('releases-cache', 8 * 60 * 60 * 1000); // 8h ttl
 
   /**
-   * "Time-To-Live" - How much time (in milliseconds) before a cached object becomes stale, and thus removed automatically.
-   *
-   * Changing this value does not affect old objects.
-   *
-   * @default 28800000 // 8 hours
+   * Sets the TTL (Time-To-Live) for objects in cache.
    */
-  public static ttl: number = 8 * 60 * 60 * 1000; // 8h
+  public static setTTL = this.cache.setTTL;
 
   /**
    * Clears the {@link Releases.cache}.
    */
-  public static async clearCache(): Promise<void> {
-    return await this.cache.clear();
-  }
+  public static clearCache = this.cache.clearCache;
 
   //#endregion
 
@@ -131,7 +123,7 @@ export class Releases {
 
     if (typeof data === 'string') return new DDNetError(`Invalid response!`, data);
 
-    await this.cache.set(url, data, this.ttl);
+    await this.cache.set(url, data);
 
     return { data, fromCache: false };
   }
