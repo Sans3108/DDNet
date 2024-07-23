@@ -6,3 +6,4 @@ testing/
 .idea/
 
 *.tgz
+*.sqlite

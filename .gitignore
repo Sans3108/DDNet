@@ -7,6 +7,5 @@ docs/
 .vscode/
 .idea/
 
-ddnet_cache.sqlite
-
 *.tgz
+*.sqlite

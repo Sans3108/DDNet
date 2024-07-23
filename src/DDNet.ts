@@ -68,10 +68,3 @@ export * from './schemas/players/query.js';
 export * from './util.js';
 
 export { findPlayer } from './Master.js';
-
-import { Releases } from './classes/other/Releases.js';
-import { Type } from './util.js';
-
-const rel = await Releases.new();
-
-console.log(rel.getServer(Type.fun)[0].name);

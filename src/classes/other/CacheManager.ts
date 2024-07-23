@@ -46,8 +46,6 @@ export class CacheManager<T> {
     this.store = new Keyv<T>({ namespace, uri: sqliteAvailable ? 'sqlite://ddnet_cache.sqlite' : undefined });
 
     this.ttl = ttl ?? CacheManager.defaultTTL;
-
-    console.log(`[${this.store.opts.namespace}] SQLite store?: ${sqliteAvailable}`);
   }
 
   /**
