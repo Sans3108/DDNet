@@ -133,6 +133,7 @@ export enum Region {
   TUR = 'TUR',
   TWN = 'TWN',
   UAE = 'UAE',
+  UKR = 'UKR',
   UNK = 'UNK',
   USA = 'USA',
   ZAF = 'ZAF'
