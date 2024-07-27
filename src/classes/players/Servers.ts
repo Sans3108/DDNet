@@ -1,9 +1,6 @@
 import { DDNetError, Type } from '../../util.js';
 import { ServerStats } from './ServerStats.js';
 
-// This code screams "please end me"
-// Surely there's a better way but I have no idea
-
 /**
  * Wrapper class for all player server types.
  */
@@ -11,103 +8,79 @@ export class Servers {
   /**
    * Novice server stats.
    */
-  public novice: ServerStats;
+  public [Type.novice]!: ServerStats;
 
   /**
    * Moderate server stats.
    */
-  public moderate: ServerStats;
+  public [Type.moderate]!: ServerStats;
 
   /**
    * Brutal server stats.
    */
-  public brutal: ServerStats;
+  public [Type.brutal]!: ServerStats;
 
   /**
    * Insane server stats.
    */
-  public insane: ServerStats;
+  public [Type.insane]!: ServerStats;
 
   /**
    * Dummy server stats.
    */
-  public dummy: ServerStats;
+  public [Type.dummy]!: ServerStats;
 
   /**
    * DDmaX.Easy server stats.
    */
-  public ddmaxEasy: ServerStats;
+  public [Type.ddmaxEasy]!: ServerStats;
 
   /**
    * DDmaX.Next server stats.
    */
-  public ddmaxNext: ServerStats;
+  public [Type.ddmaxNext]!: ServerStats;
 
   /**
    * DDmaX.Pro server stats.
    */
-  public ddmaxPro: ServerStats;
+  public [Type.ddmaxPro]!: ServerStats;
 
   /**
    * DDmaX.Nut server stats.
    */
-  public ddmaxNut: ServerStats;
+  public [Type.ddmaxNut]!: ServerStats;
 
   /**
    * Oldschool server stats.
    */
-  public oldschool: ServerStats;
+  public [Type.oldschool]!: ServerStats;
 
   /**
    * Solo server stats.
    */
-  public solo: ServerStats;
+  public [Type.solo]!: ServerStats;
 
   /**
    * Race server stats.
    */
-  public race: ServerStats;
+  public [Type.race]!: ServerStats;
 
   /**
    * Fun server stats.
    */
-  public fun: ServerStats;
+  public [Type.fun]!: ServerStats;
 
   constructor(data: ServerStats[]) {
-    const novice = data.find(server => server.name === Type.novice) ?? new DDNetError(`\`${Type.novice}\` server not found in data!`);
-    const moderate = data.find(server => server.name === Type.moderate) ?? new DDNetError(`\`${Type.moderate}\` server not found in data!`);
-    const brutal = data.find(server => server.name === Type.brutal) ?? new DDNetError(`\`${Type.brutal}\` server not found in data!`);
-    const insane = data.find(server => server.name === Type.insane) ?? new DDNetError(`\`${Type.insane}\` server not found in data!`);
-    const dummy = data.find(server => server.name === Type.dummy) ?? new DDNetError(`\`${Type.dummy}\` server not found in data!`);
-    const ddmaxEasy = data.find(server => server.name === Type.ddmaxEasy) ?? new DDNetError(`\`${Type.ddmaxEasy}\` server not found in data!`);
-    const ddmaxNext = data.find(server => server.name === Type.ddmaxNext) ?? new DDNetError(`\`${Type.ddmaxNext}\` server not found in data!`);
-    const ddmaxPro = data.find(server => server.name === Type.ddmaxPro) ?? new DDNetError(`\`${Type.ddmaxPro}\` server not found in data!`);
-    const ddmaxNut = data.find(server => server.name === Type.ddmaxNut) ?? new DDNetError(`\`${Type.ddmaxNut}\` server not found in data!`);
-    const oldschool = data.find(server => server.name === Type.oldschool) ?? new DDNetError(`\`${Type.oldschool}\` server not found in data!`);
-    const solo = data.find(server => server.name === Type.solo) ?? new DDNetError(`\`${Type.solo}\` server not found in data!`);
-    const race = data.find(server => server.name === Type.race) ?? new DDNetError(`\`${Type.race}\` server not found in data!`);
-    const fun = data.find(server => server.name === Type.fun) ?? new DDNetError(`\`${Type.fun}\` server not found in data!`);
+    for (const k in Type) {
+      const key = k as keyof typeof Type;
 
-    const types = [novice, moderate, brutal, insane, dummy, ddmaxEasy, ddmaxNext, ddmaxPro, ddmaxNut, oldschool, solo, race, fun];
+      if (key === 'unknown') continue;
 
-    if (types.some(item => item instanceof DDNetError))
-      throw new DDNetError(
-        `Invalid data!`,
-        types.filter(i => i instanceof DDNetError)
-      );
+      const stats = data.find(server => server.name === Type[key]);
 
-    this.novice = novice as ServerStats;
-    this.moderate = moderate as ServerStats;
-    this.brutal = brutal as ServerStats;
-    this.insane = insane as ServerStats;
-    this.dummy = dummy as ServerStats;
-    this.ddmaxEasy = ddmaxEasy as ServerStats;
-    this.ddmaxNext = ddmaxNext as ServerStats;
-    this.ddmaxPro = ddmaxPro as ServerStats;
-    this.ddmaxNut = ddmaxNut as ServerStats;
-    this.oldschool = oldschool as ServerStats;
-    this.solo = solo as ServerStats;
-    this.race = race as ServerStats;
-    this.fun = fun as ServerStats;
+      if (!stats) throw new DDNetError(`\`${Type[key]}\` server not found in data!`);
+
+      this[Type[key]] = stats;
+    }
   }
 }
