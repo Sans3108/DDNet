@@ -506,28 +506,3 @@ export function splitMappers(mapperNames: string): string[] {
   }
   return names;
 }
-
-export const DDNetPeople = {
-  technicalTeamLeaders: ['deen', 'Learath2', 'Robyt3'],
-  communityTeamLeaders: ['murpi', 'snailx3'],
-  ddraceModerators: {
-    europe: [':v', '0x314', 'APFFF', 'AvapiX', 'Bota', 'Cendren', 'Devinci', 'Draggory', 'Exotix', 'Fussel', 'Gumba', 'Gwendal', 'Insanity', 'Jaguar', 'jana', 'Lagar', 'Maya', 'Mery', 'Neben', 'OguzKK', 'Paralix', 'ReD', 'Rheme', 'Shadowsun', 'Yubel', 'Zeral'],
-    russia: ['Deeper', 'Ham5terzilla', 'zhn', 'ƤØŢĀŤ0Co'],
-    ukraine: ['Anime.pdf', 'StormA'],
-    chile: ['Deëivid!', 'El YeK :v', 'tortilla'],
-    brazil: ['Diamond', 'JOYSOYUM', 'limo', 'Lukov', 'strauberi'],
-    argentina: ['Skaydox'],
-    southAfrica: ['garry', 'Mariac', 'XxDarkNezZ'],
-    asia: ['cheeser0613', 'Gloomy', `I'm suck`, 'k1r1ha', 'ℝ𝕦ℕ𝕒.', 'kyokaiwei', `'^'`],
-    mainlandChina: ['Ark', 'Dust fall', 'FightFire', 'KuNao', 'owanoyano', 'Rance', 'Rice', 'Schroedinger', 'confetti', 'Texas.C', 'TsFreddie', 'wuu', 'xiaocan', '满月', '稚呦’', '十八', '摩西摩西'],
-    australia: ['Lem0n']
-  },
-  forumModerators: ['Index'],
-  testers: ['Arrow', 'Nehr', 'Cøke', 'DarkOort', 'Kicker', 'louis', 'Savalic', 'VéNa'],
-  skinDb: [`clefairy'`, 'louis'],
-  codersGhUrl: 'https://github.com/ddnet/ddnet/graphs/contributors',
-  donors: {
-    players: [], // aaaaaaaaaaaaaaaaaaaaaaaaaaaa https://ddnet.org/funding/#donations
-    other: ['Persian Tee City Staff', 'AwakenZ clan', 'ΛLIVΣ clan']
-  }
-}
