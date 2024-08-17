@@ -1,20 +1,17 @@
 // https://info.ddnet.org/info
 
 import { z } from 'zod';
-import { Region } from '../../util.js';
 
 /**
  * The zod schema for servers info data.
  *
  * @internal
  */
-export const _Schema_info_servers = z.array(
-  z.object({
-    name: z.nativeEnum(Region),
-    flagId: z.number(),
-    servers: z.record(z.string(), z.array(z.string()))
-  })
-);
+export const _Schema_info_servers = z.object({
+  name: z.string(),
+  flagId: z.number(),
+  servers: z.record(z.string(), z.array(z.string()))
+});
 
 /**
  * Servers Info data type, inferred from {@link _Schema_info_servers}

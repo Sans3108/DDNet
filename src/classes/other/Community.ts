@@ -8,7 +8,7 @@ export class CommunityServerLocation {
   /**
    * The region of this location.
    */
-  public region: Region;
+  public region: string;
 
   /**
    * The flag id of this location.
@@ -23,7 +23,7 @@ export class CommunityServerLocation {
   /**
    * Construct a new {@link CommunityServerLocation} instance.
    */
-  constructor(data: { name: Region; flagId: number; servers: Record<string, string[]> }) {
+  constructor(data: { name: string; flagId: number; servers: Record<string, string[]> }) {
     this.region = data.name;
     this.flagId = data.flagId;
     this.types = Object.entries<string[]>(data.servers).map(entry => ({ name: entry[0], addresses: entry[1] }));
@@ -82,7 +82,7 @@ export class Community {
     icon: {
       sha256: string;
       url: string;
-      servers: _Info_Servers;
+      servers: _Info_Servers[];
     };
     contact_urls: string[];
   }) {
