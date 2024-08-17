@@ -34,16 +34,37 @@ export class Info {
    */
   #rawData!: _Info; // Marked private with vanilla JS syntax for better logging.
 
+  /**
+   * List of major communities.
+   */
   public communities!: Community[];
 
+  /**
+   * Community icons directory.
+   */
   public communityIconsDownloadUrl!: string;
 
+  /**
+   * Game news.
+   */
   public news!: string;
 
+  /**
+   * Maps directory.
+   */
   public mapDownloadUrl!: string;
 
+  /**
+   * Latest game version.
+   */
   public version!: string;
 
+  /**
+   * Other parsed data.
+   *
+   * @remarks
+   * I think this is mostly used in the client. Still I parsed the data and added it here.
+   */
   public other!: {
     location: string;
     stunServersIpv6: string[];
