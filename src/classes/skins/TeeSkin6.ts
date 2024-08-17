@@ -191,9 +191,7 @@ export class TeeSkin6 {
     const w = (p: number) => Math.round((p / 8) * width);
     const h = (p: number) => Math.round((p / 4) * height);
 
-    const meta: {
-      [key in TeeSkin6Component]: [number, number, number, number, number]; // [left, top, right, bottom, scale]
-    } = {
+    const meta: Record<TeeSkin6Component, [number, number, number, number, number]> = {
       'body': [w(0), h(0), w(3), h(3), 1],
       'bodyShadow': [w(3), h(0), w(6), h(3), 1],
       'feet': [w(6), h(1), w(8), h(2), 1.5],

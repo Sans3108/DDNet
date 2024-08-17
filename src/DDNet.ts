@@ -16,7 +16,9 @@ export * from './classes/maps/MaxFinish.js';
 
 //#region Other
 export * from './classes/other/CacheManager.js';
+export * from './classes/other/Community.js';
 export * from './classes/other/Finish.js';
+export * from './classes/other/Info.js';
 export * from './classes/other/Release.js';
 export * from './classes/other/Releases.js';
 export * from './classes/other/ServerListStatuses.js';
@@ -53,6 +55,7 @@ export * from './schemas/maps/query.js';
 //#endregion
 
 //#region Other
+export * from './schemas/other/info.js';
 export * from './schemas/other/releases.js';
 export * from './schemas/other/status.js';
 //#endregion
@@ -68,3 +71,4 @@ export * from './schemas/players/query.js';
 export * from './util.js';
 
 export { findPlayer } from './Master.js';
+

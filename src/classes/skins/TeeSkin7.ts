@@ -170,7 +170,7 @@ export class TeeSkin7 {
       markingAsset = await sharp(markingAsset).resize(128, 128).png().toBuffer();
     }
 
-    const eyesCoords: { [key in TeeSkinEyeVariant]: [number, number, number, number] } = {
+    const eyesCoords: Record<TeeSkinEyeVariant, [number, number, number, number]> = {
       'eye-default': [0, 0, 64, 32],
       'eye-evil': [64, 0, 128, 32],
       'eye-hurt': [0, 32, 64, 64],

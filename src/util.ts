@@ -406,7 +406,7 @@ export enum Country {
  * @see
  * https://github.com/ddnet/ddnet/blob/master/data/countryflags/index.txt
  */
-export const CountryFlagsMap: { [key in keyof typeof Country]: number } = {
+export const CountryFlagsMap: Record<keyof typeof Country, number> = {
   'default': -1,
   'GB-ENG': 901,
   'GB-NIR': 902,
