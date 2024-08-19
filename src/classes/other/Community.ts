@@ -1,5 +1,4 @@
 import { _Info_Servers } from '../../schemas/other/info.js';
-import { Region } from '../../util.js';
 
 /**
  * Represents a community server location
