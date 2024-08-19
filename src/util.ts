@@ -118,6 +118,7 @@ export enum Region {
   CRI = 'CRI',
   EUR = 'EUR',
   GER = 'GER',
+  FIN = 'FIN',
   IND = 'IND',
   IRN = 'IRN',
   JAP = 'JAP',
