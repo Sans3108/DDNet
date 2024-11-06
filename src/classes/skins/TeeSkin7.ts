@@ -260,7 +260,7 @@ export class TeeSkin7 {
       .get<ArrayBuffer, AxiosResponse<ArrayBuffer>>(assetUrl, {
         responseType: 'arraybuffer',
         headers: {
-          'Accept': 'image/png'
+          Accept: 'image/png'
         }
       })
       .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Asset not found!`, assetUrl) : new DDNetError(err.cause?.message, err)));

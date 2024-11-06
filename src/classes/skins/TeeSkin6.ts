@@ -127,7 +127,7 @@ export class TeeSkin6 {
       .get<ArrayBuffer, AxiosResponse<ArrayBuffer>>(url, {
         responseType: 'arraybuffer',
         headers: {
-          'Accept': 'image/png'
+          Accept: 'image/png'
         }
       })
       .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Skin not found! Try changing the \`dbUrl\`.`) : new DDNetError(err.cause?.message, err)));
