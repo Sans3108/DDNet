@@ -1,7 +1,5 @@
 import Keyv from 'keyv';
-import { loadPackage } from '../../util';
-
-const KeyvSqlite = await loadPackage<ObjectConstructor>('@keyv-sqlite');
+import KeyvSqlite from '@keyv/sqlite';
 
 /**
  * A simple cache manager.
@@ -43,8 +41,7 @@ export class CacheManager<T> {
      */
     ttl?: number
   ) {
-    //sqliteAvailable ? 'sqlite://ddnet_cache.sqlite'
-    this.store = new Keyv<T>({ namespace, store: KeyvSqlite ? new KeyvSqlite({ uri: 'sqlite://ddnet_cache.sqlite' }) : undefined });
+    this.store = new Keyv<T>({ namespace, store: new KeyvSqlite({ uri: 'sqlite://ddnet_cache.sqlite' }) });
 
     this.ttl = ttl ?? CacheManager.defaultTTL;
   }

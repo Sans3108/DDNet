@@ -223,11 +223,11 @@ _fox.png_
 
 ## Cache
 
-Most classes cache results, by default this is done in memory but there is an option to use sqlite to store things, for that you will need the [@keyv/sqlite](https://www.npmjs.com/package/@keyv/sqlite) package, once installed cache will be stored on disk in the `ddnet_cache.sqlite` file.
+Most classes cache results, this is done in using the [keyv](https://www.npmjs.com/package/keyv) and [@keyv/sqlite](https://www.npmjs.com/package/@keyv/sqlite) packages. Cache data is stored in the `ddnet_cache.sqlite` file.
 
-```
-$ pnpm install @keyv/sqlite
-```
+It's not really wise to mess with the cache, but there's a couple things you can do, mainly changing the TTL (Time-To-Live) of the cached items[\*]() the class is responsible for, and clearing different cache pools.
+
+<sub>\* _Applies to newly added items_</sub>
 
 ## Building
 

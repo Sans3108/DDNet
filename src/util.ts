@@ -791,15 +791,3 @@ export function splitMappers(mapperNames: string): string[] {
   }
   return names;
 }
-
-/**
- * Loads a package if it exists, otherwise returns null.
- */
-export async function loadPackage<T = any>(packageName: string): Promise<T | null> {
-  try {
-    await import(packageName);
-    return (await import(packageName)) as T;
-  } catch {
-    return null;
-  }
-}
