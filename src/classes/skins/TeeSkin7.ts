@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { writeFileSync } from 'fs';
-import Keyv from 'keyv';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, colorImage, cropImage, scaleImage } from './TeeSkinUtils.js';
@@ -261,7 +260,6 @@ export class TeeSkin7 {
       .get<ArrayBuffer, AxiosResponse<ArrayBuffer>>(assetUrl, {
         responseType: 'arraybuffer',
         headers: {
-          'Cache-Control': 'no-cache',
           'Accept': 'image/png'
         }
       })

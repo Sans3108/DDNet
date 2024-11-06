@@ -127,7 +127,6 @@ export class TeeSkin6 {
       .get<ArrayBuffer, AxiosResponse<ArrayBuffer>>(url, {
         responseType: 'arraybuffer',
         headers: {
-          'Cache-Control': 'no-cache',
           'Accept': 'image/png'
         }
       })

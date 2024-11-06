@@ -8,7 +8,7 @@ export class ActivityEntry {
    * @remarks
    * Internally, this timestamp is only accurate to the day (hours, minutes etc. are zeroed out)
    * because the data this gets generated from is in the ISO 8601 format as per python's `Datetime#isoformat` method
-   * thus only providing the day, month and year of this activity.
+   * which only provides the day, month and year of this activity.
    *
    * @privateRemarks
    * This was only tested to work with ISO 8601 formatted strings.

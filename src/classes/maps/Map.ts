@@ -241,13 +241,7 @@ export class Map {
       }
     }
 
-    const response = await axios
-      .get<object | string, AxiosResponse<object | string>>(url, {
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      })
-      .catch((err: AxiosError) => new DDNetError(err.cause?.message, err));
+    const response = await axios.get<object | string, AxiosResponse<object | string>>(url).catch((err: AxiosError) => new DDNetError(err.cause?.message, err));
 
     if (response instanceof DDNetError) return response;
 
