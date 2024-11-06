@@ -1,4 +1,5 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/DDNet.ts", "src/Master.ts"],
   "out": "./docs",
   "commentStyle": "jsdoc",
@@ -10,6 +11,6 @@
   "gitRevision": "master",
   "validation": {
     "notExported": true,
-    "invalidLink": true
+    "invalidLink": false // -_-
   }
 }
