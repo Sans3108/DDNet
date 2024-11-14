@@ -791,3 +791,33 @@ export function splitMappers(mapperNames: string): string[] {
   }
   return names;
 }
+
+/**
+ * Calculates map points reward based on difficulty (server type) and star count.
+ *
+ * @see
+ * https://ddnet.org/ranks/fun/#points
+ */
+export function calculatePoints(type: Type, stars: number): number {
+  // [multiplier, offset]
+  const multiplierAndOffsetMap: Record<Type, [number, number]> = {
+    [Type.novice]: [1, 0],
+    [Type.moderate]: [2, 5],
+    [Type.brutal]: [3, 15],
+    [Type.insane]: [4, 30],
+    [Type.dummy]: [5, 5],
+    [Type.ddmaxEasy]: [4, 0],
+    [Type.ddmaxNext]: [4, 0],
+    [Type.ddmaxPro]: [4, 0],
+    [Type.ddmaxNut]: [4, 0],
+    [Type.oldschool]: [6, 0],
+    [Type.solo]: [4, 0],
+    [Type.race]: [2, 0],
+    [Type.fun]: [0, 0],
+    [Type.unknown]: [-1, -1]
+  };
+
+  const [multiplier, offset] = multiplierAndOffsetMap[type];
+
+  return stars * multiplier + offset;
+}
