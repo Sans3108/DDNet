@@ -264,7 +264,7 @@ And after that everything in the `/docs` directory should be up to date with you
 
 Help is always appreciated, if you are able to contribute and have the know-how, please do! I will look over every PR and potentially we can integrate your changes!
 
-This readme may not showcase everything, but that's why the [documentation website](https://sans3108.github.io/DDNet) exists! Please check it out, explore and find what you need there if it wasn't shown here.
+This readme may not showcase everything, but that's why the [documentation website](https://ddnet.js.org) exists! Please check it out, explore and find what you need there if it wasn't shown here.
 
 If something is missing or you would like to suggest something please [submit an issue](https://github.com/Sans3108/DDNet/issues/new) about it!
 
