@@ -43,7 +43,7 @@
   ],
   "devDependencies": {
     "@types/node": "22.9.0",
-    "prettier": "3.3.3",
+    "prettier": "3.4.2",
     "rimraf": "^6.0.1",
     "typedoc": "^0.26.11",
     "typedoc-material-theme": "^1.1.0",
