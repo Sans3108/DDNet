@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _Schema_players_json } from '../../schemas/players/json.js';
 import { _PlayersJson2, _Schema_players_json2 } from '../../schemas/players/json2.js';
 import { _Schema_players_query } from '../../schemas/players/query.js';
-import { DDNetError, Region, Type, dePythonifyTime } from '../../util.js';
+import { DDNetError, RankAvailableRegion, Region, Type, dePythonifyTime } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish, RecentFinish } from '../other/Finish.js';
@@ -409,7 +409,11 @@ export class Player {
     /**
      * Wether to bypass the cache.
      */
-    force = false
+    force = false,
+    /**
+     * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
+     */
+    rankSource?: RankAvailableRegion | null
   ): Promise<{ name: string; toMap: () => Promise<Map> }[]> {
     const data = await Player.makeRequest(`https://ddnet.org/players/?json=${encodeURIComponent(this.name)}`, force);
 
@@ -419,7 +423,7 @@ export class Player {
 
     if (!parsed.success) throw new DDNetError(`Failed to parse received data.`, parsed.error);
 
-    return parsed.data.map(map => ({ name: map, toMap: async () => await Map.new(map) }));
+    return parsed.data.map(map => ({ name: map, toMap: async () => await Map.new(map, rankSource) }));
   }
 
   /**

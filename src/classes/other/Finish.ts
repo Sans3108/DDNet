@@ -1,4 +1,4 @@
-import { Region, Type, timeString } from '../../util.js';
+import { RankAvailableRegion, Region, Type, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { Player } from '../players/Player.js';
 import { Rank } from '../players/Rank.js';
@@ -63,8 +63,17 @@ export class Finish {
   /**
    * Returns a new {@link Map} object from the {@link mapName} of this finish.
    */
-  public async toMap(): Promise<Map> {
-    return await Map.new(this.mapName);
+  public async toMap(
+    /**
+     * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
+     */
+    rankSource?: RankAvailableRegion | null,
+    /**
+     * Wether to bypass the cache.
+     */
+    force = false
+  ): Promise<Map> {
+    return await Map.new(this.mapName, rankSource, force);
   }
 }
 

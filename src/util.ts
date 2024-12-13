@@ -141,6 +141,41 @@ export enum Region {
 }
 
 /**
+ * Represents server regions where ranks are available online.
+ *
+ * @remarks
+ * It's similar to {@link Region} but some are missing and some don't exist.
+ *
+ * @see
+ * https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/maps.py#L178
+ */
+export enum RankAvailableRegion {
+  NLD = Region.NLD,
+  FRA = 'FRA',
+  GER = Region.GER,
+  POL = Region.POL,
+  FIN = Region.FIN,
+  UKR = Region.UKR,
+  RUS = Region.RUS,
+  TUR = Region.TUR,
+  IRN = Region.IRN,
+  BHR = 'BHR',
+  CHL = Region.CHL,
+  BRA = Region.BRA,
+  ARG = Region.ARG,
+  PER = Region.PER,
+  USA = Region.USA,
+  CHN = Region.CHN,
+  KOR = Region.KOR,
+  TWN = Region.TWN,
+  SGP = Region.SGP,
+  ZAF = Region.ZAF,
+  IND = Region.IND,
+  AUS = Region.AUS,
+  OLD = 'OLD'
+}
+
+/**
  * Represents player countries.
  *
  * @see

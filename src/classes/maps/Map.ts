@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
 import { _Schema_maps_query } from '../../schemas/maps/query.js';
-import { DDNetError, Region, Tile, Type, dePythonifyTime, splitMappers, timeString } from '../../util.js';
+import { DDNetError, RankAvailableRegion, Region, Tile, Type, dePythonifyTime, splitMappers, timeString } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish } from '../other/Finish.js';
 import { Player } from '../players/Player.js';
@@ -118,6 +118,11 @@ export class Map {
   public tiles!: Tile[];
 
   /**
+   * The region from which ranks are pulled. `null` for global ranks.
+   */
+  public rankSource!: RankAvailableRegion | null;
+
+  /**
    * Team finishes for this map.
    */
   public teamFinishes!: Finish[];
@@ -173,9 +178,13 @@ export class Map {
     /**
      * The raw data for this map.
      */
-    rawData: _MapsJson
+    rawData: _MapsJson,
+    /**
+     * The region to pull ranks from. `null` for global ranks.
+     */
+    rankSource: RankAvailableRegion | null
   ) {
-    this.populate(rawData);
+    this.populate(rawData, rankSource);
   }
 
   /**
@@ -187,11 +196,18 @@ export class Map {
      */
     nameOrUrl: string,
     /**
+     * The region to pull ranks from. Omit for global ranks.
+     *
+     * @remarks
+     * Ignored if map url is used instead of map name.
+     */
+    rankSource?: RankAvailableRegion | null,
+    /**
      * Wether to bypass the map data cache.
      */
     bypassCache = false
   ): Promise<Map> {
-    const response = await this.makeRequest(nameOrUrl, bypassCache);
+    const response = await this.makeRequest(nameOrUrl, rankSource, bypassCache);
 
     if (response instanceof DDNetError) throw response;
 
@@ -199,7 +215,7 @@ export class Map {
 
     if (!parsed.success) throw parsed.error;
 
-    return new this(parsed.data);
+    return new this(parsed.data, rankSource ?? null);
   }
 
   /**
@@ -227,11 +243,22 @@ export class Map {
      */
     nameOrUrl: string,
     /**
+     * The region to pull ranks from. Omit for global ranks.
+     *
+     * @remarks
+     * Ignored if map url is used instead of map name.
+     */
+    rankSource?: RankAvailableRegion | null,
+    /**
      * Wether to bypass the cache.
      */
     force = false
   ): Promise<{ data: object; fromCache: boolean } | DDNetError> {
-    const url = nameOrUrl.startsWith('https://ddnet.org/maps/') ? nameOrUrl : `https://ddnet.org/maps/?json=${encodeURIComponent(nameOrUrl)}`;
+    let url = nameOrUrl.startsWith('https://ddnet.org/maps/') ? nameOrUrl : `https://ddnet.org/maps/?json=${encodeURIComponent(nameOrUrl)}`;
+
+    if (rankSource && nameOrUrl !== url) {
+      url += `&country=${rankSource}`;
+    }
 
     if (!force) {
       if (await this.cache.has(url)) {
@@ -261,9 +288,14 @@ export class Map {
     /**
      * The raw map data.
      */
-    rawData: _MapsJson
+    rawData: _MapsJson,
+    /**
+     * The region to pull ranks from. `null` for global ranks.
+     */
+    rankSource: RankAvailableRegion | null
   ): this {
     this.#rawData = rawData;
+    this.rankSource = rankSource;
 
     this.name = this.#rawData.name;
     this.url = this.#rawData.website;
@@ -328,7 +360,7 @@ export class Map {
    * Refresh the data for this map.
    */
   public async refresh(): Promise<this> {
-    const data = await Map.makeRequest(this.name, true);
+    const data = await Map.makeRequest(this.name, this.rankSource, true);
 
     if (data instanceof DDNetError) throw new DDNetError(`Failed to refresh ${this}`, data);
 
@@ -336,7 +368,7 @@ export class Map {
 
     if (!parsed.success) throw new DDNetError(`Failed to refresh ${this}`, parsed.error);
 
-    return this.populate(parsed.data);
+    return this.populate(parsed.data, this.rankSource);
   }
 
   /**
@@ -355,11 +387,15 @@ export class Map {
      */
     value: string,
     /**
+     * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
+     */
+    rankSource?: RankAvailableRegion | null,
+    /**
      * Wether to bypass the cache.
      */
     force = false
   ): Promise<{ mappers: { name: string; toMapper: () => Mapper; toPlayer: () => Promise<Player> }[]; type: Type; name: string; toMap: () => Promise<Map> }[] | null> {
-    const data = await Map.makeRequest(`https://ddnet.org/maps/?query=${encodeURIComponent(value)}`, force);
+    const data = await Map.makeRequest(`https://ddnet.org/maps/?query=${encodeURIComponent(value)}`, null, force);
 
     if (data instanceof DDNetError) throw data;
 
@@ -377,7 +413,7 @@ export class Map {
         toPlayer: async () => await Player.new(mapperName.trim())
       })),
       type: !Object.values<string>(Type).includes(map.type) ? Type.unknown : (map.type as Type),
-      toMap: async () => await Map.new(map.name)
+      toMap: async () => await Map.new(map.name, rankSource)
     }));
   }
 }

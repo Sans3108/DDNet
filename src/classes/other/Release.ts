@@ -1,4 +1,4 @@
-import { Tile, Type, splitMappers } from '../../util.js';
+import { RankAvailableRegion, Tile, Type, splitMappers } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { Mapper } from '../maps/Mapper.js';
 
@@ -91,7 +91,16 @@ export class Release {
   /**
    * Returns a new {@link Map} object from the {@link name} of this release.
    */
-  public async toMap(): Promise<Map> {
-    return await Map.new(this.name);
+  public async toMap(
+    /**
+     * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
+     */
+    rankSource?: RankAvailableRegion | null,
+    /**
+     * Wether to bypass the cache.
+     */
+    force = false
+  ): Promise<Map> {
+    return await Map.new(this.name, rankSource, force);
   }
 }
