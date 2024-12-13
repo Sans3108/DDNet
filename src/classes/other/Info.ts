@@ -11,7 +11,7 @@ export class Info {
   //#region Cache
 
   /**
-   * Info responses cache.
+   * Info responses cache. (12h default TTL)
    */
   private static cache = new CacheManager<object>('info-cache', 12 * 60 * 60 * 1000); // 12h ttl
 

@@ -11,9 +11,9 @@ export class Releases {
   //#region Cache
 
   /**
-   * Releases responses cache.
+   * Releases responses cache. (12h default TTL)
    */
-  private static cache = new CacheManager<object>('releases-cache', 8 * 60 * 60 * 1000); // 8h ttl
+  private static cache = new CacheManager<object>('releases-cache', 12 * 60 * 60 * 1000); // 12h ttl
 
   /**
    * Sets the TTL (Time-To-Live) for objects in cache.

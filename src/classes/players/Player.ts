@@ -35,9 +35,9 @@ export class Player {
   #rawData!: _PlayersJson2; // Marked private with vanilla JS syntax for better logging.
 
   /**
-   * Player responses cache. (2h default TTL)
+   * Player responses cache. (8h default TTL)
    */
-  private static cache = new CacheManager<object>('player-cache');
+  private static cache = new CacheManager<object>('player-cache', 8 * 60 * 60 * 1000); // 8h
 
   /**
    * Sets the TTL (Time-To-Live) for objects in cache.

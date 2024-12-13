@@ -24,7 +24,7 @@ export class CacheManager<T> {
   /**
    * Default TTL.
    */
-  private static defaultTTL = 2 * 60 * 60 * 1000; // 2h
+  private static defaultTTL = 4 * 60 * 60 * 1000; // 4h
 
   /**
    * Construct a new {@link CacheManager} instance.

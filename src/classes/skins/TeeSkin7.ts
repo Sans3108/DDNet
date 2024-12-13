@@ -105,9 +105,9 @@ export class TeeSkin7 {
   //#region Cache
 
   /**
-   * 0.7 Tee Skin part responses cache.
+   * 0.7 Tee Skin part responses cache. (48h default TTL)
    */
-  private static cache = new CacheManager<ArrayBuffer>('teeParts7-cache', 24 * 60 * 60 * 1000); // 24h ttl
+  private static cache = new CacheManager<ArrayBuffer>('teeParts7-cache', 48 * 60 * 60 * 1000); // 48h ttl
 
   /**
    * Sets the TTL (Time-To-Live) for objects in cache.

@@ -38,9 +38,9 @@ export class Map {
   #rawData!: _MapsJson; // Marked private with vanilla JS syntax for better logging.
 
   /**
-   * Map responses cache. (8h default TTL)
+   * Map responses cache. (24h default TTL)
    */
-  private static cache = new CacheManager<object>('map-cache', 8 * 60 * 60 * 1000); // 8h
+  private static cache = new CacheManager<object>('map-cache', 24 * 60 * 60 * 1000); // 24h
 
   /**
    * Sets the TTL (Time-To-Live) for objects in cache.

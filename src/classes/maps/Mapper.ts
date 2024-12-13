@@ -13,7 +13,7 @@ export class Mapper {
   /**
    * Mapper query responses cache. (2h default TTL)
    */
-  private static cache = new CacheManager<object>('qmapper-cache');
+  private static cache = new CacheManager<object>('qmapper-cache', 2 * 60 * 60 * 1000);
 
   /**
    * Sets the TTL (Time-To-Live) for objects in cache.
