@@ -41,7 +41,7 @@ importers:
         version: 0.27.2(typescript@5.7.2)
       typedoc-material-theme:
         specifier: ^1.1.0
-        version: 1.1.0(typedoc@0.27.2(typescript@5.7.2))
+        version: 1.2.0(typedoc@0.27.2(typescript@5.7.2))
       typescript:
         specifier: ^5.6.3
         version: 5.7.2
@@ -173,8 +173,8 @@ packages:
     resolution: {integrity: sha512-Ngs9jhElXN7efS9WvvCC/p6rXMbihna8eNLVBc421Zf+VcFd+pR4DOcS6yA9V22EKtAy4DEj7LtvEEIm0bb80A==}
     engines: {node: '>= 18'}
 
-  '@material/material-color-utilities@0.2.7':
-    resolution: {integrity: sha512-0FCeqG6WvK4/Cc06F/xXMd/pv4FeisI0c1tUpBbfhA2n9Y8eZEv4Karjbmf2ZqQCPUWMrGp8A571tCjizxoTiQ==}
+  '@material/material-color-utilities@0.3.0':
+    resolution: {integrity: sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==}
 
   '@npmcli/fs@1.1.1':
     resolution: {integrity: sha512-8KG5RD0GVP4ydEzRn/I4BNDuxDtqVbOdm8675T49OIG/NGhaK0pjPX7ZcDlvKYbA+ulvVK3ztfcF4uBdOxuJbQ==}
@@ -816,11 +816,11 @@ packages:
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
-  typedoc-material-theme@1.1.0:
-    resolution: {integrity: sha512-LLWGVb8w+i+QGnsu/a0JKjcuzndFQt/UeGVOQz0HFFGGocROEHv5QYudIACrj+phL2LDwH05tJx0Ob3pYYH2UA==}
+  typedoc-material-theme@1.2.0:
+    resolution: {integrity: sha512-pZ07hqdxbyRtM+Tsu0s8BFLdANAyh2CWF0J2X07B9ldmvwbmVEfNdgpE0EYky/oFah9shv2o/KjElPtpnQi1+w==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
     peerDependencies:
-      typedoc: ^0.25.13 || ^0.26.3
+      typedoc: ^0.25.13 || ^0.26.x
 
   typedoc@0.27.2:
     resolution: {integrity: sha512-C2ima5TZJHU3ecnRIz50lKd1BsYck5LhYQIy7MRPmjuSEJreUEAt+uAVcZgY7wZsSORzEI7xW8miZIdxv/cbmw==}
@@ -990,7 +990,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  '@material/material-color-utilities@0.2.7': {}
+  '@material/material-color-utilities@0.3.0': {}
 
   '@npmcli/fs@1.1.1':
     dependencies:
@@ -1762,9 +1762,9 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  typedoc-material-theme@1.1.0(typedoc@0.27.2(typescript@5.7.2)):
+  typedoc-material-theme@1.2.0(typedoc@0.27.2(typescript@5.7.2)):
     dependencies:
-      '@material/material-color-utilities': 0.2.7
+      '@material/material-color-utilities': 0.3.0
       typedoc: 0.27.2(typescript@5.7.2)
 
   typedoc@0.27.2(typescript@5.7.2):
