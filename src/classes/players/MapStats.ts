@@ -128,3 +128,10 @@ export class CompletedMapStats extends MapStatsBase {
 export function isCompletedMapStats(stats: UncompletedMapStats | CompletedMapStats): stats is CompletedMapStats {
   return stats instanceof CompletedMapStats && stats.finishCount > 0;
 }
+
+/**
+ * Helper function to assert if a given map stats object is {@link UncompletedMapStats}.
+ */
+export function isUncompletedMapStats(stats: UncompletedMapStats | CompletedMapStats): stats is UncompletedMapStats {
+  return stats instanceof UncompletedMapStats && stats.finishCount === 0;
+}
