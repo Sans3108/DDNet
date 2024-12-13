@@ -112,3 +112,10 @@ export class CompletedMapStats extends MapStatsBase {
     this.teamRank = data.teamRank ?? null;
   }
 }
+
+/**
+ * Helper function to assert if a given map stats object is {@link CompletedMapStats}.
+ */
+export function isCompletedMapStats(stats: UncompletedMapStats | CompletedMapStats): stats is CompletedMapStats {
+  return stats instanceof CompletedMapStats && stats.finishCount > 0;
+}
