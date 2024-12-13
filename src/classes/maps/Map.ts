@@ -297,8 +297,12 @@ export class Map {
     this.#rawData = rawData;
     this.rankSource = rankSource;
 
-    this.name = this.#rawData.name;
     this.url = this.#rawData.website;
+    if (this.rankSource) {
+      this.url = this.url.replace('/maps/', `/maps/${this.rankSource.toLowerCase()}/`);
+    }
+
+    this.name = this.#rawData.name;
     this.thumbnailUrl = this.#rawData.thumbnail;
     this.webPreviewUrl = this.#rawData.web_preview;
     this.type = !Object.values<string>(Type).includes(this.#rawData.type) ? Type.unknown : (this.#rawData.type as Type);
