@@ -858,3 +858,23 @@ export function calculatePoints(type: Type, stars: number): number {
 
   return stars * multiplier + offset;
 }
+
+/**
+ * Formats an array of strings into a list.
+ *
+ * @example
+ * ```ts
+ * const authors = ["Sans3108", "urg"];
+ * console.log(formatStringList(authors)); // 'Sans3108 & urg'
+ *
+ * const authors = ["Sans3108", "urg", "Meloƞ"];
+ * console.log(formatStringList(authors)); // 'Sans3108, urg & Meloƞ'
+ * ```
+ */
+export function formatStringList(strings: string[]): string {
+  if (strings.length === 0) return '';
+  if (strings.length === 1) return strings[0];
+  if (strings.length === 2) return `${strings[0]} & ${strings[1]}`;
+
+  return `${strings.slice(0, strings.length - 1).join(', ')} & ${strings[strings.length - 1]}`;
+}
