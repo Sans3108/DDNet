@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
 import { _Schema_maps_query } from '../../schemas/maps/query.js';
-import { DDNetError, RankAvailableRegion, Region, Tile, Type, dePythonifyTime, splitMappers, timeString } from '../../util.js';
+import { DDNetError, RankAvailableRegion, Tile, Type, dePythonifyTime, splitMappers, timeString } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish } from '../other/Finish.js';
 import { Player } from '../players/Player.js';
@@ -322,7 +322,7 @@ export class Map {
     this.teamFinishes = this.#rawData.team_ranks.map(
       rank =>
         new Finish({
-          region: !Object.values<string>(Region).includes(rank.country) ? Region.UNK : (rank.country as Region),
+          region: !Object.values<string>(RankAvailableRegion).includes(rank.country) ? RankAvailableRegion.UNK : (rank.country as RankAvailableRegion),
           mapName: this.name,
           players: rank.players,
           rank: {
@@ -337,7 +337,7 @@ export class Map {
     this.finishes = this.#rawData.ranks.map(
       rank =>
         new Finish({
-          region: !Object.values<string>(Region).includes(rank.country) ? Region.UNK : (rank.country as Region),
+          region: !Object.values<string>(RankAvailableRegion).includes(rank.country) ? RankAvailableRegion.UNK : (rank.country as RankAvailableRegion),
           mapName: this.name,
           players: [rank.player],
           rank: {

@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _Schema_players_json } from '../../schemas/players/json.js';
 import { _PlayersJson2, _Schema_players_json2 } from '../../schemas/players/json2.js';
 import { _Schema_players_query } from '../../schemas/players/query.js';
-import { DDNetError, RankAvailableRegion, Region, Type, dePythonifyTime } from '../../util.js';
+import { DDNetError, RankAvailableRegion, ServerRegion, Type, dePythonifyTime } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish, RecentFinish } from '../other/Finish.js';
@@ -72,7 +72,7 @@ export class Player {
   /**
    * The favorite server region of this player.
    */
-  public favoriteServer!: Region;
+  public favoriteServer!: ServerRegion;
 
   /**
    * First and recent finishes for this player.
@@ -249,7 +249,7 @@ export class Player {
     });
 
     this.totalCompletionistPoints = this.#rawData.points.total;
-    this.favoriteServer = Region[this.#rawData.favorite_server.server as keyof typeof Region] ?? Region.UNK;
+    this.favoriteServer = ServerRegion[this.#rawData.favorite_server.server as keyof typeof ServerRegion] ?? ServerRegion.UNK;
 
     this.finishes = new Finishes({
       first: new Finish({
@@ -259,7 +259,7 @@ export class Player {
           placement: -1,
           points: -1
         },
-        region: Region.UNK,
+        region: RankAvailableRegion.UNK,
         timeSeconds: this.#rawData.first_finish.time,
         timestamp: dePythonifyTime(this.#rawData.first_finish.timestamp)
       }),
@@ -273,7 +273,7 @@ export class Player {
               placement: -1,
               points: -1
             },
-            region: Region[f.country as keyof typeof Region] ?? Region.UNK,
+            region: RankAvailableRegion[f.country as keyof typeof RankAvailableRegion] ?? RankAvailableRegion.UNK,
             timeSeconds: f.time,
             timestamp: dePythonifyTime(f.timestamp)
           })

@@ -107,7 +107,7 @@ export enum Type {
  * @see
  * https://github.com/ddnet/ddnet-web/tree/master/www/countryflags
  */
-export enum Region {
+export enum ServerRegion {
   ARG = 'ARG',
   AUS = 'AUS',
   BRA = 'BRA',
@@ -144,35 +144,36 @@ export enum Region {
  * Represents server regions where ranks are available online.
  *
  * @remarks
- * It's similar to {@link Region} but some are missing and some don't exist.
+ * It's similar to {@link ServerRegion} but some are missing and some don't exist.
  *
  * @see
  * https://github.com/ddnet/ddnet-scripts/blob/master/servers/scripts/maps.py#L178
  */
 export enum RankAvailableRegion {
-  NLD = Region.NLD,
+  NLD = ServerRegion.NLD,
   FRA = 'FRA',
-  GER = Region.GER,
-  POL = Region.POL,
-  FIN = Region.FIN,
-  UKR = Region.UKR,
-  RUS = Region.RUS,
-  TUR = Region.TUR,
-  IRN = Region.IRN,
+  GER = ServerRegion.GER,
+  POL = ServerRegion.POL,
+  FIN = ServerRegion.FIN,
+  UKR = ServerRegion.UKR,
+  RUS = ServerRegion.RUS,
+  TUR = ServerRegion.TUR,
+  IRN = ServerRegion.IRN,
   BHR = 'BHR',
-  CHL = Region.CHL,
-  BRA = Region.BRA,
-  ARG = Region.ARG,
-  PER = Region.PER,
-  USA = Region.USA,
-  CHN = Region.CHN,
-  KOR = Region.KOR,
-  TWN = Region.TWN,
-  SGP = Region.SGP,
-  ZAF = Region.ZAF,
-  IND = Region.IND,
-  AUS = Region.AUS,
-  OLD = 'OLD'
+  CHL = ServerRegion.CHL,
+  BRA = ServerRegion.BRA,
+  ARG = ServerRegion.ARG,
+  PER = ServerRegion.PER,
+  USA = ServerRegion.USA,
+  CHN = ServerRegion.CHN,
+  KOR = ServerRegion.KOR,
+  TWN = ServerRegion.TWN,
+  SGP = ServerRegion.SGP,
+  ZAF = ServerRegion.ZAF,
+  IND = ServerRegion.IND,
+  AUS = ServerRegion.AUS,
+  OLD = 'OLD',
+  UNK = 'UNK'
 }
 
 /**
@@ -772,13 +773,13 @@ export enum Tile {
 }
 
 /**
- * Gets a direct image url from the provided {@link Region}.
+ * Gets a direct image url from the provided {@link ServerRegion}.
  */
 export function getImageUrl<T extends 'region'>(
   /**
    * The region to get the image for.
    */
-  region: Region,
+  region: ServerRegion,
   kind: T
 ): `https://raw.githubusercontent.com/ddnet/ddnet-web/master/www/countryflags/${string}.png`;
 /**
@@ -805,7 +806,7 @@ export function getImageUrl<T extends 'tile'>(
  * @param kind The kind of image wanted, this is used at run-time to determine which url gets returned for overlapping members.
  * @typeParam T Used in combination with the {@link kind} param to also determine the kind of image wanted at compile-time.
  */
-export function getImageUrl<T extends 'region' | 'country' | 'tile'>(eMem: Region | Country | Tile, kind: T): string {
+export function getImageUrl<T extends 'region' | 'country' | 'tile'>(eMem: ServerRegion | Country | Tile, kind: T): string {
   if (kind === 'country') return `https://raw.githubusercontent.com/ddnet/ddnet/master/data/countryflags/${eMem}.png`;
 
   if (kind === 'region') return `https://raw.githubusercontent.com/ddnet/ddnet-web/master/www/countryflags/${eMem}.png`;

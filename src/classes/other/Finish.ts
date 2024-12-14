@@ -1,4 +1,4 @@
-import { RankAvailableRegion, Region, Type, formatStringList, timeString } from '../../util.js';
+import { RankAvailableRegion, Type, formatStringList, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { Player } from '../players/Player.js';
 import { Rank } from '../players/Rank.js';
@@ -37,7 +37,7 @@ export class Finish {
   /**
    * The region of this finish.
    */
-  public region: Region;
+  public region: RankAvailableRegion;
 
   /**
    * The finish player(s).
@@ -47,7 +47,7 @@ export class Finish {
   /**
    * Construct a new {@link Finish} instance.
    */
-  constructor(data: { timestamp: number; mapName: string; timeSeconds: number; rank: Rank; region: Region; players: string[] }) {
+  constructor(data: { timestamp: number; mapName: string; timeSeconds: number; rank: Rank; region: RankAvailableRegion; players: string[] }) {
     this.timestamp = data.timestamp;
     this.mapName = data.mapName;
     this.timeSeconds = data.timeSeconds;
