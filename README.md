@@ -223,7 +223,7 @@ _fox.png_
 
 ## Cache
 
-Most classes cache results, this is done in using the [keyv](https://www.npmjs.com/package/keyv) and [@keyv/sqlite](https://www.npmjs.com/package/@keyv/sqlite) packages. Cache data is stored in the `ddnet_cache.sqlite` file.
+Most classes cache results, this is done using the [keyv](https://www.npmjs.com/package/keyv) and [@keyv/sqlite](https://www.npmjs.com/package/@keyv/sqlite) packages. Cache data is stored in the `ddnet_cache.sqlite` file.
 
 It's not really wise to mess with the cache, but there's a couple things you can do, mainly changing the TTL (Time-To-Live) of the cached items[\*]() the class is responsible for, and clearing different cache pools.
 
