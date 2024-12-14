@@ -103,4 +103,11 @@ export class Release {
   ): Promise<Map> {
     return await Map.new(this.name, rankSource, force);
   }
+
+  /**
+   * Returns the name and url of this release in markdown format.
+   */
+  public toString(): string {
+    return `[${this.name}](${this.url})`;
+  }
 }

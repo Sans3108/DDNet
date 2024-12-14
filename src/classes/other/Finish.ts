@@ -1,4 +1,4 @@
-import { RankAvailableRegion, Region, Type, timeString } from '../../util.js';
+import { RankAvailableRegion, Region, Type, formatStringList, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { Player } from '../players/Player.js';
 import { Rank } from '../players/Rank.js';
@@ -74,6 +74,15 @@ export class Finish {
     force = false
   ): Promise<Map> {
     return await Map.new(this.mapName, rankSource, force);
+  }
+
+  /**
+   * Returns the names of the players and their finish time.
+   *
+   * @example "Sans3108 | 03:23"
+   */
+  public toString(): string {
+    return `${formatStringList(this.players.map(p => p.name))} | ${this.timeString}`;
   }
 }
 

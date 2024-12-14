@@ -58,4 +58,13 @@ export class MaxFinish {
   public async toPlayer(): Promise<Player> {
     return await Player.new(this.player);
   }
+
+  /**
+   * Returns the name of the player and finish count.
+   *
+   * @example "Sans3108 | 69"
+   */
+  public toString(): string {
+    return `${this.player} | ${this.count}`;
+  }
 }

@@ -101,4 +101,11 @@ export class Community {
   public getAllServerAddresses(): string[] {
     return this.serverLocations.flatMap(l => l.types.flatMap(t => t.addresses));
   }
+
+  /**
+   * Returns the name of the community.
+   */
+  public toString(): string {
+    return this.name;
+  }
 }
