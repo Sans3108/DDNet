@@ -69,7 +69,7 @@ You probably wouldn't want to log everything, just what you need. Examples below
 import { Player } from 'ddnet';
 const player = await Player.new('Sans3108');
 
-console.log(player.globalLeaderboard.completionist?.points); // 2740
+console.log(player.globalLeaderboard.completionist?.points); // 3421
 ```
 
 ```js
@@ -82,10 +82,10 @@ console.log(player.finishes.first.mapName); // "Multeasymap"
 
 ```js
 // Fastest finish time of all novice maps
-import { Player, CompletedMapStats } from 'ddnet';
+import { Player, isCompletedMapStats } from 'ddnet';
 const player = await Player.new('Sans3108');
 
-const completed = player.serverTypes.novice.maps.filter(map => map.finishCount > 0) as CompletedMapStats[];
+const completed = player.serverTypes.Novice.maps.filter(isCompletedMapStats);
 const fastestTime = completed.sort((a, b) => a.bestTimeSeconds - b.bestTimeSeconds)[0];
 
 console.log(`${fastestTime.mapName} ${fastestTime.bestTimeString}`); // "Tangerine 00:42"
@@ -130,12 +130,10 @@ Like before, this may be a bit much, so let's see some examples. Here are some s
 import { Map } from 'ddnet';
 
 const map = await Map.new('Grandma');
-
 console.log(map.mappers[0].name); // "Fňokurka oo7"
 
 // If the map has multiple authors, then:
 const map = await Map.new('Nagi');
-
 console.log(map.mappers.map(a => a.name).join(' & ')); // "Cøke & Arrow"
 ```
 
