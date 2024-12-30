@@ -38,10 +38,10 @@ importers:
         version: 6.0.1
       typedoc:
         specifier: ^0.27.2
-        version: 0.27.5(typescript@5.7.2)
+        version: 0.27.6(typescript@5.7.2)
       typedoc-material-theme:
         specifier: ^1.1.0
-        version: 1.2.0(typedoc@0.27.5(typescript@5.7.2))
+        version: 1.2.0(typedoc@0.27.6(typescript@5.7.2))
       typescript:
         specifier: ^5.6.3
         version: 5.7.2
@@ -822,8 +822,8 @@ packages:
     peerDependencies:
       typedoc: ^0.25.13 || ^0.26.x
 
-  typedoc@0.27.5:
-    resolution: {integrity: sha512-x+fhKJtTg4ozXwKayh/ek4wxZQI/+2hmZUdO2i2NGDBRUflDble70z+ewHod3d4gRpXSO6fnlnjbDTnJk7HlkQ==}
+  typedoc@0.27.6:
+    resolution: {integrity: sha512-oBFRoh2Px6jFx366db0lLlihcalq/JzyCVp7Vaq1yphL/tbgx2e+bkpkCgJPunaPvPwoTOXSwasfklWHm7GfAw==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
@@ -1762,12 +1762,12 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  typedoc-material-theme@1.2.0(typedoc@0.27.5(typescript@5.7.2)):
+  typedoc-material-theme@1.2.0(typedoc@0.27.6(typescript@5.7.2)):
     dependencies:
       '@material/material-color-utilities': 0.3.0
-      typedoc: 0.27.5(typescript@5.7.2)
+      typedoc: 0.27.6(typescript@5.7.2)
 
-  typedoc@0.27.5(typescript@5.7.2):
+  typedoc@0.27.6(typescript@5.7.2):
     dependencies:
       '@gerrit0/mini-shiki': 1.24.1
       lunr: 2.3.9
