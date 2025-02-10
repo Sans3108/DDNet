@@ -98,6 +98,20 @@ export class TeeSkin6 {
   }
 
   /**
+   * Get the original skin file buffer.
+   */
+  public async getSkinFileBuf(
+    /**
+     * Wether to bypass the cache when fetching.
+     */
+    force = false
+  ): Promise<Buffer> {
+    await this.populateBuffer(force);
+
+    return this.ogFileBuf;
+  }
+
+  /**
    * Populate {@link ogFileBuf} with the skin file buffer.
    *
    * If using local custom skin, it won't do anything. Otherwise it will fetch the skin and store the response buffer.
