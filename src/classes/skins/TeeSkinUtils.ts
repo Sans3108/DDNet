@@ -1,8 +1,5 @@
-//@ts-expect-error No DT types
-import { PNG } from 'node-png';
-
 import sharp, { OutputInfo } from 'sharp';
-import { MasterServerClient, getMasterSrvData } from '../../Master.js';
+import { MasterServerClient } from '../../Master.js';
 import { DDNetError } from '../../util.js';
 import { TeeSkin6 } from './TeeSkin6.js';
 import { TeeSkin7, assertSkinPart } from './TeeSkin7.js';
@@ -16,21 +13,15 @@ export async function getImgSize(
   /**
    * The image buffer to get dimensions from.
    */
-  b: Buffer
+  buf: Buffer
 ): Promise<{ width: number; height: number }> {
-  return new Promise((resolve, reject) => {
-    const p = new PNG();
+  const meta = await sharp(buf).metadata();
 
-    p.parse(b, (err: unknown, data: unknown) => {
-      if (err) {
-        reject(new DDNetError((err as Error)?.message, err));
-      } else {
-        const { width, height } = data as { width: number; height: number };
+  const { width, height } = meta;
 
-        resolve({ width, height });
-      }
-    });
-  });
+  if (!width || !height) throw new DDNetError('Image dimensions could not be found.', { buffer: buf, sharpMetadata: meta });
+
+  return { width, height };
 }
 
 /**

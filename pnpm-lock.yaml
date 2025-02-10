@@ -17,9 +17,6 @@ importers:
       keyv:
         specifier: ^5.1.3
         version: 5.2.3
-      node-png:
-        specifier: ^0.4.3
-        version: 0.4.3
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
@@ -621,10 +618,6 @@ packages:
     resolution: {integrity: sha512-olTJRgUtAb/hOXG0E93wZDs5YiJlgbXxTwQAFHyNlRsXQnYzUaF2aGgujZbw+hR8aF4ZG/rST57bWMWD16jr9w==}
     engines: {node: '>= 10.12.0'}
     hasBin: true
-
-  node-png@0.4.3:
-    resolution: {integrity: sha512-9GlBL6I/cYB7E4OPOWuGnnbhQiSfDv8dRoNbCimtgYcnxN13j6GQb/FD0LAzoTXetLf3a/eVhXEXmtMxB9D/yA==}
-    engines: {node: 0.8.x}
 
   nopt@5.0.0:
     resolution: {integrity: sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ==}
@@ -1510,8 +1503,6 @@ snapshots:
       - bluebird
       - supports-color
     optional: true
-
-  node-png@0.4.3: {}
 
   nopt@5.0.0:
     dependencies:
