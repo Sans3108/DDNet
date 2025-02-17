@@ -3,17 +3,7 @@ import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
-import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, colorImage, cropImage, flipImage, getImgSize, scaleImage } from './TeeSkinUtils.js';
-
-/**
- * Tee skin component types
- *
- * @internal
- *
- * @privateRemarks
- * Not exported because it seems pointless.
- */
-type TeeSkin6Component = TeeSkinEyeVariant | 'body' | 'bodyShadow' | 'feet' | 'feetShadow';
+import { convertToGrayscale, getImgSize, HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * Depth 2 {@link DeepRequired}
@@ -98,7 +88,7 @@ export class TeeSkin6 {
   }
 
   /**
-   * Get the original skin file buffer.
+   * Get the skin file buffer.
    */
   public async getSkinFileBuf(
     /**
@@ -148,8 +138,7 @@ export class TeeSkin6 {
 
     if (response instanceof DDNetError) throw response;
 
-    if (!response.headers['content-type']) throw new DDNetError('Invalid response type!', response);
-    if (response.headers['content-type'] !== 'image/png') throw new DDNetError('Invalid response type!', response);
+    if (!response.headers['content-type'] || response.headers['content-type'] !== 'image/png') throw new DDNetError('Invalid response type!', response);
 
     const buf = Buffer.from(response.data);
 
@@ -175,140 +164,191 @@ export class TeeSkin6 {
         eyesTWcode: null,
         markingTWcode: null
       },
-      eyeVariant: options.eyeVariant ?? 'eye-default',
+      eyeVariant: options.eyeVariant ?? TeeSkinEyeVariant.normal,
       saveFilePath: options.saveFilePath ?? null,
-      size: options.size ?? 96
+      size: options.size ?? 96,
+      viewAngle: options.viewAngle ?? 0
     };
 
-    await this.populateBuffer();
+    let skinFileBuf = await this.getSkinFileBuf();
 
-    const skinFileBuf: Buffer = this.ogFileBuf;
+    let { width, height } = await getImgSize(skinFileBuf);
+    if (width / height !== 2 / 1) throw new DDNetError('Invalid aspect ratio.', { width, height, buf: skinFileBuf });
 
-    const skinFileSize = await getImgSize(skinFileBuf);
+    // Work with 3x scale to improve acc.
+    const mult = 3;
 
-    if (skinFileSize.width / skinFileSize.height !== 2 / 1) throw new DDNetError('Invalid aspect ratio.', { width: skinFileSize.width, height: skinFileSize.height, buf: skinFileBuf });
+    skinFileBuf = await sharp(skinFileBuf)
+      .resize(width * mult, height * mult)
+      .toBuffer();
 
-    const finalSize = opts.size;
+    width *= mult;
+    height *= mult;
 
-    const mult = 2.6;
-
-    const skinRes = Math.round(finalSize * mult);
-
-    const { data: resizedBuf, info } = await sharp(skinFileBuf)
-      .resize(skinRes, Math.round(skinRes / 2))
-      .png()
-      .toBuffer({ resolveWithObject: true });
-
-    const { width, height } = info;
-
-    const w = (p: number) => Math.round((p / 8) * width);
-    const h = (p: number) => Math.round((p / 4) * height);
-
-    const meta: Record<TeeSkin6Component, [number, number, number, number, number]> = {
-      'body': [w(0), h(0), w(3), h(3), 1],
-      'bodyShadow': [w(3), h(0), w(6), h(3), 1],
-      'feet': [w(6), h(1), w(8), h(2), 1.5],
-      'feetShadow': [w(6), h(2), w(8), h(3), 1.5],
-      'eye-default': [w(2), h(3), w(3), h(4), 1.2],
-      'eye-evil': [w(3), h(3), w(4), h(4), 1.2],
-      'eye-hurt': [w(4), h(3), w(5), h(4), 1.2],
-      'eye-happy': [w(5), h(3), w(6), h(4), 1.2],
-      'eye-surprised': [w(7), h(3), w(8), h(4), 1.2]
+    // [left, top, width, height]
+    const spriteRegions: Record<(typeof TeeSkinEyeVariant)[keyof typeof TeeSkinEyeVariant] | 'body' | 'body-outline' | 'foot' | 'foot-outline', number[]> = {
+      'body': [0, 0, width * 0.375, height * 0.75].map(n => Math.round(n)),
+      'body-outline': [width * 0.375, 0, width * 0.375, height * 0.75].map(n => Math.round(n)),
+      'foot': [width * 0.75, height * 0.25, width * 0.25, height * 0.25].map(n => Math.round(n)),
+      'foot-outline': [width * 0.75, height * 0.5, width * 0.25, height * 0.25].map(n => Math.round(n)),
+      [TeeSkinEyeVariant.normal]: [width * 0.25, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n)),
+      [TeeSkinEyeVariant.blink]: [width * 0.25, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n)), // same as normal
+      [TeeSkinEyeVariant.angry]: [width * 0.375, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n)),
+      [TeeSkinEyeVariant.pain]: [width * 0.5, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n)),
+      [TeeSkinEyeVariant.happy]: [width * 0.625, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n)),
+      [TeeSkinEyeVariant.dead]: [width * 0.75, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n)),
+      [TeeSkinEyeVariant.surprise]: [width * 0.875, height * 0.75, width * 0.125, height * 0.25].map(n => Math.round(n))
     };
 
-    const selectedEyesMeta = meta[opts.eyeVariant];
+    const selectedEyeVariantRegion: number[] = spriteRegions[opts.eyeVariant];
 
-    let [bodyOutput, bodyShadowOutput, feetOutput, feetShadowOutput, eyeOutput] = await Promise.all([
-      scaleImage(await cropImage(resizedBuf, meta['body'][0], meta['body'][1], meta['body'][2], meta['body'][3]), meta['body'][4]),
-      scaleImage(await cropImage(resizedBuf, meta['bodyShadow'][0], meta['bodyShadow'][1], meta['bodyShadow'][2], meta['bodyShadow'][3]), meta['bodyShadow'][4]),
-      scaleImage(await cropImage(resizedBuf, meta['feet'][0], meta['feet'][1], meta['feet'][2], meta['feet'][3]), meta['feet'][4]),
-      scaleImage(await cropImage(resizedBuf, meta['feetShadow'][0], meta['feetShadow'][1], meta['feetShadow'][2], meta['feetShadow'][3]), meta['feetShadow'][4]),
-      scaleImage(await cropImage(resizedBuf, selectedEyesMeta[0], selectedEyesMeta[1], selectedEyesMeta[2], selectedEyesMeta[3]), selectedEyesMeta[4])
+    const region = (region: number[]): sharp.Region => {
+      return { left: region[0], top: region[1], width: region[2], height: region[3] };
+    };
+
+    let [body, bodyOutline, foot, footOutline, eye] = await Promise.all([
+      sharp(skinFileBuf).extract(region(spriteRegions.body)).toBuffer({ resolveWithObject: true }),
+      sharp(skinFileBuf).extract(region(spriteRegions['body-outline'])).toBuffer({ resolveWithObject: true }),
+      sharp(skinFileBuf).extract(region(spriteRegions.foot)).toBuffer({ resolveWithObject: true }),
+      sharp(skinFileBuf).extract(region(spriteRegions['foot-outline'])).toBuffer({ resolveWithObject: true }),
+      sharp(skinFileBuf).extract(region(selectedEyeVariantRegion)).toBuffer({ resolveWithObject: true })
     ]);
 
-    let [bodyBuf, bodyShadowBuf, feetBuf, feetShadowBuf, eyeBuf] = [bodyOutput.data, bodyShadowOutput.data, feetOutput.data, feetShadowOutput.data, eyeOutput.data];
+    const footScaledWidth = Math.round(foot.info.width * 1.5);
+    const footScaledHeight = Math.round(foot.info.height * 1.5);
+
+    const eyeScaledWidth = Math.round(eye.info.width * 1.2);
+    const eyeScaledHeight = Math.round(eye.info.height * (opts.eyeVariant === TeeSkinEyeVariant.blink ? 0.45 : 1.2));
+
+    [foot, footOutline, eye] = await Promise.all([
+      sharp(foot.data).resize(footScaledWidth, footScaledHeight).toBuffer({ resolveWithObject: true }),
+      sharp(footOutline.data).resize(footScaledWidth, footScaledHeight).toBuffer({ resolveWithObject: true }),
+      sharp(eye.data).resize(eyeScaledWidth, eyeScaledHeight, { fit: 'fill' }).toBuffer({ resolveWithObject: true })
+    ]);
 
     if (opts.customColors.bodyTWcode !== null && opts.customColors.feetTWcode !== null) {
-      const [bodyBufColored, bodyShadowBufColored, eyeBufColored, feetBufColored, feetShadowBufColored] = await Promise.all([colorImage(bodyBuf, HSLAfromTWcode(opts.customColors.bodyTWcode), true), colorImage(bodyShadowBuf, HSLAfromTWcode(opts.customColors.bodyTWcode), true), colorImage(eyeBuf, HSLAfromTWcode(opts.customColors.bodyTWcode)), colorImage(feetBuf, HSLAfromTWcode(opts.customColors.feetTWcode)), colorImage(feetShadowBuf, HSLAfromTWcode(opts.customColors.feetTWcode))]);
+      // Grayscaling
+      // prettier-ignore
+      [body, bodyOutline, foot, footOutline, eye] = await Promise.all([
+        await convertToGrayscale(body.data, true),
+        await convertToGrayscale(bodyOutline.data),
+        await convertToGrayscale(foot.data),
+        await convertToGrayscale(footOutline.data),
+        await convertToGrayscale(eye.data)
+      ])
 
-      bodyBuf = bodyBufColored;
-      bodyShadowBuf = bodyShadowBufColored;
-      eyeBuf = eyeBufColored;
-      feetBuf = feetBufColored;
-      feetShadowBuf = feetShadowBufColored;
+      // Tinting
+      const bodyCol = HSLAfromTWcode(opts.customColors.bodyTWcode);
+      const feetCol = HSLAfromTWcode(opts.customColors.feetTWcode);
+
+      // prettier-ignore
+      [body, bodyOutline, foot, footOutline, eye] = await Promise.all([
+        await tint(body.data, bodyCol),
+        await tint(bodyOutline.data, bodyCol),
+        await tint(foot.data, feetCol),
+        await tint(footOutline.data, feetCol),
+        await tint(eye.data, bodyCol)
+      ]);
     }
 
-    const bodyLen = bodyOutput.info.width;
-    const bodyPos: [number, number] = [Math.round((finalSize - bodyLen) / 2), Math.round((finalSize - bodyLen) / 2)];
+    const flippedEye = await sharp(eye.data).flop().toBuffer({ resolveWithObject: true });
 
-    const renderPos: {
-      body: [number, number];
-      feet: { back: [number, number]; front: [number, number] };
-      eyes: { left: [number, number]; right: [number, number] };
-    } = {
-      body: bodyPos,
-      feet: {
-        back: [Math.round(bodyPos[0] - bodyLen * (8 / 64)), Math.round(bodyPos[1] + bodyLen * (30 / 64))],
-        front: [Math.round(bodyPos[0] + bodyLen * (8 / 64)), Math.round(bodyPos[1] + bodyLen * (30 / 64))]
-      },
-      eyes: {
-        left: [Math.round(bodyPos[0] + bodyLen * (23 / 64)), Math.round(bodyPos[1] + bodyLen * (15 / 64))],
-        right: [Math.round(bodyPos[0] + bodyLen * (31 / 64)), Math.round(bodyPos[1] + bodyLen * (15 / 64))]
-      }
-    };
+    const bodySize = body.info.width;
+    const footHeight = foot.info.height;
+    const footWidth = foot.info.width;
+    const eyeHeight = eye.info.height;
+    const eyeWidth = eye.info.width;
+    const canvasSize = bodySize * 1.2; // Slight margin of empty space around the tee
 
-    const finalImageBuf = await sharp({
+    // Amount to shift parts by vertically downwards to center tee
+    const centerOffset = (4 / 64) * bodySize;
+
+    const bodyY = (canvasSize - bodySize) / 2; // Body doesn't need shifting
+    const bodyX = (canvasSize - bodySize) / 2;
+
+    const footY = (canvasSize - footHeight) / 2 + (10 / 64) * bodySize + centerOffset;
+    const lFootX = (canvasSize - footWidth) / 2 - (7 / 64) * bodySize;
+    const rFootX = (canvasSize - footWidth) / 2 + (7 / 64) * bodySize;
+
+    let eyeY = (canvasSize - eyeHeight) / 2 - 0.125 * bodySize + centerOffset;
+    let lEyeX = (canvasSize - eyeWidth) / 2 - 0.05 * bodySize;
+    let rEyeX = (canvasSize - eyeWidth) / 2 + 0.05 * bodySize;
+
+    const dir = opts.viewAngle * (Math.PI / 180);
+
+    const eyeMoveY = Math.sin(dir) * 0.1 * bodySize;
+    const eyeMoveX = Math.cos(dir) * 0.125 * bodySize;
+
+    eyeY += eyeMoveY;
+    lEyeX += eyeMoveX;
+    rEyeX += eyeMoveX;
+
+    const minSeparation = 0.018 * bodySize;
+    const maxSeparation = 0.025 * bodySize;
+
+    const separationAmount = Math.pow(Math.abs(Math.sin(dir)), 3) * maxSeparation;
+
+    const eyeSeparation = Math.max(minSeparation, Math.min(separationAmount, maxSeparation));
+
+    lEyeX -= eyeSeparation;
+    rEyeX += eyeSeparation;
+
+    const rendered = await sharp({
       create: {
-        width: finalSize,
-        height: finalSize,
+        width: Math.round(canvasSize),
+        height: Math.round(canvasSize),
         background: 'rgba(0, 0, 0, 0)',
         channels: 4
       }
     })
-      .composite([
-        {
-          input: bodyShadowBuf,
-          left: renderPos.body[0],
-          top: renderPos.body[1]
-        },
-        {
-          input: feetShadowBuf,
-          left: renderPos.feet.back[0],
-          top: renderPos.feet.back[1]
-        },
-        {
-          input: feetShadowBuf,
-          left: renderPos.feet.front[0],
-          top: renderPos.feet.front[1]
-        },
-        {
-          input: feetBuf,
-          left: renderPos.feet.back[0],
-          top: renderPos.feet.back[1]
-        },
-        {
-          input: bodyBuf,
-          left: renderPos.body[0],
-          top: renderPos.body[1]
-        },
-        {
-          input: eyeBuf,
-          left: renderPos.eyes.left[0],
-          top: renderPos.eyes.left[1]
-        },
-        {
-          input: await flipImage(eyeBuf),
-          left: renderPos.eyes.right[0],
-          top: renderPos.eyes.right[1]
-        },
-        {
-          input: feetBuf,
-          left: renderPos.feet.front[0],
-          top: renderPos.feet.front[1]
-        }
-      ])
+      .composite(
+        [
+          {
+            input: bodyOutline.data,
+            left: bodyX,
+            top: bodyY
+          },
+          {
+            input: footOutline.data,
+            left: lFootX,
+            top: footY
+          },
+          {
+            input: footOutline.data,
+            left: rFootX,
+            top: footY
+          },
+          {
+            input: foot.data,
+            left: lFootX,
+            top: footY
+          },
+          {
+            input: body.data,
+            left: bodyX,
+            top: bodyY
+          },
+          {
+            input: eye.data,
+            left: lEyeX,
+            top: eyeY
+          },
+          {
+            input: flippedEye.data,
+            left: rEyeX,
+            top: eyeY
+          },
+          {
+            input: foot.data,
+            left: rFootX,
+            top: footY
+          }
+        ].map(o => ({ input: o.input, left: Math.round(o.left), top: Math.round(o.top) }))
+      )
       .png()
       .toBuffer();
+
+    const finalImageBuf = await sharp(rendered).resize(opts.size).png().toBuffer();
 
     if (opts.saveFilePath) writeFileSync(opts.saveFilePath, finalImageBuf);
 

@@ -12,36 +12,36 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1
       axios:
-        specifier: ^1.7.7
+        specifier: ^1.7.9
         version: 1.7.9
       keyv:
-        specifier: ^5.1.3
+        specifier: ^5.2.3
         version: 5.2.3
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
       zod:
-        specifier: ^3.23.8
-        version: 3.24.1
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@types/node':
-        specifier: 22.9.0
-        version: 22.9.0
+        specifier: 22.13.4
+        version: 22.13.4
       prettier:
-        specifier: 3.4.2
-        version: 3.4.2
+        specifier: 3.5.1
+        version: 3.5.1
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
       typedoc:
-        specifier: ^0.27.2
-        version: 0.27.5(typescript@5.7.2)
+        specifier: ^0.27.7
+        version: 0.27.7(typescript@5.7.3)
       typedoc-material-theme:
-        specifier: ^1.1.0
-        version: 1.2.0(typedoc@0.27.5(typescript@5.7.2))
+        specifier: ^1.3.0
+        version: 1.3.0(typedoc@0.27.7(typescript@5.7.3))
       typescript:
-        specifier: ^5.6.3
-        version: 5.7.2
+        specifier: ^5.7.3
+        version: 5.7.3
 
 packages:
 
@@ -197,8 +197,8 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/node@22.9.0':
-    resolution: {integrity: sha512-vuyHg81vvWA1Z1ELfvLko2c8f34gyA0zaic0+Rllc5lbCnbSyuvb2Oxpm6TAUAC/2xZN3QGqxBNggD1nNR2AfQ==}
+  '@types/node@22.13.4':
+    resolution: {integrity: sha512-ywP2X0DYtX3y08eFVx5fNIw7/uIv8hYUKgXoK8oayJlLnKcRfEYCxWMVE1XagUdVtCJlZT1AU4LXEABW+L1Peg==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -656,8 +656,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  prettier@3.4.2:
-    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
+  prettier@3.5.1:
+    resolution: {integrity: sha512-hPpFQvHwL3Qv5AdRvBFMhnKo4tYxp0ReXiPn2bxkiohEX6mBeBwEpBSQTkD458RaaDKQMYSp4hX4UtfUTA5wDw==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -809,29 +809,29 @@ packages:
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
-  typedoc-material-theme@1.2.0:
-    resolution: {integrity: sha512-pZ07hqdxbyRtM+Tsu0s8BFLdANAyh2CWF0J2X07B9ldmvwbmVEfNdgpE0EYky/oFah9shv2o/KjElPtpnQi1+w==}
+  typedoc-material-theme@1.3.0:
+    resolution: {integrity: sha512-4vY68NUBBkMc3gKAltDtvT0KbIYX1uaFAT/3brDwhnUxhfTiYRtfg8VXR2lr8f+9VNDh7BfEtj8gpRO7Y93TWQ==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
     peerDependencies:
-      typedoc: ^0.25.13 || ^0.26.x
+      typedoc: ^0.25.13 || ^0.26.x || ^0.27.x
 
-  typedoc@0.27.5:
-    resolution: {integrity: sha512-x+fhKJtTg4ozXwKayh/ek4wxZQI/+2hmZUdO2i2NGDBRUflDble70z+ewHod3d4gRpXSO6fnlnjbDTnJk7HlkQ==}
+  typedoc@0.27.7:
+    resolution: {integrity: sha512-K/JaUPX18+61W3VXek1cWC5gwmuLvYTOXJzBvD9W7jFvbPnefRnCHQCEPw7MSNrP/Hj7JJrhZtDDLKdcYm6ucg==}
     engines: {node: '>= 18'}
     hasBin: true
     peerDependencies:
       typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x
 
-  typescript@5.7.2:
-    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
   uc.micro@2.1.0:
     resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
 
-  undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   unique-filename@1.1.1:
     resolution: {integrity: sha512-Vmp0jIp2ln35UTXuryvjzkjGdRyf9b2lTXuSYUiPmzRcl3FDtYqAwOnTJkAngD9SWhnoJzDbTKwaOrZ+STtxNQ==}
@@ -869,8 +869,8 @@ packages:
     engines: {node: '>= 14'}
     hasBin: true
 
-  zod@3.24.1:
-    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
 snapshots:
 
@@ -1016,9 +1016,9 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/node@22.9.0':
+  '@types/node@22.13.4':
     dependencies:
-      undici-types: 6.19.8
+      undici-types: 6.20.0
 
   '@types/unist@3.0.3': {}
 
@@ -1553,7 +1553,7 @@ snapshots:
       tar-fs: 2.1.1
       tunnel-agent: 0.6.0
 
-  prettier@3.4.2: {}
+  prettier@3.5.1: {}
 
   promise-inflight@1.0.1:
     optional: true
@@ -1753,25 +1753,25 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  typedoc-material-theme@1.2.0(typedoc@0.27.5(typescript@5.7.2)):
+  typedoc-material-theme@1.3.0(typedoc@0.27.7(typescript@5.7.3)):
     dependencies:
       '@material/material-color-utilities': 0.3.0
-      typedoc: 0.27.5(typescript@5.7.2)
+      typedoc: 0.27.7(typescript@5.7.3)
 
-  typedoc@0.27.5(typescript@5.7.2):
+  typedoc@0.27.7(typescript@5.7.3):
     dependencies:
       '@gerrit0/mini-shiki': 1.24.1
       lunr: 2.3.9
       markdown-it: 14.1.0
       minimatch: 9.0.5
-      typescript: 5.7.2
+      typescript: 5.7.3
       yaml: 2.6.1
 
-  typescript@5.7.2: {}
+  typescript@5.7.3: {}
 
   uc.micro@2.1.0: {}
 
-  undici-types@6.19.8: {}
+  undici-types@6.20.0: {}
 
   unique-filename@1.1.1:
     dependencies:
@@ -1812,4 +1812,4 @@ snapshots:
 
   yaml@2.6.1: {}
 
-  zod@3.24.1: {}
+  zod@3.24.2: {}

@@ -2,7 +2,7 @@
   "tabWidth": 2,
   "useTabs": false,
   "trailingComma": "none",
-  "printWidth": 500,
+  "printWidth": 300,
   "semi": true,
   "arrowParens": "avoid",
   "bracketSameLine": true,

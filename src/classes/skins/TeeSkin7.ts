@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
-import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, colorImage, cropImage, scaleImage } from './TeeSkinUtils.js';
+import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 import { CacheManager } from '../other/CacheManager.js';
 
 /**
@@ -146,69 +146,92 @@ export class TeeSkin7 {
     /**
      * Render options to use.
      */
-    options?: TeeSkinRenderOptions
+    options: Omit<TeeSkinRenderOptions, 'eyeVariant'> & {
+      eyeVariant?: Exclude<TeeSkinEyeVariant, TeeSkinEyeVariant.dead>;
+    } = {}
   ): Promise<Buffer> {
-    const opts: DeepRequired<TeeSkinRenderOptions> = {
+    const opts: DeepRequired<
+      Omit<TeeSkinRenderOptions, 'eyeVariant'> & {
+        eyeVariant?: Exclude<TeeSkinEyeVariant, TeeSkinEyeVariant.dead>;
+      }
+    > = {
       customColors: {
-        bodyTWcode: options?.customColors?.bodyTWcode ?? null,
-        markingTWcode: options?.customColors?.markingTWcode ?? null,
-        decorationTWcode: options?.customColors?.decorationTWcode ?? null,
-        feetTWcode: options?.customColors?.feetTWcode ?? null,
-        eyesTWcode: options?.customColors?.eyesTWcode ?? null
+        bodyTWcode: options.customColors?.bodyTWcode ?? null,
+        markingTWcode: options.customColors?.markingTWcode ?? null,
+        decorationTWcode: options.customColors?.decorationTWcode ?? null,
+        feetTWcode: options.customColors?.feetTWcode ?? null,
+        eyesTWcode: options.customColors?.eyesTWcode ?? null
       },
-      eyeVariant: options?.eyeVariant ?? 'eye-default',
-      saveFilePath: options?.saveFilePath ?? null,
-      size: options?.size ?? 96
+      eyeVariant: options.eyeVariant ?? TeeSkinEyeVariant.normal,
+      saveFilePath: options.saveFilePath ?? null,
+      size: options.size ?? 96,
+      viewAngle: options.viewAngle ?? 0
     };
 
     // Fetching all assets
-    let [bodyAsset, feetAsset, eyesAsset, markingAsset, decorationAsset] = await Promise.all([TeeSkin7.makeRequest('body', this.opts.body), TeeSkin7.makeRequest('feet', this.opts.feet), TeeSkin7.makeRequest('eyes', this.opts.eyes), this.opts.marking ? TeeSkin7.makeRequest('marking', this.opts.marking) : null, this.opts.decoration ? TeeSkin7.makeRequest('decoration', this.opts.decoration) : null]);
+    let [bodyAsset, feetAsset, eyesAsset, markingAsset, decorationAsset] = await Promise.all([
+      TeeSkin7.makeRequest('body', this.opts.body),
+      TeeSkin7.makeRequest('feet', this.opts.feet),
+      TeeSkin7.makeRequest('eyes', this.opts.eyes),
+      this.opts.marking ? TeeSkin7.makeRequest('marking', this.opts.marking) : null,
+      this.opts.decoration ? TeeSkin7.makeRequest('decoration', this.opts.decoration) : null
+    ]);
 
     // marking/stripes is 171x171 for some reason
     if (this.opts.marking === 'stripes' && markingAsset) {
       markingAsset = await sharp(markingAsset).resize(128, 128).png().toBuffer();
     }
 
-    const eyesCoords: Record<TeeSkinEyeVariant, [number, number, number, number]> = {
-      'eye-default': [0, 0, 64, 32],
-      'eye-evil': [64, 0, 128, 32],
-      'eye-hurt': [0, 32, 64, 64],
-      'eye-happy': [64, 32, 128, 64],
-      'eye-surprised': [0, 64, 64, 96]
+    const eyesCoords: Record<Exclude<(typeof TeeSkinEyeVariant)[keyof typeof TeeSkinEyeVariant], typeof TeeSkinEyeVariant.dead>, sharp.Region> = {
+      [TeeSkinEyeVariant.normal]: { left: 0, top: 0, width: 64, height: 32 },
+      [TeeSkinEyeVariant.blink]: { left: 0, top: 0, width: 64, height: 32 }, // same as normal
+      [TeeSkinEyeVariant.angry]: { left: 64, top: 0, width: 64, height: 32 },
+      [TeeSkinEyeVariant.pain]: { left: 0, top: 32, width: 64, height: 32 },
+      [TeeSkinEyeVariant.happy]: { left: 64, top: 32, width: 64, height: 32 },
+      [TeeSkinEyeVariant.surprise]: { left: 0, top: 64, width: 64, height: 32 }
     };
 
     // Cropping
-    let [bodyBg, bodyColorable, bodyAccent, bodyOutline, feetBg, feetColorable, selectedEyes, decorationBg, decorationColorable] = await Promise.all([
-      cropImage(bodyAsset, 0, 0, 128, 128),
-      cropImage(bodyAsset, 128, 0, 256, 128),
-      cropImage(bodyAsset, 0, 128, 128, 256),
-      cropImage(bodyAsset, 128, 128, 256, 256),
-      cropImage(feetAsset, 64, 0, 128, 64),
-      cropImage(feetAsset, 0, 0, 64, 64),
-      cropImage(eyesAsset, ...eyesCoords[opts.eyeVariant]),
-      decorationAsset ? cropImage(decorationAsset, 128, 0, 256, 128) : null,
-      decorationAsset ? cropImage(decorationAsset, 0, 0, 128, 128) : null
+    let [bodyBg, bodyColorable, bodyAccent, bodyOutline, footBg, footColorable, selectedEyes, decorationBg, decorationColorable] = await Promise.all([
+      sharp(bodyAsset).extract({ left: 0, top: 0, width: 128, height: 128 }).toBuffer(),
+      sharp(bodyAsset).extract({ left: 128, top: 0, width: 128, height: 128 }).toBuffer(),
+      sharp(bodyAsset).extract({ left: 0, top: 128, width: 128, height: 128 }).toBuffer(),
+      sharp(bodyAsset).extract({ left: 128, top: 128, width: 128, height: 128 }).toBuffer(),
+      sharp(feetAsset).extract({ left: 64, top: 0, width: 64, height: 64 }).toBuffer(),
+      sharp(feetAsset).extract({ left: 0, top: 0, width: 64, height: 64 }).toBuffer(),
+      sharp(eyesAsset).extract(eyesCoords[opts.eyeVariant]).toBuffer({ resolveWithObject: true }),
+      decorationAsset ? sharp(decorationAsset).extract({ left: 128, top: 0, width: 128, height: 128 }).toBuffer() : null,
+      decorationAsset ? sharp(decorationAsset).extract({ left: 0, top: 0, width: 128, height: 128 }).toBuffer() : null
     ]);
+
+    // Blink emote
+    if (opts.eyeVariant === TeeSkinEyeVariant.blink) {
+      selectedEyes = await sharp(selectedEyes.data)
+        .resize(selectedEyes.info.width, Math.round(selectedEyes.info.height * 0.45))
+        .toBuffer({ resolveWithObject: true });
+    }
 
     // Coloring
     let [bodyColored, feetColored, eyesColored, markingColored, decorationColored] = await Promise.all([
-      opts.customColors.bodyTWcode ? colorImage(bodyColorable, HSLAfromTWcode(opts.customColors.bodyTWcode)) : bodyColorable,
-      opts.customColors.feetTWcode ? colorImage(feetColorable, HSLAfromTWcode(opts.customColors.feetTWcode)) : feetColorable,
-      opts.customColors.eyesTWcode ? colorImage(selectedEyes, HSLAfromTWcode(opts.customColors.eyesTWcode)) : selectedEyes,
-      opts.customColors.markingTWcode && markingAsset ? colorImage(markingAsset, HSLAfromTWcode(opts.customColors.markingTWcode, true)) : markingAsset,
-      opts.customColors.decorationTWcode && decorationColorable ? colorImage(decorationColorable, HSLAfromTWcode(opts.customColors.decorationTWcode)) : decorationColorable
+      opts.customColors.bodyTWcode ? tint(bodyColorable, HSLAfromTWcode(opts.customColors.bodyTWcode), true) : bodyColorable,
+      opts.customColors.feetTWcode ? tint(footColorable, HSLAfromTWcode(opts.customColors.feetTWcode), true) : footColorable,
+      opts.customColors.eyesTWcode ? tint(selectedEyes.data, HSLAfromTWcode(opts.customColors.eyesTWcode), true) : selectedEyes,
+      opts.customColors.markingTWcode && markingAsset ? tint(markingAsset, HSLAfromTWcode(opts.customColors.markingTWcode, true), true) : markingAsset,
+      opts.customColors.decorationTWcode && decorationColorable ? tint(decorationColorable, HSLAfromTWcode(opts.customColors.decorationTWcode), true) : decorationColorable
     ]);
 
-    eyesColored = (await scaleImage(eyesColored, 1.1)).data;
+    eyesColored = await sharp(eyesColored.data)
+      .resize(Math.trunc(eyesColored.info.width * 1.1), Math.trunc(eyesColored.info.height * 1.1))
+      .toBuffer({ resolveWithObject: true });
 
     // Drawing order
-    const overlays: sharp.OverlayOptions[] = [{ input: bodyBg }, { input: feetBg }];
+    const overlays: sharp.OverlayOptions[] = [{ input: bodyBg }, { input: footBg }];
     if (decorationBg) overlays.push({ input: decorationBg });
-    overlays.push({ input: feetColored, left: 18, top: 59 });
-    if (decorationColored) overlays.push({ input: decorationColored });
-    overlays.push({ input: bodyColored });
-    if (markingColored) overlays.push({ input: markingColored });
-    overlays.push({ input: bodyAccent }, { input: bodyOutline }, { input: feetColored, left: 46, top: 59 }, { input: eyesColored, left: 44, top: 36 });
+    overlays.push({ input: 'data' in feetColored ? feetColored.data : feetColored, left: 18, top: 59 });
+    if (decorationColored) overlays.push({ input: 'data' in decorationColored ? decorationColored.data : decorationColored });
+    overlays.push({ input: 'data' in bodyColored ? bodyColored.data : bodyColored });
+    if (markingColored) overlays.push({ input: 'data' in markingColored ? markingColored.data : markingColored });
+    overlays.push({ input: bodyAccent }, { input: bodyOutline }, { input: 'data' in feetColored ? feetColored.data : feetColored, left: 46, top: 59 }, { input: 'data' in eyesColored ? eyesColored.data : eyesColored, left: 44, top: 36 });
 
     let output = await sharp({
       create: {
@@ -266,9 +289,7 @@ export class TeeSkin7 {
       .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Asset not found!`, assetUrl) : new DDNetError(err.cause?.message, err)));
 
     if (response instanceof DDNetError) throw response;
-
-    if (!response.headers['content-type']) throw new DDNetError('Invalid response type!', response);
-    if (response.headers['content-type'] !== 'image/png') throw new DDNetError('Invalid response type!', response);
+    if (!response.headers['content-type'] || response.headers['content-type'] !== 'image/png') throw new DDNetError('Invalid response type!', response);
 
     const buf = Buffer.from(response.data);
 

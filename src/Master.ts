@@ -12,6 +12,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { z } from 'zod';
 import { Player } from './DDNet.js';
 import { DDNetError } from './util.js';
+import { renderTee, TeeSkinRenderOptions } from './classes/skins/TeeSkinUtils.js';
 
 /**
  * Zod schema for raw master server info data.
@@ -207,12 +208,13 @@ export interface MasterSrvFoundPlayer {
   name: string;
   clan: string;
   self: MasterServerClient;
-  toPlayer: () => Promise<Player>;
   server: {
     name: string;
     addresses: string[];
     self: MasterServerData['servers'][number];
   };
+  toPlayer: () => Promise<Player>;
+  renderSkin: (renderOpts?: Omit<TeeSkinRenderOptions, 'customColors'>) => Promise<Buffer>;
 }
 
 /**
@@ -267,12 +269,13 @@ export async function findPlayer(
       name: client.name,
       clan: client.clan,
       self: client,
-      toPlayer: async () => await Player.new(client.name),
       server: {
         name: srv.name,
         addresses: srv.addresses,
         self: srv.self
-      }
+      },
+      toPlayer: async () => await Player.new(client.name),
+      renderSkin: async (renderOpts?: Omit<TeeSkinRenderOptions, 'customColors'>) => await renderTee(client.skin, renderOpts)
     };
   });
 }

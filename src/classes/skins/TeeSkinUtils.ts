@@ -1,8 +1,24 @@
-import sharp, { OutputInfo } from 'sharp';
-import { MasterServerClient } from '../../Master.js';
+import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
+import { MasterServerClient } from '../../Master.js';
 import { TeeSkin6 } from './TeeSkin6.js';
 import { TeeSkin7, assertSkinPart } from './TeeSkin7.js';
+
+/**
+ * Tee skin eye variants
+ */
+export enum TeeSkinEyeVariant {
+  normal = 'eye-normal',
+  angry = 'eye-angry',
+  pain = 'eye-pain',
+  happy = 'eye-happy',
+  dead = 'eye-dead',
+  surprise = 'eye-surprise',
+  /**
+   * Unused, some 0.6 skins have them though
+   */
+  blink = 'eye-blink'
+}
 
 /**
  * Gets width and height from an image buffer.
@@ -25,247 +41,176 @@ export async function getImgSize(
 }
 
 /**
- * Crops and area from an image buffer and returns the resulting buffer
- *
- * @internal
- */
-export async function cropImage(
-  /**
-   * The image buffer to use.
-   */
-  buf: Buffer,
-  /**
-   * Top left x coordinate.
-   */
-  x1: number,
-  /**
-   * Top left y coordinate.
-   */
-  y1: number,
-  /**
-   * Bottom right x coordinate.
-   */
-  x2: number,
-  /**
-   * Bottom right y coordinate.
-   */
-  y2: number
-): Promise<Buffer> {
-  return await sharp(buf)
-    .extract({
-      left: x1,
-      top: y1,
-      height: y2 - y1,
-      width: x2 - x1
-    })
-    .png()
-    .toBuffer();
-}
-
-/**
- * Converts an array of HSL values to an array of RGB values.
- *
- * @see
- * https://github.com/AlexIsTheGuy/TeeAssembler-2.0
- *
- * @internal
- */
-export function HSLToRGB(
-  /**
-   * The HSL values ordered array.
-   */
-  hsl: [number, number, number]
-): [number, number, number] {
-  const [hue, saturation, lightness] = hsl;
-
-  const chroma = (1 - Math.abs((2 * lightness) / 100 - 1)) * (saturation / 100);
-  const huePrime = hue / 60;
-  const secondComponent = chroma * (1 - Math.abs((huePrime % 2) - 1));
-
-  let red = 0;
-  let green = 0;
-  let blue = 0;
-
-  const flHuePrime = Math.floor(huePrime);
-
-  if (flHuePrime === 0) {
-    red = chroma;
-    green = secondComponent;
-    blue = 0;
-  } else if (flHuePrime === 1) {
-    red = secondComponent;
-    green = chroma;
-    blue = 0;
-  } else if (flHuePrime === 2) {
-    red = 0;
-    green = chroma;
-    blue = secondComponent;
-  } else if (flHuePrime === 3) {
-    red = 0;
-    green = secondComponent;
-    blue = chroma;
-  } else if (flHuePrime === 4) {
-    red = secondComponent;
-    green = 0;
-    blue = chroma;
-  } else if (flHuePrime === 5) {
-    red = chroma;
-    green = 0;
-    blue = secondComponent;
-  }
-
-  const lightnessAdjustment = lightness / 100 - chroma / 2;
-
-  red = Math.round((red + lightnessAdjustment) * 255);
-  green = Math.round((green + lightnessAdjustment) * 255);
-  blue = Math.round((blue + lightnessAdjustment) * 255);
-
-  return [red, green, blue];
-}
-
-/**
- * Scales an image buffer by some factor and returns the buffer and some additional information from Sharp.
- *
- * @internal
- */
-export async function scaleImage(
-  /**
-   * The image buffer to use.
-   */
-  buf: Buffer,
-  /**
-   * The scale factor to use. 1 means 100% or no change.
-   */
-  scale: number
-): Promise<{ data: Buffer; info: OutputInfo }> {
-  if (scale === 1) return await sharp(buf).png().toBuffer({ resolveWithObject: true });
-
-  const { width, height } = await sharp(buf).metadata();
-
-  if (!width || !height) throw new DDNetError(`Invalid metadata!`);
-
-  const newWidth = Math.round(width * scale);
-  const newHeight = Math.round(height * scale);
-
-  return await sharp(buf).resize(newWidth, newHeight).png().toBuffer({ resolveWithObject: true });
-}
-
-/**
  * For the tee body
- * Reorder that the average grey is 192,192,192
+ * Reorder that the average grey is 192
  *
  * @see
- * https://github.com/ddnet/ddnet/blob/master/src/game/client/components/skins.cpp#L227-L263
- *
- * @see
- * https://github.com/AlexIsTheGuy/TeeAssembler-2.0
+ * https://github.com/ddnet/ddnet/blob/master/src/game/client/components/skins.cpp#L224-L260
  *
  * @internal
  */
-export function reorderBody(
+export async function reorderBody(
   /**
    * The buffer to work on.
    */
   buf: Buffer
-): Buffer {
-  const frequencies = new Array<number>(256).fill(0);
+): Promise<{ data: Buffer; info: sharp.OutputInfo }> {
+  const raw = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
 
-  // Find the most common frequence
+  buf = raw.data;
+
+  const frequencies = new Array(256).fill(0);
+  const newWeight = 192;
+  const invNewWeight = 255 - newWeight;
+
+  let orgWeight = 0;
+
+  // Find most common frequency
   for (let byte = 0; byte < buf.length; byte += 4) {
     if (buf[byte + 3] > 128) {
       frequencies[buf[byte]]++;
     }
   }
 
-  const orgWeight = frequencies.indexOf(Math.max(...frequencies));
-
-  // let orgWeight = 0;
-
-  // for (let i = 1; i < 256; i++) {
-  //   if (frequencies[orgWeight] < frequencies[i]) {
-  //     orgWeight = i;
-  //   }
-  // }
-
-  const invOrgWeight = 255 - orgWeight;
-
-  const newWeight = 192;
-  const invNewWeight = 255 - newWeight;
-
-  for (let byte = 0; byte < buf.length; byte += 4) {
-    if (buf[byte] <= orgWeight && orgWeight === 0) {
-      continue;
-    } else if (buf[byte] <= orgWeight) {
-      buf[byte] = Math.trunc((buf[byte] / orgWeight) * newWeight);
-    } else if (invOrgWeight == 0) {
-      buf[byte] = newWeight;
-    } else {
-      buf[byte] = Math.trunc(((buf[byte] - orgWeight) / invOrgWeight) * invNewWeight + newWeight);
+  for (let i = 1; i < 256; i++) {
+    if (frequencies[orgWeight] < frequencies[i]) {
+      orgWeight = i;
     }
-
-    buf[byte + 1] = buf[byte];
-    buf[byte + 2] = buf[byte];
   }
 
-  return buf;
+  // Reorder
+  const invOrgWeight = 255 - orgWeight;
+
+  for (let byte = 0; byte < buf.length; byte += 4) {
+    let v = buf[byte];
+
+    if (v <= orgWeight && orgWeight == 0) {
+      v = 0;
+    } else if (v <= orgWeight) {
+      v = Math.trunc((v / orgWeight) * newWeight);
+    } else if (invOrgWeight == 0) {
+      v = newWeight;
+    } else {
+      v = Math.trunc(((v - orgWeight) / invOrgWeight) * invNewWeight + newWeight);
+    }
+
+    buf[byte] = v;
+    buf[byte + 1] = v;
+    buf[byte + 2] = v;
+  }
+
+  return await sharp(buf, {
+    raw: {
+      channels: 4,
+      width: raw.info.width,
+      height: raw.info.height
+    }
+  })
+    .png()
+    .toBuffer({ resolveWithObject: true });
 }
 
 /**
- * Colors an image buffer with the given HSLA values.
- *
- * @internal
+ * Converts a buffer to grayscale.
  */
-export async function colorImage(
+export async function convertToGrayscale(
   /**
-   * The image buffer to color.
+   * The buffer to work on.
    */
   buf: Buffer,
   /**
-   * The HSL or HSLA values to use.
+   * If the buffer should be reordered by the {@link reorderBody} function.
    */
-  hsla: [number, number, number, number?],
-  /**
-   * Should only be set to true for coloring a 0.6 tee body part.
-   */
-  body?: boolean
-): Promise<Buffer> {
-  const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  reorder = false
+): Promise<{ data: Buffer; info: sharp.OutputInfo }> {
+  const raw = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
 
-  const { width, height, channels } = info;
+  buf = raw.data;
 
-  if (hsla[2] < 37) hsla[2] = 37; //52.5; // Prevent full black/white skins
+  for (let byte = 0; byte < buf.length; byte += 4) {
+    const avg = Math.trunc((buf[byte] + buf[byte + 1] + buf[byte + 2]) / 3);
 
-  const [r, g, b] = HSLToRGB([hsla[0], hsla[1], hsla[2]]);
-  const a = hsla[3] ? hsla[3] * 255 : 255;
-
-  for (let byte = 0; byte < data.length; byte += channels) {
-    if (data[byte + 3] > 0) {
-      const average = (data[byte] + data[byte + 1] + data[byte + 2]) / 3;
-
-      data[byte] = average;
-      data[byte + 1] = average;
-      data[byte + 2] = average;
-    }
+    buf[byte] = avg;
+    buf[byte + 1] = avg;
+    buf[byte + 2] = avg;
   }
 
-  if (body) buf = reorderBody(buf);
-
-  for (let byte = 0; byte < data.length; byte += channels) {
-    if (data[byte + 3] > 0) {
-      data[byte] = (data[byte] * r) / 255;
-      data[byte + 1] = (data[byte + 1] * g) / 255;
-      data[byte + 2] = (data[byte + 2] * b) / 255;
-      data[byte + 3] = (data[byte + 3] * a) / 255;
+  let grayscaled = await sharp(buf, {
+    raw: {
+      channels: 4,
+      width: raw.info.width,
+      height: raw.info.height
     }
-  }
+  })
+    .png()
+    .toBuffer({ resolveWithObject: true });
 
-  return await sharp(data, { raw: { width, height, channels } }).toFormat('png').toBuffer();
+  if (reorder) grayscaled = await reorderBody(grayscaled.data);
+
+  return grayscaled;
 }
 
 /**
- * Converts a TW color code into HSL values
+ * Tint a buffer with a given HSLA color.
+ */
+export async function tint(
+  /**
+   * The buffer to work on.
+   */
+  buf: Buffer,
+  /**
+   * The HSLA color to tint the buffer with.
+   */
+  hsla: HSLA_Color,
+  /**
+   * Set to true for tinting 0.7 skins.
+   */
+  use7UnclampVal?: boolean
+): Promise<{ data: Buffer; info: sharp.OutputInfo }> {
+  const raw = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
+
+  buf = raw.data;
+
+  const darkest6 = 50;
+  const darkest7 = (61 / 255) * 100;
+
+  const darkest = use7UnclampVal ? darkest7 : darkest6;
+
+  const { r, g, b, a } = HSLAToRGBA({ ...hsla, l: darkest + (hsla.l * (100 - darkest)) / 100 });
+
+  for (let byte = 0; byte < buf.length; byte += 4) {
+    if (buf[byte + 3] === 0) continue; // Skip fully transparent pixels
+
+    buf[byte] = (buf[byte] * r) / 255;
+    buf[byte + 1] = (buf[byte + 1] * g) / 255;
+    buf[byte + 2] = (buf[byte + 2] * b) / 255;
+    buf[byte + 3] = buf[byte + 3] * a;
+  }
+
+  return await sharp(buf, {
+    raw: {
+      channels: 4,
+      width: raw.info.width,
+      height: raw.info.height
+    }
+  })
+    .png()
+    .toBuffer({ resolveWithObject: true });
+}
+
+/**
+ * Represents an HSLA color.
+ */
+export type HSLA_Color = { h: number; s: number; l: number; a: number };
+
+/**
+ * Converts a TW color code into HSLA values.
  *
- * @internal
+ * @remarks Ranges for each component are:
+ * Hue: 0-360
+ * Sat: 0-100
+ * Lht: 0-100
+ * Alpha: 0-1
  */
 export function HSLAfromTWcode(
   /**
@@ -276,54 +221,63 @@ export function HSLAfromTWcode(
    * Set to true if the TW has an encoded alpha value. (For example, 0.7 tees have an alpha value encoded for the marking color)
    */
   hasAlpha?: boolean
-): [number, number, number, number] {
-  const hsla: [number, number, number, number] = [0, 0, 0, 255];
+): HSLA_Color {
+  let { h, s, l, a }: HSLA_Color = { h: 0, s: 0, l: 0, a: 255 };
 
   if (hasAlpha) {
-    hsla[3] = (twCode >> 24) & 0xff;
+    a = (twCode >> 24) & 0xff;
     twCode = twCode & 0x00ffffff;
   }
 
-  hsla[0] = (twCode >> 16) & 0xff;
-  hsla[1] = (twCode >> 8) & 0xff;
-  hsla[2] = twCode & 0xff;
+  h = (twCode >> 16) & 0xff;
+  s = (twCode >> 8) & 0xff;
+  l = twCode & 0xff;
 
-  if (hsla[0] === 255) {
-    hsla[0] = 0;
-  }
+  if (h === 255) h = 0;
 
-  hsla[0] *= 360 / 255;
-  hsla[1] *= 100 / 255;
-  hsla[2] *= 100 / 255;
-  hsla[3] /= 255;
+  h *= 360 / 255;
+  s *= 100 / 255;
+  l *= 100 / 255;
+  a /= 255;
 
-  return hsla;
+  return { h, s, l, a };
 }
 
 /**
- * Flips an image buffer and returns the resulting buffer.
+ * Represents an RGBA color.
+ */
+export type RGBA_Color = { r: number; g: number; b: number; a: number };
+
+/**
+ * Converts an HSLA color to an RGBA color.
  *
- * @internal
+ * @remarks Ranges for each component are:
+ * Red: 0-255
+ * Green: 0-255
+ * Blue: 0-255
+ * Alpha: 0-1
  */
-export async function flipImage(
+export function HSLAToRGBA(
   /**
-   * The image buffer to use.
+   * The HSLA values ordered array.
    */
-  buf: Buffer,
-  /**
-   * If true, flip vertically instead of horizontally.
-   */
-  vertical?: boolean
-): Promise<Buffer> {
-  return await sharp(buf)[vertical ? 'flip' : 'flop']().png().toBuffer();
-}
+  hsla: HSLA_Color
+): RGBA_Color {
+  let { h, s, l, a } = hsla;
 
-/**
- * Tee skin eye variant types
- */
-export type TeeSkinEyeVariant = keyof {
-  [K in 'default' | 'evil' | 'hurt' | 'happy' | 'surprised' as `eye-${K & string}`]: never;
-};
+  s /= 100;
+  l /= 100;
+
+  const k = (n: number) => (n + h / 30) % 12;
+  const a2 = s * Math.min(l, 1 - l);
+  const f = (n: number) => l - a2 * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
+
+  const r = Math.round(f(0) * 255);
+  const g = Math.round(f(8) * 255);
+  const b = Math.round(f(4) * 255);
+
+  return { r, g, b, a };
+}
 
 /**
  * Skin rendering options
@@ -378,6 +332,16 @@ export interface TeeSkinRenderOptions {
    * 96
    */
   size?: number;
+  /**
+   * The angle in degrees at which the tee should be looking
+   *
+   * @remarks
+   * 0 is right
+   *
+   * @default
+   * 0
+   */
+  viewAngle?: number;
 }
 
 /**
@@ -405,6 +369,10 @@ export async function renderTee(
     });
   }
 
+  if (renderOpts?.eyeVariant === TeeSkinEyeVariant.dead) {
+    renderOpts.eyeVariant = TeeSkinEyeVariant.normal;
+  }
+
   return await new TeeSkin7({
     body: !assertSkinPart('body', skinData.body?.name) ? undefined : skinData.body.name,
     decoration: !assertSkinPart('decoration', skinData.decoration?.name) ? undefined : skinData.decoration.name,
@@ -412,13 +380,13 @@ export async function renderTee(
     feet: !assertSkinPart('feet', skinData.feet?.name) ? undefined : skinData.feet.name,
     marking: !assertSkinPart('marking', skinData.marking?.name) ? undefined : skinData.marking.name
   }).render({
-    ...renderOpts,
+    ...(renderOpts as Omit<TeeSkinRenderOptions, 'eyeVariant' | 'customColors'> & { eyeVariant?: Exclude<TeeSkinEyeVariant, TeeSkinEyeVariant.dead> }),
     customColors: {
       bodyTWcode: skinData.body?.color,
-      markingTWcode: skinData.decoration?.color,
-      decorationTWcode: skinData.eyes?.color,
+      markingTWcode: skinData.marking?.color,
+      decorationTWcode: skinData.decoration?.color,
       feetTWcode: skinData.feet?.color,
-      eyesTWcode: skinData.marking?.color
+      eyesTWcode: skinData.eyes?.color
     }
   });
 }
