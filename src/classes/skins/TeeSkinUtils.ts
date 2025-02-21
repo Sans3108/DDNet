@@ -12,11 +12,11 @@ export enum TeeSkinEyeVariant {
   angry = 'eye-angry',
   pain = 'eye-pain',
   happy = 'eye-happy',
-  dead = 'eye-dead',
-  surprise = 'eye-surprise',
   /**
    * Unused, some 0.6 skins have them though
    */
+  dead = 'eye-dead',
+  surprise = 'eye-surprise',
   blink = 'eye-blink'
 }
 

@@ -71,16 +71,3 @@ export * from './schemas/players/query.js';
 export * from './util.js';
 
 export { findPlayer } from './Master.js';
-
-// import { TeeSkinEyeVariant } from './classes/skins/TeeSkinUtils.js';
-// import { findPlayer } from './Master.js';
-// const me = (await findPlayer('Sans3108'))![0];
-
-// console.log(me.self.skin);
-
-// await me.renderSkin({
-//   saveFilePath: 'tee.png',
-//   eyeVariant: TeeSkinEyeVariant.normal,
-//   size: 256,
-//   viewAngle: 0
-// });

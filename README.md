@@ -155,30 +155,51 @@ const map = await Map.new('Baby Aim 1.0');
 console.log(`${map.finishes[0].players[0].name} ${map.finishes[0].timeString}`); // "Cireme 06:25"
 ```
 
-### TW 0.6 Skin rendering
+### Skin rendering
 
-I tried my hand at making a renderer based on [TeeAssembler-2.0](https://github.com/AlexIsTheGuy/TeeAssembler-2.0) by [AlexIsTheGuy](https://github.com/AlexIsTheGuy), and I think I nailed it.
+The lib also provides a way to render still images of any skin, in any way (without animated feet)
+
+#### 0.6 (DDNet) skins
+
+With inspiration from [TeeAssembler-2.0](https://github.com/AlexIsTheGuy/TeeAssembler-2.0) by [AlexIsTheGuy](https://github.com/AlexIsTheGuy) and help from [Patiga](https://github.com/Patiga)'s [Tee Rendering documentation](https://github.com/heinrich5991/libtw2/blob/master/doc/tee_rendering.md). It is able to render any 0.6 skin from either a skin name or buffer.
 
 Example usage:
 
 ```ts
 import { TeeSkin6 } from 'ddnet';
 
-const mySkin = new TeeSkin6({ skinResource: 'CrystalCat' });
-const rendered = await mySkin.render({ eyeVariant: 'eye-happy' });
-// Do something with the rendered skin buffer, like sending it in a message on discord as an attachment
+const mySkin = new TeeSkin6({ skinResource: '10Fox' });
+const rendered = await mySkin.render(); // Do something with the rendered skin buffer
 
-// Or optionally, save it to a file by providing a file path, like this:
-await mySkin.render({ eyeVariant: 'eye-happy', saveFilePath: 'my-skin.png' }); // Still returns a buffer
+// Or optionally, save it to a file by providing a file path
+await mySkin.render({ saveFilePath: 'my-skin.png' }); // Still returns a buffer
 ```
 
 _my-skin.png_
 
 ![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/my-skin.png)
 
-### TW 0.7 Skin rendering
+You can also customize the emote, and direction the tee is looking towards:
 
-I also tried creating a TW 0.7 skin renderer, which is similar to the 0.6 renderer but with a few changes.
+```ts
+import { TeeSkin6, TeeSkinEyeVariant } from 'ddnet';
+
+const mySkin = new TeeSkin6({ skinResource: '10Fox' });
+
+await mySkin.render({
+  saveFilePath: 'my-skin-happy-left.png',
+  eyeVariant: TeeSkinEyeVariant.happy,
+  viewAngle: 180 // left, since 0 is right
+});
+```
+
+_my-skin-happy-left.png_
+
+![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/my-skin-happy-left.png)
+
+#### 0.7 (Teeworlds) skins
+
+Very similar to 0.6 skins, the only difference being how the instance is initialized.
 
 Example usage:
 
@@ -197,12 +218,10 @@ const rendered = await skin.render({
     markingTWcode: -485425166,
     feetTWcode: 1102450,
     eyesTWcode: 1441632
-  },
-  eyeVariant: 'eye-evil'
-});
-// Do something with the rendered skin buffer, like sending it in a message on discord as an attachment
+  }
+}); // Do something with the rendered skin buffer
 
-// Or optionally, save it to a file by providing a file path, like this:
+// Or optionally, save it to a file by providing a file path
 await skin.render({
   customColors: {
     bodyTWcode: 1102443,
@@ -210,14 +229,15 @@ await skin.render({
     feetTWcode: 1102450,
     eyesTWcode: 1441632
   },
-  saveFilePath: 'fox.png',
-  eyeVariant: 'eye-evil'
+  saveFilePath: 'fox.png'
 }); // Still returns a buffer
 ```
 
 _fox.png_
 
 ![Skin Render Output](https://raw.githubusercontent.com/Sans3108/DDNet/master/misc/fox.png)
+
+Other customizations remain the same between 0.6 and 0.7 skins such as the emote, eye direction etc.
 
 ## Cache
 

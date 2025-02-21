@@ -223,12 +223,12 @@ export class TeeSkin7 {
       markingAsset
     ]);
 
-    // // Blink emote
-    // if (opts.eyeVariant === TeeSkinEyeVariant.blink) {
-    //   selectedEyes = await sharp(selectedEyes.data)
-    //     .resize(selectedEyes.info.width, Math.round(selectedEyes.info.height * 0.45))
-    //     .toBuffer();
-    // }
+    // Blink emote
+    if (opts.eyeVariant === TeeSkinEyeVariant.blink) {
+      selectedEyes = await sharp(selectedEyes)
+        .resize(selectedEyesRegion.width, Math.round(selectedEyesRegion.height * 0.45))
+        .toBuffer();
+    }
 
     // Coloring
     [decorationShadow, decorationColorable, bodyColorable, marking, selectedEyes, footColorable] = await Promise.all([
@@ -254,8 +254,8 @@ export class TeeSkin7 {
 
     const bodySize = spriteRegions.body.shadow.width;
     const footSize = spriteRegions.foot.shadow.width;
-    const eyeHeight = spriteRegions.eyes[TeeSkinEyeVariant.normal].height;
-    const eyeWidth = spriteRegions.eyes[TeeSkinEyeVariant.normal].width;
+    const eyeHeight = opts.eyeVariant === TeeSkinEyeVariant.blink ? Math.round(selectedEyesRegion.height * 0.45) : selectedEyesRegion.height;
+    const eyeWidth = selectedEyesRegion.width;
     const canvasSize = bodySize * 1.2; // Slight margin of empty space around the tee
 
     const centerOffset = (4 / 64) * bodySize;
@@ -280,6 +280,7 @@ export class TeeSkin7 {
 
     const overlays: sharp.OverlayOptions[] = [
       { input: footShadow, left: lFootX, top: footY }, // back foot
+      { input: footShadow, left: rFootX, top: footY }, // front foot
       { input: bodyShadow, left: bodyX, top: bodyY },
       decorationShadow ? { input: decorationShadow, left: bodyX, top: bodyY } : null,
       { input: footColorable, left: lFootX, top: footY }, // back foot
@@ -289,7 +290,6 @@ export class TeeSkin7 {
       { input: bodyAccent, left: bodyX, top: bodyY },
       { input: bodyOutline, left: bodyX, top: bodyY },
       { input: selectedEyes, left: eyeX, top: eyeY },
-      { input: footShadow, left: rFootX, top: footY }, // front foot
       { input: footColorable, left: rFootX, top: footY } // front foot
     ].filter(Boolean) as sharp.OverlayOptions[];
 
