@@ -2,8 +2,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
-import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 import { CacheManager } from '../other/CacheManager.js';
+import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * All the assets I found in the teeworlds repo under datasrc/skins
@@ -169,7 +169,7 @@ export class TeeSkin7 {
     };
 
     // Fetching all assets
-    let [bodyAsset, feetAsset, eyesAsset, markingAsset, decorationAsset] = await Promise.all([
+    let [bodyAsset, footAsset, eyesAsset, markingAsset, decorationAsset] = await Promise.all([
       TeeSkin7.makeRequest('body', this.opts.body),
       TeeSkin7.makeRequest('feet', this.opts.feet),
       TeeSkin7.makeRequest('eyes', this.opts.eyes),
@@ -182,66 +182,126 @@ export class TeeSkin7 {
       markingAsset = await sharp(markingAsset).resize(128, 128).png().toBuffer();
     }
 
-    const eyesCoords: Record<Exclude<(typeof TeeSkinEyeVariant)[keyof typeof TeeSkinEyeVariant], typeof TeeSkinEyeVariant.dead>, sharp.Region> = {
-      [TeeSkinEyeVariant.normal]: { left: 0, top: 0, width: 64, height: 32 },
-      [TeeSkinEyeVariant.blink]: { left: 0, top: 0, width: 64, height: 32 }, // same as normal
-      [TeeSkinEyeVariant.angry]: { left: 64, top: 0, width: 64, height: 32 },
-      [TeeSkinEyeVariant.pain]: { left: 0, top: 32, width: 64, height: 32 },
-      [TeeSkinEyeVariant.happy]: { left: 64, top: 32, width: 64, height: 32 },
-      [TeeSkinEyeVariant.surprise]: { left: 0, top: 64, width: 64, height: 32 }
+    const spriteRegions = {
+      body: {
+        shadow: { top: 0, left: 0, width: 128, height: 128 },
+        colorable: { top: 0, left: 128, width: 128, height: 128 },
+        accent: { top: 128, left: 0, width: 128, height: 128 },
+        outline: { top: 128, left: 128, width: 128, height: 128 }
+      },
+      decoration: {
+        shadow: { top: 0, left: 128, width: 128, height: 128 },
+        colorable: { top: 0, left: 0, width: 128, height: 128 }
+      },
+      foot: {
+        shadow: { top: 0, left: 64, width: 64, height: 64 },
+        colorable: { top: 0, left: 0, width: 64, height: 64 }
+      },
+      eyes: {
+        [TeeSkinEyeVariant.normal]: { top: 0, left: 0, width: 64, height: 32 },
+        [TeeSkinEyeVariant.blink]: { top: 0, left: 0, width: 64, height: 32 }, // same as normal
+        [TeeSkinEyeVariant.angry]: { top: 0, left: 64, width: 64, height: 32 },
+        [TeeSkinEyeVariant.pain]: { top: 32, left: 0, width: 64, height: 32 },
+        [TeeSkinEyeVariant.happy]: { top: 32, left: 64, width: 64, height: 32 },
+        [TeeSkinEyeVariant.surprise]: { top: 64, left: 0, width: 64, height: 32 }
+      }
     };
 
+    const selectedEyesRegion = spriteRegions.eyes[opts.eyeVariant];
+
     // Cropping
-    let [bodyBg, bodyColorable, bodyAccent, bodyOutline, footBg, footColorable, selectedEyes, decorationBg, decorationColorable] = await Promise.all([
-      sharp(bodyAsset).extract({ left: 0, top: 0, width: 128, height: 128 }).toBuffer(),
-      sharp(bodyAsset).extract({ left: 128, top: 0, width: 128, height: 128 }).toBuffer(),
-      sharp(bodyAsset).extract({ left: 0, top: 128, width: 128, height: 128 }).toBuffer(),
-      sharp(bodyAsset).extract({ left: 128, top: 128, width: 128, height: 128 }).toBuffer(),
-      sharp(feetAsset).extract({ left: 64, top: 0, width: 64, height: 64 }).toBuffer(),
-      sharp(feetAsset).extract({ left: 0, top: 0, width: 64, height: 64 }).toBuffer(),
-      sharp(eyesAsset).extract(eyesCoords[opts.eyeVariant]).toBuffer({ resolveWithObject: true }),
-      decorationAsset ? sharp(decorationAsset).extract({ left: 128, top: 0, width: 128, height: 128 }).toBuffer() : null,
-      decorationAsset ? sharp(decorationAsset).extract({ left: 0, top: 0, width: 128, height: 128 }).toBuffer() : null
+    let [bodyShadow, bodyColorable, bodyAccent, bodyOutline, footShadow, footColorable, selectedEyes, decorationShadow, decorationColorable, marking] = await Promise.all([
+      sharp(bodyAsset).extract(spriteRegions.body.shadow).toBuffer(),
+      sharp(bodyAsset).extract(spriteRegions.body.colorable).toBuffer(),
+      sharp(bodyAsset).extract(spriteRegions.body.accent).toBuffer(),
+      sharp(bodyAsset).extract(spriteRegions.body.outline).toBuffer(),
+      sharp(footAsset).extract(spriteRegions.foot.shadow).toBuffer(),
+      sharp(footAsset).extract(spriteRegions.foot.colorable).toBuffer(),
+      sharp(eyesAsset).extract(selectedEyesRegion).toBuffer(),
+      decorationAsset ? sharp(decorationAsset).extract(spriteRegions.decoration.shadow).toBuffer() : null,
+      decorationAsset ? sharp(decorationAsset).extract(spriteRegions.decoration.colorable).toBuffer() : null,
+      markingAsset
     ]);
 
-    // Blink emote
-    if (opts.eyeVariant === TeeSkinEyeVariant.blink) {
-      selectedEyes = await sharp(selectedEyes.data)
-        .resize(selectedEyes.info.width, Math.round(selectedEyes.info.height * 0.45))
-        .toBuffer({ resolveWithObject: true });
-    }
+    // // Blink emote
+    // if (opts.eyeVariant === TeeSkinEyeVariant.blink) {
+    //   selectedEyes = await sharp(selectedEyes.data)
+    //     .resize(selectedEyes.info.width, Math.round(selectedEyes.info.height * 0.45))
+    //     .toBuffer();
+    // }
 
     // Coloring
-    let [bodyColored, feetColored, eyesColored, markingColored, decorationColored] = await Promise.all([
-      opts.customColors.bodyTWcode ? tint(bodyColorable, HSLAfromTWcode(opts.customColors.bodyTWcode), true) : bodyColorable,
-      opts.customColors.feetTWcode ? tint(footColorable, HSLAfromTWcode(opts.customColors.feetTWcode), true) : footColorable,
-      opts.customColors.eyesTWcode ? tint(selectedEyes.data, HSLAfromTWcode(opts.customColors.eyesTWcode), true) : selectedEyes,
-      opts.customColors.markingTWcode && markingAsset ? tint(markingAsset, HSLAfromTWcode(opts.customColors.markingTWcode, true), true) : markingAsset,
-      opts.customColors.decorationTWcode && decorationColorable ? tint(decorationColorable, HSLAfromTWcode(opts.customColors.decorationTWcode), true) : decorationColorable
+    [decorationShadow, decorationColorable, bodyColorable, marking, selectedEyes, footColorable] = await Promise.all([
+      opts.customColors.decorationTWcode && decorationShadow ? (await tint(decorationShadow, HSLAfromTWcode(opts.customColors.decorationTWcode), true)).data
+      : decorationShadow ? decorationShadow
+      : null,
+      opts.customColors.decorationTWcode && decorationColorable ? (await tint(decorationColorable, HSLAfromTWcode(opts.customColors.decorationTWcode), true)).data
+      : decorationColorable ? decorationColorable
+      : null,
+      opts.customColors.bodyTWcode ? (await tint(bodyColorable, HSLAfromTWcode(opts.customColors.bodyTWcode), true)).data : bodyColorable,
+      opts.customColors.markingTWcode && marking ? (await tint(marking, HSLAfromTWcode(opts.customColors.markingTWcode, true), true)).data
+      : marking ? marking
+      : null,
+      opts.customColors.eyesTWcode ? (await tint(selectedEyes, HSLAfromTWcode(opts.customColors.eyesTWcode), true)).data : selectedEyes,
+      opts.customColors.feetTWcode ? (await tint(footColorable, HSLAfromTWcode(opts.customColors.feetTWcode), true)).data : footColorable
     ]);
 
-    eyesColored = await sharp(eyesColored.data)
-      .resize(Math.trunc(eyesColored.info.width * 1.1), Math.trunc(eyesColored.info.height * 1.1))
-      .toBuffer({ resolveWithObject: true });
+    // Part sizes
+    // bodyShadow, bodyColorable, bodyAccent, bodyOutline 128x128
+    // footShadow, footColorable 64x64
+    // selectedEyes 64x32
+    // decorationShadow, decorationColorable, marking 128x128
 
-    // Drawing order
-    const overlays: sharp.OverlayOptions[] = [{ input: bodyBg }, { input: footBg }];
-    if (decorationBg) overlays.push({ input: decorationBg });
-    overlays.push({ input: 'data' in feetColored ? feetColored.data : feetColored, left: 18, top: 59 });
-    if (decorationColored) overlays.push({ input: 'data' in decorationColored ? decorationColored.data : decorationColored });
-    overlays.push({ input: 'data' in bodyColored ? bodyColored.data : bodyColored });
-    if (markingColored) overlays.push({ input: 'data' in markingColored ? markingColored.data : markingColored });
-    overlays.push({ input: bodyAccent }, { input: bodyOutline }, { input: 'data' in feetColored ? feetColored.data : feetColored, left: 46, top: 59 }, { input: 'data' in eyesColored ? eyesColored.data : eyesColored, left: 44, top: 36 });
+    const bodySize = spriteRegions.body.shadow.width;
+    const footSize = spriteRegions.foot.shadow.width;
+    const eyeHeight = spriteRegions.eyes[TeeSkinEyeVariant.normal].height;
+    const eyeWidth = spriteRegions.eyes[TeeSkinEyeVariant.normal].width;
+    const canvasSize = bodySize * 1.2; // Slight margin of empty space around the tee
+
+    const centerOffset = (4 / 64) * bodySize;
+
+    const bodyX = (canvasSize - bodySize) / 2;
+    const bodyY = (canvasSize - bodySize) / 2;
+
+    const footY = (canvasSize - footSize) / 2 + (10 / 64) * bodySize + centerOffset;
+    const lFootX = (canvasSize - footSize) / 2 - (7 / 64) * bodySize;
+    const rFootX = (canvasSize - footSize) / 2 + (7 / 64) * bodySize;
+
+    let eyeY = (canvasSize - eyeHeight) / 2 - 0.125 * bodySize + centerOffset;
+    let eyeX = (canvasSize - eyeWidth) / 2;
+
+    const dir = opts.viewAngle * (Math.PI / 180);
+
+    const eyeMoveY = Math.sin(dir) * 0.1 * bodySize;
+    const eyeMoveX = Math.cos(dir) * 0.125 * bodySize;
+
+    eyeY += eyeMoveY;
+    eyeX += eyeMoveX;
+
+    const overlays: sharp.OverlayOptions[] = [
+      { input: footShadow, left: lFootX, top: footY }, // back foot
+      { input: bodyShadow, left: bodyX, top: bodyY },
+      decorationShadow ? { input: decorationShadow, left: bodyX, top: bodyY } : null,
+      { input: footColorable, left: lFootX, top: footY }, // back foot
+      decorationColorable ? { input: decorationColorable, left: bodyX, top: bodyY } : null,
+      { input: bodyColorable, left: bodyX, top: bodyY },
+      marking ? { input: marking, left: bodyX, top: bodyY } : null,
+      { input: bodyAccent, left: bodyX, top: bodyY },
+      { input: bodyOutline, left: bodyX, top: bodyY },
+      { input: selectedEyes, left: eyeX, top: eyeY },
+      { input: footShadow, left: rFootX, top: footY }, // front foot
+      { input: footColorable, left: rFootX, top: footY } // front foot
+    ].filter(Boolean) as sharp.OverlayOptions[];
 
     let output = await sharp({
       create: {
-        width: 128,
-        height: 128,
+        width: Math.round(canvasSize),
+        height: Math.round(canvasSize),
         background: 'rgba(0, 0, 0, 0)',
         channels: 4
       }
     })
-      .composite(overlays)
+      .composite(overlays.map(o => ({ input: o.input, left: o.left ? Math.round(o.left) : undefined, top: o.top ? Math.round(o.top) : undefined })))
       .png()
       .toBuffer();
 
