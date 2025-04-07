@@ -53,7 +53,7 @@
     "@keyv/sqlite": "^4.0.1",
     "axios": "^1.7.9",
     "keyv": "^5.2.3",
-    "sharp": "^0.33.5",
+    "sharp": "^0.34.0",
     "zod": "^3.24.2"
   },
   "types": "dist/DDNet.d.ts",
