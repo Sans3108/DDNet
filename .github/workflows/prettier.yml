@@ -1,4 +1,7 @@
 name: Prettier Formatting
+permissions:
+  contents: write
+  pull-requests: write
 
 env:
   files_modified:
