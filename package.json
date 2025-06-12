@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A typescript npm package for interacting with data from ddnet.org",
   "main": "dist/DDNet.js",
   "exports": {
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "pnpm cleanup && tsc --project tsconfig.json",
-    "typedoc": "typedoc --plugin typedoc-material-theme --themeColor #1976d2",
+    "typedoc": "typedoc",
     "cleanup": "rimraf dist",
     "prettier": "prettier . --write",
     "dev": "pnpm build && node --enable-source-maps dist/DDNet.js"
@@ -42,19 +42,19 @@
     "dist/**/*"
   ],
   "devDependencies": {
-    "@types/node": "22.15.18",
+    "@types/node": "24.0.1",
     "prettier": "3.5.3",
     "rimraf": "^6.0.1",
-    "typedoc": "^0.28.4",
+    "typedoc": "^0.28.5",
     "typedoc-material-theme": "^1.4.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@keyv/sqlite": "^4.0.4",
     "axios": "^1.9.0",
-    "keyv": "^5.3.3",
-    "sharp": "^0.34.1",
-    "zod": "^3.24.4"
+    "keyv": "^5.3.4",
+    "sharp": "^0.34.2",
+    "zod": "^3.25.63"
   },
   "types": "dist/DDNet.d.ts",
   "pnpm": {

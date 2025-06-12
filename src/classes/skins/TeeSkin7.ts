@@ -3,7 +3,7 @@ import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
-import { HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
+import { DeepRequired, HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * All the assets I found in the teeworlds repo under datasrc/skins
