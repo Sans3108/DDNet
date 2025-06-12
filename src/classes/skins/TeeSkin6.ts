@@ -3,17 +3,14 @@ import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
-import { convertToGrayscale, getImgSize, HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
+import { convertToGrayscale, DeepRequired, getImgSize, HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * Depth 2 {@link DeepRequired}
  *
  * @internal
- *
- * @privateRemarks
- * Not exported because it seems pointless.
  */
-type D2Required<T extends object> = Required<{
+export type D2Required<T extends object> = Required<{
   [P in keyof T]: T[P] extends object | undefined ? Required<T[P]> : T[P];
 }>;
 

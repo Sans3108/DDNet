@@ -12,5 +12,7 @@
   "validation": {
     "notExported": true,
     "invalidLink": false // -_-
-  }
+  },
+  "plugin": ["typedoc-material-theme"],
+  "themeColor": "#1976d2"
 }
