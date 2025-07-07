@@ -22,7 +22,7 @@ importers:
         version: 0.34.2
       zod:
         specifier: ^3.25.63
-        version: 3.25.63
+        version: 3.25.75
     devDependencies:
       '@types/node':
         specifier: 24.0.1
@@ -943,8 +943,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@3.25.63:
-    resolution: {integrity: sha512-3ttCkqhtpncYXfP0f6dsyabbYV/nEUW+Xlu89jiXbTBifUfjaSqXOG6JnQPLtqt87n7KAmnMqcjay6c0Wq0Vbw==}
+  zod@3.25.75:
+    resolution: {integrity: sha512-OhpzAmVzabPOL6C3A3gpAifqr9MqihV/Msx3gor2b2kviCgcb+HM9SEOpMWwwNp9MRunWnhtAKUoo0AHhjyPPg==}
 
 snapshots:
 
@@ -1966,4 +1966,4 @@ snapshots:
 
   yaml@2.8.0: {}
 
-  zod@3.25.63: {}
+  zod@3.25.75: {}
