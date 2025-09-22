@@ -226,7 +226,7 @@ const rendered = await skin.render({
 }); // Do something with the rendered skin buffer
 
 // Or optionally, save it to a file by providing a file path
-// Tip: You can import an use the Color class to easily specify colors instead of pasting numbers
+// Tip: You can import and use the Color class to easily specify colors instead of pasting numbers
 await skin.render({
   customColors: {
     bodyTWcode: Color.from('#d85407').to('tw'),

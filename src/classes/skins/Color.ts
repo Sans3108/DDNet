@@ -51,14 +51,17 @@ export type ValidateHexStr<T extends string> = T & ValidateHex<T> & ValidateLeng
  * Represents a color type.
  */
 export type ColorType = 'hex' | 'tw' | 'rgba' | 'hsla';
+
 /**
  * Represents an RGBA color.
  */
 export type RGBA_Color = { r: number; g: number; b: number; a: number };
+
 /**
  * Represents an HSLA color.
  */
 export type HSLA_Color = { h: number; s: number; l: number; a: number };
+
 /**
  * Represents a HEX color.
  */

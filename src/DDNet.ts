@@ -39,6 +39,7 @@ export * from './classes/players/ServerStats.js';
 //#endregion
 
 //#region Skins
+export * from './classes/skins/Color.js';
 export * from './classes/skins/TeeSkin6.js';
 export * from './classes/skins/TeeSkin7.js';
 export * from './classes/skins/TeeSkinUtils.js';
