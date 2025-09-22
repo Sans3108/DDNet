@@ -43,7 +43,7 @@
   ],
   "devDependencies": {
     "@types/node": "24.0.1",
-    "prettier": "3.5.3",
+    "prettier": "3.6.2",
     "rimraf": "^6.0.1",
     "typedoc": "^0.28.5",
     "typedoc-material-theme": "^1.4.0",
@@ -54,7 +54,7 @@
     "axios": "^1.9.0",
     "keyv": "^5.3.4",
     "sharp": "^0.34.2",
-    "zod": "^3.25.63"
+    "zod": "^4.0.5"
   },
   "types": "dist/DDNet.d.ts",
   "pnpm": {
