@@ -347,7 +347,7 @@ export class TeeSkin7 {
           Accept: 'image/png'
         }
       })
-      .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Asset not found!`, assetUrl) : new DDNetError(err.cause?.message, err)));
+      .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Asset not found!`, assetUrl) : new DDNetError('An error has occurred while fetching a skin asset!', err)));
 
     if (response instanceof DDNetError) throw response;
     if (!response.headers['content-type'] || response.headers['content-type'] !== 'image/png') throw new DDNetError('Invalid response type!', response);

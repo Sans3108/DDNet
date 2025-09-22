@@ -132,7 +132,7 @@ export class TeeSkin6 {
           Accept: 'image/png'
         }
       })
-      .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Skin not found! Try changing the \`dbUrl\`.`) : new DDNetError(err.cause?.message, err)));
+      .catch((err: AxiosError) => (err.response?.status === 404 ? new DDNetError(`Skin not found! Try changing the \`dbUrl\`.`) : new DDNetError('An error has occurred while fetching the skin!', err)));
 
     if (response instanceof DDNetError) throw response;
 

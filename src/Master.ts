@@ -163,7 +163,7 @@ export async function makeMasterRequest(
         'Cache-Control': 'no-cache'
       }
     })
-    .catch((err: AxiosError) => new DDNetError(err.cause?.message, err));
+    .catch((err: AxiosError) => new DDNetError('An error has occurred while fetching servers!', err));
 
   if (response instanceof DDNetError) return response;
 
