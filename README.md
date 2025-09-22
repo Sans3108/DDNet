@@ -208,12 +208,12 @@ Very similar to 0.6 skins, the only difference being how the instance is initial
 Example usage:
 
 ```ts
-import { TeeSkin7 } from 'ddnet';
+import { TeeSkin7, Color } from 'ddnet';
 
 const skin = new TeeSkin7({
   body: 'fox',
   marking: 'fox',
-  eyes: 'colorable'
+  eyes: 'negative'
 });
 
 const rendered = await skin.render({
@@ -226,12 +226,13 @@ const rendered = await skin.render({
 }); // Do something with the rendered skin buffer
 
 // Or optionally, save it to a file by providing a file path
+// Tip: You can import an use the Color class to easily specify colors instead of pasting numbers
 await skin.render({
   customColors: {
-    bodyTWcode: 1102443,
-    markingTWcode: -485425166,
-    feetTWcode: 1102450,
-    eyesTWcode: 1441632
+    bodyTWcode: Color.from('#d85407').to('tw'),
+    markingTWcode: Color.from('#ffae7098').to('tw'),
+    feetTWcode: Color.from('#723920').to('tw'),
+    eyesTWcode: Color.from('#161414').to('tw')
   },
   saveFilePath: 'fox.png'
 }); // Still returns a buffer

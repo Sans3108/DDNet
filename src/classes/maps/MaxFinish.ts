@@ -42,6 +42,9 @@ export class MaxFinish {
    */
   public maxTimestamp: number;
 
+  /**
+   * Construct a new {@link MaxFinish} instance.
+   */
   constructor(data: { rank: number; player: string; count: number; time: number; minTimestamp: number; maxTimestamp: number }) {
     this.rank = data.rank;
     this.player = data.player;

@@ -3,7 +3,8 @@ import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
-import { convertToGrayscale, DeepRequired, getImgSize, HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
+import { Color } from './Color.js';
+import { convertToGrayscale, DeepRequired, getImgSize, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * Depth 2 {@link DeepRequired}
@@ -235,8 +236,8 @@ export class TeeSkin6 {
       ])
 
       // Tinting
-      const bodyCol = HSLAfromTWcode(opts.customColors.bodyTWcode);
-      const feetCol = HSLAfromTWcode(opts.customColors.feetTWcode);
+      const bodyCol = Color.from(opts.customColors.bodyTWcode).to('hsla');
+      const feetCol = Color.from(opts.customColors.feetTWcode).to('hsla');
 
       // prettier-ignore
       [body, bodyOutline, foot, footOutline, eye] = await Promise.all([

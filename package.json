@@ -1,6 +1,6 @@
 {
   "name": "ddnet",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "A typescript npm package for interacting with data from ddnet.org",
   "main": "dist/DDNet.js",
   "exports": {

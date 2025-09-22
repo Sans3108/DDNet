@@ -1,6 +1,7 @@
 import sharp from 'sharp';
-import { DDNetError } from '../../util.js';
 import { MasterServerClient } from '../../Master.js';
+import { DDNetError } from '../../util.js';
+import { Color, HSLA_Color } from './Color.js';
 import { TeeSkin6 } from './TeeSkin6.js';
 import { TeeSkin7, assertSkinPart } from './TeeSkin7.js';
 
@@ -165,7 +166,11 @@ export async function tint(
   /**
    * Set to true for tinting 0.7 skins.
    */
-  use7UnclampVal?: boolean
+  use7UnclampVal?: boolean,
+  /**
+   * Wether to allow working with the alpha channel.
+   */
+  allowAlpha = false
 ): Promise<{ data: Buffer; info: sharp.OutputInfo }> {
   const raw = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
 
@@ -176,7 +181,7 @@ export async function tint(
 
   const darkest = use7UnclampVal ? darkest7 : darkest6;
 
-  const { r, g, b, a } = HSLAToRGBA({ ...hsla, l: darkest + (hsla.l * (100 - darkest)) / 100 });
+  const { r, g, b, a } = new Color({ ...hsla, l: darkest + (hsla.l * (100 - darkest)) / 100 }).to('rgba');
 
   for (let byte = 0; byte < buf.length; byte += 4) {
     if (buf[byte + 3] === 0) continue; // Skip fully transparent pixels
@@ -184,7 +189,7 @@ export async function tint(
     buf[byte] = (buf[byte] * r) / 255;
     buf[byte + 1] = (buf[byte + 1] * g) / 255;
     buf[byte + 2] = (buf[byte + 2] * b) / 255;
-    buf[byte + 3] = buf[byte + 3] * a;
+    if (allowAlpha) buf[byte + 3] = buf[byte + 3] * a;
   }
 
   return await sharp(buf, {
@@ -196,87 +201,6 @@ export async function tint(
   })
     .png()
     .toBuffer({ resolveWithObject: true });
-}
-
-/**
- * Represents an HSLA color.
- */
-export type HSLA_Color = { h: number; s: number; l: number; a: number };
-
-/**
- * Converts a TW color code into HSLA values.
- *
- * @remarks Ranges for each component are:
- * Hue: 0-360
- * Sat: 0-100
- * Lht: 0-100
- * Alpha: 0-1
- */
-export function HSLAfromTWcode(
-  /**
-   * The TW custom color code.
-   */
-  twCode: number,
-  /**
-   * Set to true if the TW has an encoded alpha value. (For example, 0.7 tees have an alpha value encoded for the marking color)
-   */
-  hasAlpha?: boolean
-): HSLA_Color {
-  let { h, s, l, a }: HSLA_Color = { h: 0, s: 0, l: 0, a: 255 };
-
-  if (hasAlpha) {
-    a = (twCode >> 24) & 0xff;
-    twCode = twCode & 0x00ffffff;
-  }
-
-  h = (twCode >> 16) & 0xff;
-  s = (twCode >> 8) & 0xff;
-  l = twCode & 0xff;
-
-  if (h === 255) h = 0;
-
-  h *= 360 / 255;
-  s *= 100 / 255;
-  l *= 100 / 255;
-  a /= 255;
-
-  return { h, s, l, a };
-}
-
-/**
- * Represents an RGBA color.
- */
-export type RGBA_Color = { r: number; g: number; b: number; a: number };
-
-/**
- * Converts an HSLA color to an RGBA color.
- *
- * @remarks Ranges for each component are:
- * Red: 0-255
- * Green: 0-255
- * Blue: 0-255
- * Alpha: 0-1
- */
-export function HSLAToRGBA(
-  /**
-   * The HSLA values ordered array.
-   */
-  hsla: HSLA_Color
-): RGBA_Color {
-  let { h, s, l, a } = hsla;
-
-  s /= 100;
-  l /= 100;
-
-  const k = (n: number) => (n + h / 30) % 12;
-  const a2 = s * Math.min(l, 1 - l);
-  const f = (n: number) => l - a2 * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1));
-
-  const r = Math.round(f(0) * 255);
-  const g = Math.round(f(8) * 255);
-  const b = Math.round(f(4) * 255);
-
-  return { r, g, b, a };
 }
 
 /**

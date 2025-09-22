@@ -3,7 +3,8 @@ import { writeFileSync } from 'fs';
 import sharp from 'sharp';
 import { DDNetError } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
-import { DeepRequired, HSLAfromTWcode, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
+import { Color } from './Color.js';
+import { DeepRequired, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * All the assets I found in the teeworlds repo under datasrc/skins
@@ -232,18 +233,18 @@ export class TeeSkin7 {
 
     // Coloring
     [decorationShadow, decorationColorable, bodyColorable, marking, selectedEyes, footColorable] = await Promise.all([
-      opts.customColors.decorationTWcode && decorationShadow ? (await tint(decorationShadow, HSLAfromTWcode(opts.customColors.decorationTWcode), true)).data
+      opts.customColors.decorationTWcode && decorationShadow ? (await tint(decorationShadow, Color.from(opts.customColors.decorationTWcode).to('hsla'), true)).data
       : decorationShadow ? decorationShadow
       : null,
-      opts.customColors.decorationTWcode && decorationColorable ? (await tint(decorationColorable, HSLAfromTWcode(opts.customColors.decorationTWcode), true)).data
+      opts.customColors.decorationTWcode && decorationColorable ? (await tint(decorationColorable, Color.from(opts.customColors.decorationTWcode).to('hsla'), true)).data
       : decorationColorable ? decorationColorable
       : null,
-      opts.customColors.bodyTWcode ? (await tint(bodyColorable, HSLAfromTWcode(opts.customColors.bodyTWcode), true)).data : bodyColorable,
-      opts.customColors.markingTWcode && marking ? (await tint(marking, HSLAfromTWcode(opts.customColors.markingTWcode, true), true)).data
+      opts.customColors.bodyTWcode ? (await tint(bodyColorable, Color.from(opts.customColors.bodyTWcode).to('hsla'), true)).data : bodyColorable,
+      opts.customColors.markingTWcode && marking ? (await tint(marking, Color.from(opts.customColors.markingTWcode).to('hsla'), true, true)).data
       : marking ? marking
       : null,
-      opts.customColors.eyesTWcode ? (await tint(selectedEyes, HSLAfromTWcode(opts.customColors.eyesTWcode), true)).data : selectedEyes,
-      opts.customColors.feetTWcode ? (await tint(footColorable, HSLAfromTWcode(opts.customColors.feetTWcode), true)).data : footColorable
+      opts.customColors.eyesTWcode ? (await tint(selectedEyes, Color.from(opts.customColors.eyesTWcode).to('hsla'), true)).data : selectedEyes,
+      opts.customColors.feetTWcode ? (await tint(footColorable, Color.from(opts.customColors.feetTWcode).to('hsla'), true)).data : footColorable
     ]);
 
     // Part sizes

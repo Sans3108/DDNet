@@ -71,15 +71,3 @@ export * from './schemas/players/query.js';
 export * from './util.js';
 
 export { findPlayer } from './Master.js';
-
-import { HSLAfromTWcode } from './classes/skins/TeeSkinUtils.js';
-
-const col1 = 1102443;
-const col2 = -485425166; // has alpha
-const col3 = 1102450;
-const col4 = 1441632;
-
-console.log(col1.toString(16));
-console.log(col2.toString(16));
-console.log(col3.toString(16));
-console.log(col4.toString(16));
