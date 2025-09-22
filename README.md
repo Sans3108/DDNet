@@ -8,6 +8,10 @@ A typescript npm package for interacting with data from ddnet.org
 
 I was bored, and also I needed a decent package to use for interacting with ddnet.org programatically. It is also my first package and I tried my best to make it as good as possible.
 
+### Notice
+
+This package heavily relies on the type checker for a lot of things, I cannot guarantee safe usage with plain/vanilla JavaScript!
+
 ## Installation
 
 Using your node package manager of choice, for example `pnpm`:
