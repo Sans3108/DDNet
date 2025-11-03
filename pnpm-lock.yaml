@@ -38,7 +38,7 @@ importers:
         version: 0.28.13(typescript@5.9.3)
       typedoc-material-theme:
         specifier: ^1.4.0
-        version: 1.4.0(typedoc@0.28.13(typescript@5.9.3))
+        version: 1.4.1(typedoc@0.28.13(typescript@5.9.3))
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
@@ -877,8 +877,8 @@ packages:
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
-  typedoc-material-theme@1.4.0:
-    resolution: {integrity: sha512-TBoBpX/4zWO6l74/wBLivXHC2rIiD70KXMliYrw1KhcqdybyxkVBLP5z8KiJuNV8aQIeS+rK2QG6GSucQHJQDQ==}
+  typedoc-material-theme@1.4.1:
+    resolution: {integrity: sha512-/inKZw8SqZPt+pmawpMhDmXCJQyIm+fHFuGChioyJQICZcX2FyzpwZnyPWcZHmJ09upttWFhti4ZI3hESJNkSA==}
     engines: {node: '>=18.0.0', npm: '>=8.6.0'}
     peerDependencies:
       typedoc: ^0.25.13 || ^0.26.x || ^0.27.x || ^0.28.x
@@ -1887,7 +1887,7 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  typedoc-material-theme@1.4.0(typedoc@0.28.13(typescript@5.9.3)):
+  typedoc-material-theme@1.4.1(typedoc@0.28.13(typescript@5.9.3)):
     dependencies:
       '@material/material-color-utilities': 0.3.0
       typedoc: 0.28.13(typescript@5.9.3)
