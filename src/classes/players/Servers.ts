@@ -1,5 +1,25 @@
-import { DDNetError, Type } from '../../util.js';
+import { DDNetError } from '../../util.js';
 import { ServerStats } from './ServerStats.js';
+
+/**
+ * Represents the different DDNet server types.
+ */
+export enum ServerType {
+  novice = 'Novice',
+  moderate = 'Moderate',
+  brutal = 'Brutal',
+  insane = 'Insane',
+  dummy = 'Dummy',
+  ddmaxEasy = 'DDmaX.Easy',
+  ddmaxNext = 'DDmaX.Next',
+  ddmaxPro = 'DDmaX.Pro',
+  ddmaxNut = 'DDmaX.Nut',
+  oldschool = 'Oldschool',
+  solo = 'Solo',
+  race = 'Race',
+  fun = 'Fun',
+  unknown = 'UNKNOWN'
+}
 
 /**
  * Wrapper class for all player server types.
@@ -8,79 +28,79 @@ export class Servers {
   /**
    * Novice server stats.
    */
-  public [Type.novice]!: ServerStats;
+  public [ServerType.novice]!: ServerStats;
 
   /**
    * Moderate server stats.
    */
-  public [Type.moderate]!: ServerStats;
+  public [ServerType.moderate]!: ServerStats;
 
   /**
    * Brutal server stats.
    */
-  public [Type.brutal]!: ServerStats;
+  public [ServerType.brutal]!: ServerStats;
 
   /**
    * Insane server stats.
    */
-  public [Type.insane]!: ServerStats;
+  public [ServerType.insane]!: ServerStats;
 
   /**
    * Dummy server stats.
    */
-  public [Type.dummy]!: ServerStats;
+  public [ServerType.dummy]!: ServerStats;
 
   /**
    * DDmaX.Easy server stats.
    */
-  public [Type.ddmaxEasy]!: ServerStats;
+  public [ServerType.ddmaxEasy]!: ServerStats;
 
   /**
    * DDmaX.Next server stats.
    */
-  public [Type.ddmaxNext]!: ServerStats;
+  public [ServerType.ddmaxNext]!: ServerStats;
 
   /**
    * DDmaX.Pro server stats.
    */
-  public [Type.ddmaxPro]!: ServerStats;
+  public [ServerType.ddmaxPro]!: ServerStats;
 
   /**
    * DDmaX.Nut server stats.
    */
-  public [Type.ddmaxNut]!: ServerStats;
+  public [ServerType.ddmaxNut]!: ServerStats;
 
   /**
    * Oldschool server stats.
    */
-  public [Type.oldschool]!: ServerStats;
+  public [ServerType.oldschool]!: ServerStats;
 
   /**
    * Solo server stats.
    */
-  public [Type.solo]!: ServerStats;
+  public [ServerType.solo]!: ServerStats;
 
   /**
    * Race server stats.
    */
-  public [Type.race]!: ServerStats;
+  public [ServerType.race]!: ServerStats;
 
   /**
    * Fun server stats.
    */
-  public [Type.fun]!: ServerStats;
+  public [ServerType.fun]!: ServerStats;
 
   constructor(data: ServerStats[]) {
-    for (const k in Type) {
-      const key = k as keyof typeof Type;
+    for (const k in ServerType) {
+      const key = k as keyof typeof ServerType;
 
       if (key === 'unknown') continue;
 
-      const stats = data.find(server => server.name === Type[key]);
+      const stats = data.find(server => server.name === ServerType[key]);
 
-      if (!stats) throw new DDNetError(`\`${Type[key]}\` server not found in data!`);
+      if (!stats) throw new DDNetError(`\`${ServerType[key]}\` server not found in data!`);
 
-      this[Type[key]] = stats;
+      this[ServerType[key]] = stats;
     }
   }
 }

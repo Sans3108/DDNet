@@ -27,7 +27,6 @@ export * from './classes/other/ServerStatus.js';
 
 //#region Players
 export * from './classes/players/ActivityEntry.js';
-export * from './classes/players/Finishes.js';
 export * from './classes/players/GlobalLeaderboard.js';
 export * from './classes/players/Leaderboard.js';
 export * from './classes/players/MapStats.js';

@@ -254,7 +254,7 @@ It's not really wise to mess with the cache, but there's a couple things you can
 
 ## Building
 
-For building this package yourself you will need at least Node v18.20.2, and some knowledge of typescript. Package manager choice should not matter, but for smooth operations I recommend `pnpm`.
+For building this package yourself you will need the latest LTS version of Node.JS, and some knowledge of typescript. Package manager choice should not matter, but for smooth operations I recommend `pnpm`.
 
 First, clone the repository and navigate to it:
 

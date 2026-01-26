@@ -1,6 +1,6 @@
-import { Type } from '../../util.js';
 import { Leaderboard } from './Leaderboard.js';
 import { CompletedMapStats, UncompletedMapStats } from './MapStats.js';
+import { ServerType } from './Servers.js';
 
 /**
  * Represents player server stats.
@@ -9,7 +9,7 @@ export class ServerStats {
   /**
    * The name of this server.
    */
-  public name: Type;
+  public name: ServerType;
 
   /**
    * Player leaderboard stats for this server.
@@ -29,7 +29,7 @@ export class ServerStats {
   /**
    * Construct a new {@link ServerStats} instance.
    */
-  constructor(data: { name: Type; leaderboard: Leaderboard; totalCompletionistPoints: number; maps: (CompletedMapStats | UncompletedMapStats)[] }) {
+  constructor(data: { name: ServerType; leaderboard: Leaderboard; totalCompletionistPoints: number; maps: (CompletedMapStats | UncompletedMapStats)[] }) {
     this.name = data.name;
     this.leaderboard = data.leaderboard;
     this.totalCompletionistPoints = data.totalCompletionistPoints;

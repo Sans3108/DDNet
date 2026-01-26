@@ -1,5 +1,6 @@
-import { RankAvailableRegion, Type, timeString } from '../../util.js';
+import { ServerRegion, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
+import { ServerType } from './Servers.js';
 
 /**
  * Base class representing a player's map stats.
@@ -13,14 +14,14 @@ export abstract class MapStatsBase {
   /**
    * The server type of this map.
    */
-  public mapType: Type;
+  public mapType: ServerType;
 
   /**
    * The amount of points awarded for completing this map.
    */
   public points: number;
 
-  constructor(data: { mapName: string; mapType: Type; pointsReward: number }) {
+  constructor(data: { mapName: string; mapType: ServerType; pointsReward: number }) {
     this.mapName = data.mapName;
     this.mapType = data.mapType;
     this.points = data.pointsReward;
@@ -33,7 +34,7 @@ export abstract class MapStatsBase {
     /**
      * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
      */
-    rankSource?: RankAvailableRegion | null,
+    rankSource?: ServerRegion | null,
     /**
      * Wether to bypass the cache.
      */

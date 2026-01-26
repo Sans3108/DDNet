@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _Schema_maps_qmapper } from '../../schemas/maps/qmapper.js';
-import { DDNetError, Type, slugify } from '../../util.js';
+import { DDNetError, slugify } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Release } from '../other/Release.js';
 import { Releases } from '../other/Releases.js';
 import { Player } from '../players/Player.js';
+import { ServerType } from '../players/Servers.js';
 
 /**
  * Represents a map author/mapper.
@@ -56,7 +57,7 @@ export class Mapper {
     /**
      * If provided, the method will only return releases of this type.
      */
-    type?: Type
+    type?: ServerType
   ): Promise<Release[]> {
     const releases = await Releases.new();
 

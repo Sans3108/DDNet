@@ -1,4 +1,4 @@
-import { RankAvailableRegion, Type, formatStringList, timeString } from '../../util.js';
+import { ServerRegion, formatStringList, timeString } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { Player } from '../players/Player.js';
 import { Rank } from '../players/Rank.js';
@@ -37,7 +37,7 @@ export class Finish {
   /**
    * The region of this finish.
    */
-  public region: RankAvailableRegion;
+  public region: ServerRegion;
 
   /**
    * The finish player(s).
@@ -47,7 +47,7 @@ export class Finish {
   /**
    * Construct a new {@link Finish} instance.
    */
-  constructor(data: { timestamp: number; mapName: string; timeSeconds: number; rank: Rank; region: RankAvailableRegion; players: string[] }) {
+  constructor(data: { timestamp: number; mapName: string; timeSeconds: number; rank: Rank; region: ServerRegion; players: string[] }) {
     this.timestamp = data.timestamp;
     this.mapName = data.mapName;
     this.timeSeconds = data.timeSeconds;
@@ -67,7 +67,7 @@ export class Finish {
     /**
      * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
      */
-    rankSource?: RankAvailableRegion | null,
+    rankSource?: ServerRegion | null,
     /**
      * Wether to bypass the cache.
      */
@@ -83,23 +83,5 @@ export class Finish {
    */
   public toString(): string {
     return `${formatStringList(this.players.map(p => p.name))} | ${this.timeString}`;
-  }
-}
-
-/**
- * Represents a player recent finish.
- */
-export class RecentFinish extends Finish {
-  /**
-   * The type of the map.
-   */
-  public mapType: Type;
-
-  /**
-   * Construct a new {@link RecentFinish} instance.
-   */
-  constructor(data: ConstructorParameters<typeof Finish>[0] & { mapType: Type }) {
-    super(data);
-    this.mapType = data.mapType;
   }
 }

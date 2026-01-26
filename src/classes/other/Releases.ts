@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _Releases, _Schema_releases } from '../../schemas/other/releases.js';
-import { DDNetError, Type, dePythonifyTime } from '../../util.js';
+import { DDNetError, dePythonifyTime } from '../../util.js';
+import { ServerType } from '../players/Servers.js';
 import { CacheManager } from './CacheManager.js';
 import { Release } from './Release.js';
 
@@ -170,14 +171,14 @@ export class Releases {
   }
 
   /**
-   * Get all the releases of a specific {@link Type}.
+   * Get all the releases of a specific {@link ServerType}.
    */
   public getServer(
     /**
      * The type of the releases.
      */
-    type: Type
+    type: ServerType
   ): Release[] {
-    return this.maps.filter(m => m.type === (type as Type));
+    return this.maps.filter(m => m.type === (type as ServerType));
   }
 }

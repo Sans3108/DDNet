@@ -60,7 +60,7 @@ export const _Schema_maps_json = z.object({
 });
 
 /**
- * Raw player data type, inferred from {@link _Schema_maps_json}
+ * Raw map data type, inferred from {@link _Schema_maps_json}
  *
  * @internal
  */

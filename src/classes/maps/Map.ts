@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { _MapsJson, _Schema_maps_json } from '../../schemas/maps/json.js';
 import { _Schema_maps_query } from '../../schemas/maps/query.js';
-import { DDNetError, RankAvailableRegion, Tile, Type, dePythonifyTime, splitMappers, timeString } from '../../util.js';
+import { DDNetError, LatestFinishesFilters, ServerRegion, Tile, dePythonifyTime, getLatestFinishes, splitMappers, timeString } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Finish } from '../other/Finish.js';
 import { Player } from '../players/Player.js';
+import { ServerType } from '../players/Servers.js';
 import { Mapper } from './Mapper.js';
 import { MaxFinish } from './MaxFinish.js';
 
@@ -75,7 +76,7 @@ export class Map {
   /**
    * The type of this map.
    */
-  public type!: Type;
+  public type!: ServerType;
 
   /**
    * Amount of points awarded for completing this map.
@@ -120,7 +121,7 @@ export class Map {
   /**
    * The region from which ranks are pulled. `null` for global ranks.
    */
-  public rankSource!: RankAvailableRegion | null;
+  public rankSource!: ServerRegion | null;
 
   /**
    * Team finishes for this map.
@@ -182,7 +183,7 @@ export class Map {
     /**
      * The region to pull ranks from. `null` for global ranks.
      */
-    rankSource: RankAvailableRegion | null
+    rankSource: ServerRegion | null
   ) {
     this.populate(rawData, rankSource);
   }
@@ -201,7 +202,7 @@ export class Map {
      * @remarks
      * Ignored if map url is used instead of map name.
      */
-    rankSource?: RankAvailableRegion | null,
+    rankSource?: ServerRegion | null,
     /**
      * Wether to bypass the map data cache.
      */
@@ -248,7 +249,7 @@ export class Map {
      * @remarks
      * Ignored if map url is used instead of map name.
      */
-    rankSource?: RankAvailableRegion | null,
+    rankSource?: ServerRegion | null,
     /**
      * Wether to bypass the cache.
      */
@@ -292,7 +293,7 @@ export class Map {
     /**
      * The region to pull ranks from. `null` for global ranks.
      */
-    rankSource: RankAvailableRegion | null
+    rankSource: ServerRegion | null
   ): this {
     this.#rawData = rawData;
     this.rankSource = rankSource;
@@ -305,7 +306,7 @@ export class Map {
     this.name = this.#rawData.name;
     this.thumbnailUrl = this.#rawData.thumbnail;
     this.webPreviewUrl = this.#rawData.web_preview;
-    this.type = !Object.values<string>(Type).includes(this.#rawData.type) ? Type.unknown : (this.#rawData.type as Type);
+    this.type = !Object.values<string>(ServerType).includes(this.#rawData.type) ? ServerType.unknown : (this.#rawData.type as ServerType);
     this.points = this.#rawData.points;
     this.difficulty = this.#rawData.difficulty;
     this.mappers = splitMappers(this.#rawData.mapper).map(mapperName => new Mapper({ name: mapperName }));
@@ -322,7 +323,7 @@ export class Map {
     this.teamFinishes = this.#rawData.team_ranks.map(
       rank =>
         new Finish({
-          region: !Object.values<string>(RankAvailableRegion).includes(rank.country) ? RankAvailableRegion.UNK : (rank.country as RankAvailableRegion),
+          region: !Object.values<string>(ServerRegion).includes(rank.country) ? ServerRegion.UNK : (rank.country as ServerRegion),
           mapName: this.name,
           players: rank.players,
           rank: {
@@ -337,7 +338,7 @@ export class Map {
     this.finishes = this.#rawData.ranks.map(
       rank =>
         new Finish({
-          region: !Object.values<string>(RankAvailableRegion).includes(rank.country) ? RankAvailableRegion.UNK : (rank.country as RankAvailableRegion),
+          region: !Object.values<string>(ServerRegion).includes(rank.country) ? ServerRegion.UNK : (rank.country as ServerRegion),
           mapName: this.name,
           players: [rank.player],
           rank: {
@@ -393,12 +394,21 @@ export class Map {
     /**
      * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
      */
-    rankSource?: RankAvailableRegion | null,
+    rankSource?: ServerRegion | null,
     /**
      * Wether to bypass the cache.
      */
     force = false
-  ): Promise<{ mappers: { name: string; toMapper: () => Mapper; toPlayer: () => Promise<Player> }[]; type: Type; name: string; toMap: () => Promise<Map> }[] | null> {
+  ): Promise<
+    | {
+        mappers: { name: string; toMapper: () => Mapper; toPlayer: () => Promise<Player> }[];
+        type: ServerType;
+        name: string;
+        toMap: () => Promise<Map>;
+        latestFinishes: (filters: LatestFinishesFilters) => Promise<Finish[]>;
+      }[]
+    | null
+  > {
     const data = await Map.makeRequest(`https://ddnet.org/maps/?query=${encodeURIComponent(value)}`, null, force);
 
     if (data instanceof DDNetError) throw data;
@@ -416,8 +426,39 @@ export class Map {
         toMapper: () => new Mapper({ name: mapperName.trim() }),
         toPlayer: async () => await Player.new(mapperName.trim())
       })),
-      type: !Object.values<string>(Type).includes(map.type) ? Type.unknown : (map.type as Type),
-      toMap: async () => await Map.new(map.name, rankSource)
+      type: !Object.values<string>(ServerType).includes(map.type) ? ServerType.unknown : (map.type as ServerType),
+      toMap: async () => await Map.new(map.name, rankSource),
+      latestFinishes: async filters => await Map.getLatestFinishes(map.name, filters)
     }));
+  }
+
+  /**
+   * Get latest finishes, filtered for this map.
+   */
+  public async getLatestFinishes(
+    /**
+     * Filtering options for latest finishes.
+     */
+    filters?: LatestFinishesFilters
+  ): Promise<Finish[]> {
+    return await Map.getLatestFinishes(this.name, filters);
+  }
+
+  /**
+   * Get latest finishes, filtered for a specific map.
+   */
+  public static async getLatestFinishes(
+    /**
+     * The name of the map.
+     */
+    mapName: string,
+    /**
+     * Filtering options for latest finishes.
+     */
+    filters?: LatestFinishesFilters
+  ): Promise<Finish[]> {
+    const finishes = await getLatestFinishes(filters);
+
+    return finishes.filter(f => f.mapName === mapName);
   }
 }

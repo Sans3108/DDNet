@@ -1,6 +1,8 @@
-import { RankAvailableRegion, Tile, Type, splitMappers } from '../../util.js';
+import { getLatestFinishes, LatestFinishesFilters, ServerRegion, splitMappers, Tile } from '../../util.js';
 import { Map } from '../maps/Map.js';
 import { Mapper } from '../maps/Mapper.js';
+import { ServerType } from '../players/Servers.js';
+import { Finish } from './Finish.js';
 
 /**
  * Represents a map release.
@@ -14,7 +16,7 @@ export class Release {
   /**
    * The type of this map.
    */
-  public type: Type;
+  public type: ServerType;
 
   /**
    * The url of this map on ddnet.org
@@ -71,7 +73,7 @@ export class Release {
    */
   constructor(data: { type: string; name: string; website: string; thumbnail: string; web_preview: string; points: number; difficulty: number; mapper: string; releaseTimestamp: number; width: number; height: number; tiles: string[] }) {
     this.name = data.name;
-    this.type = !Object.values<string>(Type).includes(data.type) ? Type.unknown : (data.type as Type);
+    this.type = !Object.values<string>(ServerType).includes(data.type) ? ServerType.unknown : (data.type as ServerType);
     this.url = data.website;
     this.thumbnailUrl = data.thumbnail;
     this.webPreviewUrl = data.web_preview;
@@ -95,7 +97,7 @@ export class Release {
     /**
      * The region to pull ranks from in the `toMap` function from the returned value. Omit for global ranks.
      */
-    rankSource?: RankAvailableRegion | null,
+    rankSource?: ServerRegion | null,
     /**
      * Wether to bypass the cache.
      */
@@ -109,5 +111,35 @@ export class Release {
    */
   public toString(): string {
     return `[${this.name}](${this.url})`;
+  }
+
+  /**
+   * Get latest finishes, filtered for this release.
+   */
+  public async getLatestFinishes(
+    /**
+     * Filtering options for latest finishes.
+     */
+    filters?: LatestFinishesFilters
+  ): Promise<Finish[]> {
+    return await Release.getLatestFinishes(this.name, filters);
+  }
+
+  /**
+   * Get latest finishes, filtered for a specific release.
+   */
+  public static async getLatestFinishes(
+    /**
+     * The name of the map.
+     */
+    mapName: string,
+    /**
+     * Filtering options for latest finishes.
+     */
+    filters?: LatestFinishesFilters
+  ): Promise<Finish[]> {
+    const finishes = await getLatestFinishes(filters);
+
+    return finishes.filter(f => f.mapName === mapName);
   }
 }
