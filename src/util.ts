@@ -119,7 +119,6 @@ export enum ServerRegion {
   UKR = 'UKR',
   USA = 'USA',
   ZAF = 'ZAF',
-  OLD = 'OLD',
   UNK = 'UNK' // custom unknown region
 }
 
