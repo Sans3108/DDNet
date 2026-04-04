@@ -7,12 +7,12 @@ When a GitHub release is created, the [npm-publish workflow](.github/workflows/n
 
 > You must have published at least one version of the package to npm before you can enable trusted publishing.
 
-1. Go to [npmjs.com](https://www.npmjs.com) and sign in to the account that owns the `ddnet` package.
-2. Navigate to the **package settings** page: <https://www.npmjs.com/package/ddnet/access>
+1. Go to [npmjs.com](https://www.npmjs.com) and sign in to the account that owns your package.
+2. Navigate to your **package settings** page: `https://www.npmjs.com/package/<your-package-name>/access`
 3. Under **Publishing access**, find the **Trusted Publishers** section.
 4. Click **Add a trusted publisher** and fill in:
-   - **Organization or user:** `Sans3108`
-   - **Repository:** `DDNet`
+   - **Organization or user:** Your GitHub username or organization
+   - **Repository:** Your repository name
    - **Workflow filename:** `npm-publish.yml`
    - **Environment:** _(leave blank)_
 5. Save the configuration.
@@ -43,7 +43,7 @@ Once this is done, the GitHub Actions workflow can publish to npm using OIDC wit
    ```
 
 3. **Create a GitHub release** from the tag:
-   - Go to <https://github.com/Sans3108/DDNet/releases/new>
+   - Go to your repository's releases page and click **Draft a new release**
    - Select the tag you just pushed (e.g., `v0.10.3` or `0.10.3`)
    - Fill in the release title and notes
    - Click **Publish release**
