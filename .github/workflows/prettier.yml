@@ -7,22 +7,20 @@ env:
   files_modified:
 
 on:
-  pull_request:
   push:
     branches: [master]
 
 jobs:
   format:
-    # Check if the PR is not from a fork
-    if: >
-      github.event.pull_request.head.repo.full_name == github.repository ||
-      (github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Format files with Prettier') == false)
+    # Run on pushes to master, but avoid re-formatting our own formatting commits
+    if: |
+      github.event_name == 'push' &&
+      startsWith(github.event.head_commit.message, 'Format files with Prettier') == false
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.head_ref }}
           fetch-depth: 0 # Ensures history is checked out
           token: ${{ secrets.GITHUB_TOKEN }} # Use the GitHub token for authentication
 
