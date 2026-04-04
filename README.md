@@ -38,20 +38,20 @@ Player {
   name: 'Sans3108',
   url: 'https://ddnet.org/players/Sans3108',
   globalLeaderboard: GlobalLeaderboard {
-    completionist: { placement: 8462, points: 2740 },
+    completionist: { placement: 7023, points: 5182 },
     team: null,
     rank: null,
-    completionistLastMonth: { placement: 3003, points: 224 },
-    completionistLastWeek: { placement: 1570, points: 89 }
+    completionistLastMonth: { placement: 5516, points: 138 },
+    completionistLastWeek: { placement: 5202, points: 35 }
   },
-  totalCompletionistPoints: 32136,
+  totalCompletionistPoints: 33375,
   favoriteServer: 'GER',
   finishes: Finishes {
     first: Finish {
       timestamp: 1628418102000,
       mapName: 'Multeasymap',
       timeSeconds: 2484.68,
-      timeString: '41:24',
+      timeString: '41:24⁶⁷',
       rank: [Object],
       region: 'UNK',
       players: [Array]
@@ -73,7 +73,7 @@ You probably wouldn't want to log everything, just what you need. Examples below
 import { Player } from 'ddnet';
 const player = await Player.new('Sans3108');
 
-console.log(player.globalLeaderboard.completionist?.points); // 3421
+console.log(player.globalLeaderboard.completionist?.points); // 5182
 ```
 
 ```js
@@ -92,7 +92,7 @@ const player = await Player.new('Sans3108');
 const completed = player.serverTypes.Novice.maps.filter(isCompletedMapStats);
 const fastestTime = completed.sort((a, b) => a.bestTimeSeconds - b.bestTimeSeconds)[0];
 
-console.log(`${fastestTime.mapName} ${fastestTime.bestTimeString}`); // "Tangerine 00:42"
+console.log(`${fastestTime.mapName} ${fastestTime.bestTimeString}`); // "Tangerine 00:42⁸⁶"
 ```
 
 ### Map class examples
@@ -120,7 +120,7 @@ Map {
       playerUrl: 'https://ddnet.org/players/Zerodin'
     }
   ],
-  releasedTimestamp: 1438538340000,
+  releasedTimestamp: 1438531140000,
   ... (lots of other data)
 }
 */

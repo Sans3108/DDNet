@@ -52,7 +52,7 @@ export function timeString(
   const h = Math.floor(totalSeconds / 3600);
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = Math.floor(totalSeconds % 60);
-  const cs = Math.floor((totalSeconds - Math.floor(totalSeconds)) * 100);
+  const cs = Math.round((totalSeconds - Math.floor(totalSeconds)) * 100);
 
   const pad = (n: number) => (n < 10 ? '0' : '') + n;
 
