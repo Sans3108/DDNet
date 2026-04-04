@@ -22,6 +22,7 @@ Once this is done, the GitHub Actions workflow can publish to npm using OIDC wit
 ## How to publish a new release
 
 1. **Update the version** in `package.json`:
+
    ```bash
    # Bump the patch version (e.g., 0.10.2 → 0.10.3)
    npm version patch
@@ -32,9 +33,11 @@ Once this is done, the GitHub Actions workflow can publish to npm using OIDC wit
    # Or for a major version bump (e.g., 0.10.2 → 1.0.0)
    npm version major
    ```
+
    This updates `package.json` and creates a git tag automatically.
 
 2. **Push the commit and tag** to GitHub:
+
    ```bash
    git push origin master --follow-tags
    ```
@@ -59,9 +62,9 @@ checkout → install pnpm → setup node → pnpm install → pnpm build → npm
 
 ## Troubleshooting
 
-| Problem | Fix |
-|---|---|
-| **"No matching trusted publisher"** error in CI | Ensure the workflow filename in npmjs.com settings matches exactly: `npm-publish.yml` |
-| **403 Forbidden** during publish | Verify that trusted publishing is configured for the correct user/org and repo on npmjs.com |
-| **Version already exists** | You need to bump the version in `package.json` before publishing. npm does not allow re-publishing the same version. |
-| **Provenance error** | Make sure the workflow has `permissions: id-token: write` and is running in a public repository |
+| Problem                                         | Fix                                                                                                                  |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **"No matching trusted publisher"** error in CI | Ensure the workflow filename in npmjs.com settings matches exactly: `npm-publish.yml`                                |
+| **403 Forbidden** during publish                | Verify that trusted publishing is configured for the correct user/org and repo on npmjs.com                          |
+| **Version already exists**                      | You need to bump the version in `package.json` before publishing. npm does not allow re-publishing the same version. |
+| **Provenance error**                            | Make sure the workflow has `permissions: id-token: write` and is running in a public repository                      |
