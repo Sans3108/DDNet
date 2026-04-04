@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "outDir": "dist",
     "removeComments": false,
     "esModuleInterop": true,
@@ -14,11 +14,12 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "ESNext",
+    "module": "node16",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "rootDir": "src"
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules"]

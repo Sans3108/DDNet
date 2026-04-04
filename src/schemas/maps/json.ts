@@ -52,7 +52,7 @@ export const _Schema_maps_json = z.object({
       max_timestamp: z.number()
     })
   ),
-  median_time: z.number().optional(),
+  average_time: z.number().optional(),
   first_finish: z.number().optional(),
   last_finish: z.number().optional(),
   finishes: z.number().optional(),

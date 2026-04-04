@@ -21,26 +21,48 @@ export class DDNetError extends Error {
 }
 
 /**
+ * Represents how centiseconds should be displayed in time strings.
+ *
+ * @remarks
+ * - `super` (default) will display centiseconds as superscript, e.g. "1:03¹²"
+ * - `sub` will display centiseconds as subscript, e.g. "1:03₁₂"
+ * - `none` will not display centiseconds at all, e.g. "1:03"
+ */
+export enum CentiSecDisplay {
+  super,
+  sub,
+  none
+}
+
+/**
  * Converts a number of seconds to a DDNet finish time string.
  *
  * @example "03:23"
+ * @example "1:03¹²"
  */
 export function timeString(
   /**
    * The time in seconds to convert.
    */
-  totalSeconds: number
+  totalSeconds: number,
+  centiSeconds = CentiSecDisplay.super
 ): string {
   if (totalSeconds < 0) return '--:--';
 
-  const pad = (s: string) => (s.length < 2 ? `0${s}` : s);
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = Math.floor(totalSeconds % 60);
+  const cs = Math.floor((totalSeconds - Math.floor(totalSeconds)) * 100);
 
-  const hours = Math.floor(totalSeconds / 3600).toString();
-  const remainingSecondsAfterHours = totalSeconds % 3600;
-  const minutes = Math.floor(remainingSecondsAfterHours / 60).toString();
-  const seconds = Math.floor(remainingSecondsAfterHours % 60).toString();
+  const pad = (n: number) => (n < 10 ? '0' : '') + n;
 
-  return hours === '0' ? `${pad(minutes)}:${pad(seconds)}` : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  const base = h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+
+  if (centiSeconds === CentiSecDisplay.none) return base;
+
+  const digits = centiSeconds === CentiSecDisplay.super ? '⁰¹²³⁴⁵⁶⁷⁸⁹' : '₀₁₂₃₄₅₆₇₈₉';
+
+  return base + digits[Math.floor(cs / 10)] + digits[cs % 10];
 }
 
 /**
