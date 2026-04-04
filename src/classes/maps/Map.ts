@@ -141,14 +141,14 @@ export class Map {
   /**
    * The average finish time of this map in seconds.
    */
-  public medianTimeSeconds!: number;
+  public averageTimeSeconds!: number;
 
   /**
    * String formatted average finish time.
    *
    * @example "03:23"
    */
-  public medianTimeString!: string;
+  public averageTimeString!: string;
 
   /**
    * Timestamp for the first recorded finish on this map.
@@ -351,8 +351,8 @@ export class Map {
     );
 
     this.maxFinishes = this.#rawData.max_finishes.map(mf => new MaxFinish({ maxTimestamp: dePythonifyTime(mf.max_timestamp), minTimestamp: dePythonifyTime(mf.min_timestamp), count: mf.num, player: mf.player, rank: mf.rank, time: mf.time }));
-    this.medianTimeSeconds = this.#rawData.median_time ?? -1;
-    this.medianTimeString = timeString(this.medianTimeSeconds);
+    this.averageTimeSeconds = this.#rawData.average_time ?? -1;
+    this.averageTimeString = timeString(this.averageTimeSeconds);
     this.firstFinishTimestamp = this.#rawData.first_finish ? dePythonifyTime(this.#rawData.first_finish) : null;
     this.lastFinishTimestamp = this.#rawData.last_finish ? dePythonifyTime(this.#rawData.last_finish) : null;
     this.finishCount = this.#rawData.finishes ?? 0;
