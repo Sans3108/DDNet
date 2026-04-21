@@ -28,7 +28,7 @@
   ],
   "type": "module",
   "author": "thatboisans",
-  "license": "ISC",
+  "license": "GPL-3.0-only",
   "homepage": "https://ddnet.js.org",
   "bugs": {
     "url": "https://github.com/Sans3108/DDNet/issues"
