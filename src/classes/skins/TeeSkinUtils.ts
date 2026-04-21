@@ -283,12 +283,12 @@ export async function renderTee(
 ): Promise<Buffer> {
   if (!skinData) return await new TeeSkin6().render(renderOpts);
 
-  if (skinData.name) {
+  if ('name' in skinData) {
     return await new TeeSkin6({ skinResource: skinData.name }).render({
       ...renderOpts,
       customColors: {
-        bodyTWcode: skinData.color_body,
-        feetTWcode: skinData.color_feet
+        bodyTWcode: 'color_body' in skinData ? skinData.color_body : undefined,
+        feetTWcode: 'color_feet' in skinData ? skinData.color_feet : undefined
       }
     });
   }
@@ -314,12 +314,3 @@ export async function renderTee(
     }
   });
 }
-
-/**
- * Deep Required type
- *
- * @internal
- */
-export type DeepRequired<T extends object> = Required<{
-  [P in keyof T]: T[P] extends object | undefined ? DeepRequired<Required<T[P]>> : T[P];
-}>;

@@ -21,18 +21,13 @@ export class DDNetError extends Error {
 }
 
 /**
- * Represents how centiseconds should be displayed in time strings.
+ * Deep Required type
  *
- * @remarks
- * - `super` (default) will display centiseconds as superscript, e.g. "1:03¹²"
- * - `sub` will display centiseconds as subscript, e.g. "1:03₁₂"
- * - `none` will not display centiseconds at all, e.g. "1:03"
+ * @internal
  */
-export enum CentiSecDisplay {
-  super,
-  sub,
-  none
-}
+export type DeepRequired<T extends object> = Required<{
+  [P in keyof T]: T[P] extends object | undefined ? DeepRequired<Required<T[P]>> : T[P];
+}>;
 
 /**
  * Converts a number of seconds to a DDNet finish time string.
@@ -45,7 +40,30 @@ export function timeString(
    * The time in seconds to convert.
    */
   totalSeconds: number,
-  centiSeconds = CentiSecDisplay.super
+  /**
+   * Options for formatting the time string.
+   */
+  options?: {
+    /**
+     * Whether to display centiseconds as subscript instead of superscript.
+     *
+     * @default false
+     */
+    centiSecondsSubscript?: boolean;
+    /**
+     * Whether to always display hours, even if the time is less than 1 hour.
+     *
+     * @default false
+     */
+    forceHoursDisplay?: boolean;
+    /**
+     * Whether to display centiseconds, or to let the function decide based on the time.
+     * If set to "auto", centiseconds will only be displayed if the time is less than 1 hour.
+     *
+     * @default "auto"
+     */
+    centiSecondsDisplayBehavior?: boolean | 'auto';
+  }
 ): string {
   if (totalSeconds < 0) return '--:--';
 
@@ -56,13 +74,25 @@ export function timeString(
 
   const pad = (n: number) => (n < 10 ? '0' : '') + n;
 
-  const base = h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  const isLong = h > 0;
 
-  if (centiSeconds === CentiSecDisplay.none) return base;
+  const opts: Required<{
+    centiSecondsSubscript?: boolean;
+    forceHoursDisplay?: boolean;
+    centiSecondsDisplayBehavior?: boolean | 'auto';
+  }> = {
+    centiSecondsSubscript: options?.centiSecondsSubscript ?? false,
+    forceHoursDisplay: options?.forceHoursDisplay ?? false,
+    centiSecondsDisplayBehavior: options?.centiSecondsDisplayBehavior ?? 'auto'
+  };
 
-  const digits = centiSeconds === CentiSecDisplay.super ? '⁰¹²³⁴⁵⁶⁷⁸⁹' : '₀₁₂₃₄₅₆₇₈₉';
+  const base = isLong || opts.forceHoursDisplay ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
 
-  return base + digits[Math.floor(cs / 10)] + digits[cs % 10];
+  const digits = opts.centiSecondsSubscript ? '₀₁₂₃₄₅₆₇₈₉' : '⁰¹²³⁴⁵⁶⁷⁸⁹';
+
+  const csString = opts.centiSecondsDisplayBehavior === true || (opts.centiSecondsDisplayBehavior === 'auto' && !isLong) ? `${digits[Math.floor(cs / 10)]}${digits[cs % 10]}` : '';
+
+  return base + csString;
 }
 
 /**

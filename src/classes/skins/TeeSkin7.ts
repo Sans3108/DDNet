@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { writeFileSync } from 'fs';
 import sharp from 'sharp';
-import { DDNetError } from '../../util.js';
+import { DDNetError, DeepRequired } from '../../util.js';
 import { CacheManager } from '../other/CacheManager.js';
 import { Color } from './Color.js';
-import { DeepRequired, TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
+import { TeeSkinEyeVariant, TeeSkinRenderOptions, tint } from './TeeSkinUtils.js';
 
 /**
  * All the assets I found in the teeworlds repo under datasrc/skins
