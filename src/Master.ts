@@ -77,7 +77,9 @@ export const _Schema_MasterSrv_Info_DDRace = z.object({
             color: z.number().optional()
           })
         })
-      ])
+      ]),
+      afk: z.boolean(),
+      team: z.number()
     })
   )
 });
